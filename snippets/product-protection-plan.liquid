@@ -1,0 +1,141 @@
+{% assign applince_product = false %}
+{% assign antitache_product = false %}
+
+{% if product.tags contains 'category:laundry_espace' or product.tags contains 'category:kitchen_espace' or product.tags contains 'category:dishwasher_espace' %}
+  {% assign applince_product = true %}
+{% elsif product.tags contains 'category:living_room' or product.tags contains 'category:furniture_espace'  %}
+  {% assign antitache_product = true %}
+{% endif %}
+
+{% assign prod_obj_2year = all_products['plan-de-protection-2-ans'] %}
+{% assign prod_obj_4year = all_products['plan-de-protection-4-ans'] %}
+{% assign prod_obj_furniture = all_products['plan-de-protection-antitache'] %}
+{% assign variant_prce = product.price %}
+
+<!-- 2year product -->
+{% for va_val in prod_obj_2year.variants %}
+  {% assign prce = va_val.title | split: '-' | first %}
+  {% assign basePrice = prce | times: 100 %}
+  {% if basePrice > variant_prce %}
+    {% break %}
+  {% else %}
+    {% assign selectedPrice = va_val.price | times: soldInSetQty %}
+    {% assign selectedvariant = va_val.id %}
+    {% assign selectedsku = va_val.sku %}
+  {% endif %}
+{% endfor %}
+
+<!-- 4year product -->
+{% for va_val2 in prod_obj_4year.variants %}
+  {% assign prce1 = va_val2.title | split: '-' | first %}
+  {% assign basePrice1 = prce1 | times: 100 %}
+  {% if basePrice1 > variant_prce %}
+    {% break %}
+  {% else %}
+    {% assign selectedPrice2 = va_val2.price | times: soldInSetQty %}
+    {% assign selectedvariant2 = va_val2.id %}
+    {% assign selectedsku2 = va_val2.sku %}
+  {% endif %}
+{% endfor %}
+
+<!-- Furniture product -->
+{% for va_val3 in prod_obj_furniture.variants %}
+  {% assign prce3 = va_val3.title | split: '-' | first %}
+  {% assign basePrice3 = prce3 | times: 100 %}
+  {% if basePrice3 > variant_prce %}
+    {% break %}
+  {% else %}
+    {% assign selectedPrice3 = va_val3.price | times: soldInSetQty %}
+    {% assign selectedvariant3 = va_val3.id %}
+    {% assign selectedsku3 = va_val3.sku %}
+  {% endif %}
+{% endfor %}
+
+{% if applince_product == true or antitache_product == true %}
+  <div class="protection_plan-main">
+    {% if section.settings.protection_head != blank or section.settings.protection_subhead != blank %}
+      <div class="protection-heads">
+        {% if section.settings.protection_head != blank %}
+          <div class="pro-head">
+            {% render 'service-gear-icon' %}
+            {{ section.settings.protection_head }}
+          </div>
+        {% endif %}
+        {% if section.settings.protection_subhead != blank %}
+          <div class="pro-desc">{{ section.settings.protection_subhead }}</div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if request.locale.iso_code == 'fr' %}
+      {% assign warrenty_guide = section.settings['warrenty_guide-fr'] %}
+      {% assign protection_guide = section.settings['protection_guide-fr'] %}
+    {% elsif request.locale.iso_code == 'en' %}
+      {% assign warrenty_guide = section.settings['warrenty_guide-en'] %}
+      {% assign protection_guide = section.settings['protection_guide-en'] %}
+    {% endif %}
+
+    {% if applince_product == true %}
+      {% assign applien_page = section.settings.appliance %}
+      {% if request.locale.iso_code == 'fr' %}
+        <div class="page-custom-handlize" style="display:none;">/pages/{{ applien_page }}</div>
+      {% elsif request.locale.iso_code == 'en' %}
+        <div class="page-custom-handlize" style="display:none;">/en/pages/{{ applien_page }}</div>
+      {% endif %}
+    {% elsif antitache_product == true %}
+      {% assign furniture_page = section.settings.furniture %}
+      {% if request.locale.iso_code == 'fr' %}
+        <div class="page-custom-handlize" style="display:none;">/pages/{{ furniture_page }}</div>
+      {% elsif request.locale.iso_code == 'en' %}
+        <div class="page-custom-handlize" style="display:none;">/en/pages/{{ furniture_page }}</div>
+      {% endif %}
+    {% endif %}
+    <select class="protection_plan">
+      {% if applince_product == true %}
+        <option data="app" data-vid="{{ selectedvariant }}" data-sku="{{ selectedsku }}" data-price="{{ selectedPrice }}" data-prodHandle="{{ product.handle}}" >
+          2 ans pour
+        </option>
+        <option data="app" data-vid="{{ selectedvariant2 }}" data-sku="{{ selectedsku2 }}" data-price="{{ selectedPrice2 }}" data-prodHandle="{{ product.handle}}" >
+          4 ans de plan de protection
+        </option>
+      {% elsif antitache_product == true %}
+        <option data="ant" data-vid="{{ selectedvariant3 }}" data-sku="{{ selectedsku3 }}" data-price="{{ selectedPrice3 }}" data-prodHandle="{{ product.handle}}" >
+          OUI
+        </option>
+      {% endif %}
+
+      {% if antitache_product == true %}
+        <option>NON</option>
+      {% endif %}
+    </select>
+
+    <div class="protection_plan-global we-offer-wrapper">
+      {% if applince_product == true %}
+        <span class="prot-selected prot_plan_text">Plan de protection<b>2 ans pour</b></span>
+      {% elsif antitache_product == true %}
+        <span class="prot-selected prot_plan_text">Voulez-vous une protection anti-tâches ??</span>
+      {% endif %}
+      <ul class="protection_plan-list offers-list" data-protection-plan>
+        {% if applince_product == true %}
+          <li class="off-item active" data-vid="{{ selectedvariant }}" data-sku="{{ selectedsku }}" data-price="{{ selectedPrice }}" data-prodHandle="{{ product.handle}}" data-val="2 year" >
+            <span class="prot_plan_text label">Plan de protection</span>
+            <span class="prot_plan_price plan-name">2 ans pour {{ selectedPrice | money }} </span
+            ><a href="#" class="cover-link">Qu'est-ce qui est couvert ?</a>
+          </li>
+          <li class="off-item" data-vid="{{ selectedvariant2 }}" data-sku="{{ selectedsku2 }}" data-price="{{ selectedPrice2 }}" data-prodHandle="{{ product.handle}}" data-val="4 year" >
+            <span class="prot_plan_text label">Plan de protection</span>
+            <span class="prot_plan_price plan-name">4 ans pour {{ selectedPrice2 | money }}</span
+            ><a href="#" class="cover-link">Qu'est-ce qui est couvert ?</a>
+          </li>
+        {% elsif antitache_product == true %}
+          <li class="off-item active" data-vid="{{ selectedvariant3 }}" data-sku="{{ selectedsku3 }}" data-price="{{ selectedPrice3 }}" data-prodHandle="{{ product.handle}}" data-val="yes" >
+            <span class="prot_plan_text label">L'expérience Excelsior™ ANTI-TACHE</span>
+            10 Ans pour
+            <span class="prot_plan_price plan-name"> {{- selectedPrice3 | money -}}</span>
+            <a href="#" class="cover-link">Qu'est-ce qui est couvert ?</a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+{% endif %}

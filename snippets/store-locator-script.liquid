@@ -1,0 +1,42 @@
+<script type='text/javascript'>
+  var selector = document.getElementsByClassName('storemapper-powered-by');
+  var isALARendered;
+  function ALAcheck() {
+    isALARendered = setInterval(function () {
+      customALA()
+    }, 2000);
+  }
+  ALAcheck();
+  function customALA() {
+    if(selector.length > 0) {
+      clearInterval(isALARendered);
+      
+      setTimeout(function(){ 
+        // console.log('in');
+        var curr_day = new Date().getDay();
+        $('#storemapper-list li').each(function(){
+          $(this).find('.days-info table tr:eq('+curr_day+')').addClass('curr_day');
+          $(this).find('.current-day-time .Time-title').empty().text($(this).find('.days-info table tr.curr_day .week_hours').text());
+          $(this).find('.current-day-time').show();
+        });
+
+        $(document).on('click','.storemapper-reset',function(){
+          var curr_day = new Date().getDay();
+          $('#storemapper-list li').each(function(){
+            $(this).find('.days-info table tr:eq('+curr_day+')').addClass('curr_day');
+            $(this).find('.current-day-time .Time-title').empty().text($(this).find('.days-info table tr.curr_day .week_hours').text());
+            $(this).find('.current-day-time').show();
+          });
+        });      
+
+        $(document).on('click','.current-day-time',function(){
+            $(this).parent().find('.days-info').slideToggle('slow');
+              $(this).parent().toggleClass('active');
+        });
+      }, 1000);
+    }
+    setTimeout(function(){
+      clearInterval(isALARendered);
+    },9000);
+  } 
+</script>

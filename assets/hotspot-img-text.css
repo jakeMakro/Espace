@@ -1,0 +1,294 @@
+.hotspot-img-text .global-media-settings{
+  border: none;
+}
+.hotspot-img-text .image-with-text__text--caption{
+  color: #E1E1E1;
+  font-weight: 700;
+  letter-spacing: -0.32px;
+}
+.hotspot-img-text .image-with-text__content>*+* {
+  margin-top: 40px;
+}
+.hotspot-img-text .image-with-text__heading{
+  max-width: 700px;
+}
+.hotspot-img-text .image-with-text__content{
+   padding: 0 5rem;
+}
+.hotspots-product, .hotspots-section .icon-hotspot, .hotspots-section .icon-hotspot svg{
+  height: 40px;
+  width: 40px;
+  display: inline-block;
+}
+.hotspots-product{
+  position: absolute;
+  cursor: pointer;
+  top: 83%;
+  left: 19%;
+  overflow: visible !important;
+}
+.hotspots-pro-details, .hotspots-product:hover .icon-hotspot rect, .hotspots-product:hover .icon-hotspot circle{
+  transition: all 0.3s ease 0s;
+  transition: visibility .4s cubic-bezier(.75,0,.175,1),opacity .4s cubic-bezier(.75,0,.175,1),transform .4s cubic-bezier(.75,0,.175,1);
+  will-change: trasform;
+}
+.hotspots-pro-details{
+  padding: 20px;
+  background: #FFF;
+  line-height: 1;
+  width: 250px;
+  position: absolute;
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0);
+  z-index: 1;
+  box-shadow: 2px 2px 15px 0px rgba(0, 0, 0, 0.05);
+}
+.hotspots-product.active .hotspots-pro-details, .hotspots-product:hover .hotspots-pro-details{
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+}
+.hotspots-product .icon-hotspot svg{
+  border-radius: 100px;
+  border: 2px solid #FFF;
+  background: rgba(255, 255, 255, 0.60);
+  /* fill: #fff; */
+}
+.hotspots-product .icon-hotspot svg rect+rect{
+  opacity: 0.2;
+}
+.hotspots-product .icon-hotspot svg circle{
+  fill: #fff;
+  transition: all .3s ease 0s;
+}
+.hotspots-product:hover .icon-hotspot svg rect+rect{
+  opacity: 1;
+  transition: all .3s ease 0s;
+}
+.hotspots-product:hover .icon-hotspot svg circle{
+  fill: #EBFF00;
+}
+.hotspots-pro-details .pro-vendor{
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 90%;
+  margin-bottom: 5px;
+  display: block;
+}
+.hotspots-pro-details .pro-title{
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 150%;
+  text-transform: capitalize;
+  margin: 0 0 10px;
+}
+.hotspots-pro-details .pro-title a{
+  color: currentcolor;
+}
+.hotspots-pro-details>.icon{
+  margin-top: 20px;
+  display: inline-block;
+  height: 8px;
+}
+.hotspots-pro-details>.icon svg{
+  height: 8px;
+  vertical-align:top;
+}
+.hotspots-pro-details .link{
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  left: 0;
+  top: 0;
+  display: block;
+}
+.hotspots-pro-details .link:hover~.pro-title {
+  text-decoration: underline;
+  text-underline-offset: 0.3rem;
+}
+.hotspot-img-text .section-head{
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+.hotspot-img-text .pro-vendor-title{
+  font-size: 14px;
+  line-height: 150%;
+  text-transform: capitalize;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  display: block;
+  position: relative;
+  margin-top: 20px;
+}
+.hotspots-pro-details .pro-vendor-title:after{
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 25px;
+  height: 2px;
+  background: #EBFF00;
+}
+.hotspots-pro-details .price{
+  letter-spacing: -0.4px;
+  font-size: 20px;
+}
+.hotspots-pro-details .pro--img{
+  position: relative;
+  padding-top: 100%;
+  margin-bottom: 10px;
+}
+.hotspots-pro-details .pro--img img{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.hotspots-pro-details .pro-card-stock{
+  position: relative;
+  bottom: 0;
+}
+.hotspot-img-text .swiper-slide, .hotspot-img-text swiper-slide{
+  height: auto;
+}
+.hotspot-img-text .hotspot-slide-box{
+  height: 100%;
+}
+
+@media screen and (min-width: 750px){
+  .hotspots-pro-details.top_left{
+    bottom: 100%;
+    right: 100%;
+    margin-right: 0;
+    margin-bottom: 0
+  }
+  .hotspots-pro-details.top_right{
+    bottom: 100%;
+    left: 100%;
+    margin-left: 0;
+    margin-bottom: 0;
+  }
+  .hotspots-pro-details.bottom_left{
+    top: 100%;
+    right: 100%;
+    margin-right: 0;
+    margin-top: 0
+  }
+  .hotspots-pro-details.bottom_right{
+    top: 100%;
+    left: 100%;
+    margin-left: 0;
+    margin-top: 0
+  }
+  .hotspot-img-text .swiper-btns {
+    display: flex;
+  }
+  .hotspot-img-text .swiper-prev {
+    margin-right: 20px;
+  }
+  .image-with-text__media-item.page-width{
+    padding-right: 0;
+  }
+  .hotspot-img-text .section-head{
+    gap: 30px;
+  }
+}
+@media screen and (max-width: 1199px){
+  .hotspot-img-text .image-with-text__content>*+* {
+    margin-top: 30px;
+  }
+  .hotspot-img-text .image-with-text .image-with-text__media-item>*{
+    overflow: visible;
+  }
+  .hotspot-img-text{
+    overflow-x: hidden;
+    overflow-y: visible;
+  }
+}
+@media screen and (max-width: 989px){
+  .hotspots-pro-details>.icon{
+    margin-top: 15px;
+  }
+  .hotspots-pro-details{
+    padding: 15px;
+  }
+}
+@media screen and (max-width: 749px){
+  .hotspot-img-text .image-with-text__content>*+* {
+    margin-top: 20px;
+  }
+  .hotspot-img-text .image-with-text__content{
+     padding: 0 1.5rem;
+  }
+  .hotspots-pro-details{
+    width: 190px;
+  }
+  .hotspots-pro-details.top_left_mob{
+    bottom: 100%;
+    right: 100%;
+    margin-right: 0;
+    margin-bottom: 0;
+  }
+  .hotspots-pro-details.top_right_mob{
+    bottom: 100%;
+    left: 100%;
+    margin-left: 0;
+    margin-bottom: 0;
+  }
+  .hotspots-pro-details.bottom_left_mob{
+    top: 100%;
+    right: 100%;
+    margin-right: 0;
+    margin-top: 0;
+  }
+  .hotspots-pro-details.bottom_right_mob{
+    top: 100%;
+    left: 100%;
+    margin-left: 0;
+    margin-top: 0;
+  }
+  .image-with-text__media-item.page-width{
+    padding-right: 0;
+    padding-left: 0;
+  }
+  .hotspot-img-text .pro-vendor-title{
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    margin-top: 10px;
+    font-size: 12px;
+  }
+  .hotspots-pro-details .price{
+    font-size: 14px;
+  }
+  .hotspots-pro-details .price--on-sale .price-item--regular {
+    font-size: 10px;
+  }
+  .hotspot-img-text .swiper-pagination{
+    position: relative;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    top: 0;
+    bottom: 0;
+    padding: 0 15px;
+  }
+  .hotspot-img-text .swiper-pagination-bullet{
+    height: 4px;
+    border-radius: 0;
+    width: 60px;
+    margin: 5px !important;
+  }
+  .hotspot-img-text .swiper-pagination-bullet.swiper-pagination-bullet-active{
+    opacity: 1;
+    background: #000;
+  }
+}
+@media screen and (max-width: 374px){
+  .hotspots-pro-details{
+    width: 160px;
+  }
+}

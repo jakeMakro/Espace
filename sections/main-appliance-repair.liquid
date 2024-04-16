@@ -1,0 +1,624 @@
+{{ 'section-contact-form.css' | asset_url | stylesheet_tag }}
+{{ 'section-main-page.css' | asset_url | stylesheet_tag }}
+{{ 'section-appliance-repair.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  .section-{{ section.id }}-padding .appliance-repair-wrapper .contact-content:not(.queryInfo) { padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px; margin-top: -{{ section.settings.padding_top | times: 0.75 | round: 0 }}px; }
+
+  .tab-wrapper ul {padding: 0;list-style: none;display: flex;justify-content: space-evenly;align-items: center;border: 1px solid;}
+  .tab-wrapper ul li {display: flex;width: 100%;justify-content: center;align-items: center;padding: 10px;cursor: pointer;}
+  .contact-form-wrapper.appliance-wrapper {display: none;}
+  .contact-form-wrapper.appliance-wrapper.active {display: block;}
+  .tab-wrapper ul li.active {background-color: #000;color: #FFF;}
+
+  .contact-form-wrapper[data-title="furnitures"] form .form__input-wrapper .form__field {
+    border: none;
+    border-bottom: 1px solid #B8B8B8;
+    background-color: #ffffff;
+    padding: 15px 0;
+    color: #747474;
+    font-size: 14px;
+    font-weight: 400;
+    font-style: normal;
+    letter-spacing: normal;
+    line-height: 1.29;
+    height: 44px;
+    border-radius: 0;
+    display: block;
+    width: 100%;
+  }
+  
+  .contact-form-wrapper[data-title="furnitures"] form .form__input-wrapper label + .form__field {
+    margin-top: auto;
+    margin-bottom: 0;
+    padding: 0;
+  }
+  
+  .contact-form-wrapper[data-title="furnitures"] form .form__input-wrapper label {
+    line-height: 1.2;
+    display: flex;
+    margin-bottom: 9px;
+  }
+  
+  .contact-form-wrapper[data-title="furnitures"] form .form__input-wrapper {
+    position: relative;
+    margin-bottom: 12px;
+  }
+  
+  .contact-form-wrapper[data-title="furnitures"] form .form__input-wrapper {
+    position: relative;
+    margin-bottom: 20px;
+    width: 100%;
+  }
+  
+  .contact-form-wrapper[data-title="furnitures"] form .input-grp {
+    display: flex;
+    gap: 30px;
+  }
+  
+  .contact-form-wrapper[data-title="furnitures"] form .form__input-wrapper.half-input {
+    width: 50%;
+    display: flex;
+    flex-flow: column;
+  }
+  .select__select:focus-visible {
+    outline: none !important;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+    .section-{{ section.id }}-padding .appliance-repair-wrapper .contact-content:not(.queryInfo) { padding-top: {{ section.settings.padding_top }}px; margin-top: -{{ section.settings.padding_top }}px; }
+  }
+{%- endstyle -%}
+
+<div class="page-width section-{{ section.id }}-padding form-wrappwer">  
+
+  <div class="appliance-repair-wrapper"> 
+    
+    <div class="contact-content">
+      
+      <div class="contact-content-inner">
+        <div class="contact-breadcrumb">
+          {% render 'breadcrumb' %}
+        </div>
+        {% if section.settings.ct_main_title != blank %}
+          <h1 class="contact-title h1">{{ section.settings.ct_main_title }}</h1>
+        {% endif %}
+        <div class="contact-info">
+          {% unless section.settings.phn_content == blank %}
+            <div class="phone-details custom-details">
+              {% if section.settings.phn_svg %}
+                <div class="icon-custom">{{ section.settings.phn_svg }}</div>
+              {% endif %}
+              {% if section.settings.phn_content %}
+                <div class="detail-content">
+                  <h6>{{ section.settings.phn_title }}</h6>
+                  {{ section.settings.phn_content }}
+                </div>
+              {% endif %}
+            </div>
+          {% endunless %}
+  
+          {% unless section.settings.email_content == blank %}
+            <div class="email-details custom-details">
+              {% if section.settings.email_svg %}
+                <div class="icon-custom">{{ section.settings.email_svg }}</div>
+              {% endif %}
+              {% if section.settings.email_content %}
+                <div class="detail-content">
+                  <h6>{{ section.settings.email_title }}</h6>
+                  <a href="mailto:{{ section.settings.email_content }}" title="mailto:contact@espace-67.com" target="_blank" rel="noopener" aria-describedby="a11y-new-window-message">{{ section.settings.email_content }}</a>
+                </div>
+              {% endif %}
+            </div>
+          {% endunless %}
+  
+          {% unless section.settings.hrs_content == blank %}
+            <div class="hourse-details custom-details">
+              {% if section.settings.hours_svg %}
+                <div class="icon-custom">{{ section.settings.hours_svg }}</div>
+              {% endif %}
+              {% if section.settings.hrs_content %}
+                <div class="detail-content">
+                  <h6>{{ section.settings.hours_title }}</h6>
+                  {{ section.settings.hrs_content | newline_to_br }}
+                </div>
+              {% endif %}
+            </div>
+          {% endunless %}
+        </div>
+      </div>
+
+     {% unless section.settings.qtn_text == blank and section.settings.faq_text == blank %}
+        <div class="contact-content queryInfo">      
+          <div class="query-info">
+            {% if section.settings.qtn_text %}
+              <p>{{ section.settings.qtn_text }}</p>
+            {% endif %}
+            {% if section.settings.faq_text != blank or section.settings.faq_url != blank %}
+              <a class="link" href="{{ section.settings.faq_url }}">{{ section.settings.faq_text }}{% render 'icon-long-arrow-right' %}</a>
+            {% endif %}
+          </div>
+        </div>
+     {% endunless %}
+      
+    </div>  
+
+    <div class="custom--form-wrapper">
+      
+      {%- if section.settings.title != blank -%}
+        <h2 class="main-page-title page-title h1{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
+          {{ section.settings.title }}
+        </h2>
+      {%- endif -%}
+      
+      <div class="tab-wrapper">
+    <ul>
+      <li data-title="appliances" class="active">Électroménagers</li>
+      <li data-title="furnitures">Meubles</li>
+    </ul>
+  </div>
+  
+      <div class="contact-form-wrapper appliance-wrapper custom-page-form-wrapper active" data-title="appliances">
+    <div id="success-msg" class="center"></div>
+    <form id="submit_offer_{{section.id}}" class="appliance_repair" action="{{ section.settings.webhook1 }}" method="post">
+
+        <div class="contact__fields input-grp">
+          <div class="field form__input-wrapper form__input-wrapper--labelled half-input">            
+            <input id="customer-firstname" type="text" class="field__input field__required form__field form__field--text" name="customer-firstname" aria-label="{{ 'templates.contact.form.f_name' | t }}" placeholder="First Name*" value="" >
+            <span style="display:none;" class="error-msg">Veuillez remplir le champ.</span>
+            <label for="customer-firstname" class="field__label">Prénom*</label>
+          </div>
+
+          <div class="field form__input-wrapper form__input-wrapper--labelled half-input">            
+            <input id="customer-lastname" type="text" class="field__input field__required form__field form__field--text {% if customer.name != blank %}is-filled{% endif %}" name="customer-lastname" aria-label="{{ 'templates.contact.form.l_name' | t }}" placeholder="Last Name*" {% if customer %}value="{{ customer.name }}"{% endif %} >
+            <span style="display:none;" class="error-msg">Veuillez remplir le champ.</span>
+            <label for="customer-lastname" class="field__label">Nom*</label>
+          </div>
+        </div>
+
+        <div class="field form__input-wrapper form__input-wrapper--labelled">          
+          <input id="customer-Telephone" type="text" class="field__input field__required form__field form__field--text" name="customer-Telephone" aria-label="Phone" value="" placeholder="No. téléphone (lors de l'achat)*">
+          <span style="display:none;" class="error-msg">Veuillez remplir le champ.</span>
+          <label for="customer-Telephone" class="field__label">Numéro de téléphone (Lors de l'achat)*</label>
+        </div>
+
+        <div class="field form__input-wrapper form__input-wrapper--labelled">   
+          <input id="customer-Address" type="text" class="field__input field__required form__field form__field--text" name="customer-Address" aria-label="Address" value="" placeholder="Adresse*">
+          <span style="display:none;" class="error-msg">Veuillez remplir le champ.</span>
+          <label for="customer-Address" class="field__label">Adresse*</label>
+        </div>
+
+        <div class="field form__input-wrapper form__input-wrapper--labelled">              
+          <input id="customer-City" type="text" class="field__input form__field form__field--text" name="customer-City" aria-label="City" value="" placeholder="City">
+          <label for="customer-City" class="field__label">Ville</label>      
+        </div>
+
+        <div class="contact__fields input-grp">
+          <div class="field form__input-wrapper form__input-wrapper--labelled">          
+            <input id="customer-Province" type="text" class="field__input field__required form__field form__field--text" name="customer-Province" aria-label="Province"  value="" placeholder="Province*">
+            <span style="display:none;" class="error-msg">Veuillez remplir le champ.</span>
+            <label for="customer-Province" class="field__label">Province*</label>
+          </div>
+  
+          <div class="field form__input-wrapper form__input-wrapper--labelled">          
+            <input id="customer-postal" type="text" class="field__input form__field form__field--text" name="customer-postal" aria-label="postal" value="" placeholder="Postal Code">
+            <label for="customer-postal" class="field__label">Code Postal</label>
+          </div>
+        </div>  
+
+        <div class="contact__fields input-grp">
+          <div class="field form__input-wrapper form__input-wrapper--labelled half-input">            
+            <input id="customer-order" type="text" class="field__input form__field form__field--text" name="customer-order" aria-label="{{ 'contact.form.order' | t }}" value="" placeholder="Purchase order number (Optional)">
+            <label for="customer-order" class="field__label">Numéro de commande (facultatif)</label>
+          </div>
+
+          <div class="field form__input-wrapper form__input-wrapper--labelled half-input">            
+            <input id="customer-phone" type="text" class="field__input form__field field__required form__field--text" name="customer-phone" aria-label="phone" value="" placeholder="Phone number to reach you is requested.*">
+            <span style="display:none;" class="error-msg">Veuillez remplir le champ.</span>
+            <label for="customer-phone" class="field__label"><span>Le numéro de téléphone pour vous joindre est demandé.*</span></label>
+          </div>
+        </div>
+
+        <div class="field form__input-wrapper form__input-wrapper--labelled">          
+          <input id="customer-email" type="email" class="field__input form__field field__required form__field--text" name="customer-email" aria-label="{{ 'templates.contact.form.email' | t }}" {% if customer %}value="{{ customer.email }}"{% endif %} placeholder="Email address*">
+          <span style="display:none;" class="error-msg">Veuillez remplir le champ.</span>
+          <label for="customer-email" class="field__label">Courriel*</label>
+        </div>
+
+        <div class="field select form__input-wrapper form__input-wrapper--labelled">
+          <label for="customer-Device-type" class="field__label hidden">Type d'appareil</label>
+          <select class="select__select form__field form__field--text" name="customer-Device-type">
+            <option value="" selected>Type d'appareil</option>
+            <option value="Cuisine">Cuisine</option>
+            <option value="Buandrie">Buandrie</option>
+          </select>
+          {% render 'icon-caret' %}
+        </div>
+
+        <div class="field select form__input-wrapper form__input-wrapper--labelled">
+          <label for="customer-Device-brand" class="field__label">Marque de l'appareil</label>
+          <select class="select__select field__required form__field form__field--text" name="customer-Device-brand">
+            <option value="" selected>Marque de l'appareil*</option>
+            <option value="Aga Marvel">Aga Marvel</option>
+            <option value="Amana">Amana</option>
+            <option value="Avangarde">Avangarde</option>
+            <option value="Bertazzoni">Bertazzoni</option>
+            <option value="Bloomberg">Bloomberg</option>
+            <option value="Bosch">Bosch</option>
+            <option value="Cavavin">Cavavin</option>
+            <option value="Danby">Danby</option>
+            <option value="Fisher & Packle">Fisher & Packle</option>
+            <option value="Frigidaire / Electrolux">Frigidaire / Electrolux</option>
+            <option value="Fulgor">Fulgor</option>
+            <option value="GE">GE</option>
+            <option value="Huebsch">Huebsch</option>
+            <option value="Jennair">Jennair</option>
+            <option value="Kitchenaid">Kitchenaid</option>
+            <option value="LG">LG</option>
+            <option value="Maytag">Maytag</option>
+            <option value="Miele">Miele</option>
+            <option value="Panasonic">Panasonic</option>
+            <option value="Thermador">Thermador</option>
+            <option value="Subzero, Asko, Wolf, Sirius">Subzero, Asko, Wolf, Sirius</option>           
+            <option value="Vicking">Vicking</option>
+            <option value="Venmar / Broan">Venmar / Broan</option>
+            <option value="Whirlpool">Whirlpool</option>
+          </select>
+          {% render 'icon-caret' %}
+          <span style="display:none;" class="error-msg">Veuillez remplir le champ.</span>
+        </div>
+
+        <div class="field select form__input-wrapper form__input-wrapper--labelled">
+          <label for="customer-serial-no" class="field__label">N° de série</label>
+          <select class="select__select form__field form__field--text" name="customer-serial-no">
+            <option value="">N° de série</option>
+            <option value="Réfrigérateur">Réfrigérateur</option>
+            <option value="Cuisinière régulière">Cuisinière régulière</option>
+            <option value="Cuisinière encastrée">Cuisinière encastrée</option>
+            <option value="Plaque de cuisson">Plaque de cuisson</option>
+            <option value="Micro-onde">Micro-onde</option>
+            <option value="Four mural">Four mural</option>
+            <option value="Lave-vaisselle">Lave-vaisselle</option>
+            <option value="Hotte">Hotte</option>
+            <option value="Congélateur">Congélateur</option>
+            <option value="Cellier">Cellier</option>
+            <option value="Boyeur">Boyeur</option>
+            <option value="Tiroir réchaud">Tiroir réchaud</option>
+            <option value="Machine à café">Machine à café</option>
+          </select>
+          {% render 'icon-caret' %}
+        </div>
+
+        <div class="field form__input-wrapper form__input-wrapper--labelled hidden">              
+          <input id="serial-no" type="text" class="field__input form__field form__field--text" name="serial-no" aria-label="Serial No." value="" placeholder="Serial No">
+          <label for="serial-no" class="field__label">Entrez numéro de série</label>      
+        </div>
+
+        <div class="field select form__input-wrapper form__input-wrapper--labelled">
+          <label for="customer-Device-problem" class="field__label">Problème de l'appareil</label>
+          <select class="select__select form__field form__field--text" name="customer-Device-problem">
+            <option value="">Problème de l'appareil</option>
+            <option value="Dommage à la livraison">Dommage à la livraison</option>
+            <option value="Bris mécanique">Bris mécanique</option>
+          </select>
+          {% render 'icon-caret' %}
+        </div>
+
+        <div class="field select form__input-wrapper form__input-wrapper--labelled">
+          <label for="customer-extended-wrnty" class="field__label">Avez-vous une garantie prolongée ?</label>
+          <select class="select__select form__field form__field--text" name="customer-extended-wrnty">
+            <option value="">Avez-vous une garantie prolongée</option>
+            <option value="Oui">Oui</option>
+            <option value="Non">Non</option>
+          </select>
+          {% render 'icon-caret' %}
+        </div>        
+
+        <div class="fIW_file field form__input-wrapper form__input-wrapper--labelled">
+          <label for="add-photo" class="form__floating-label">Veuillez envoyer des photos du dommage et une photo de l'étiquette avec le numéro de série et le modèle. Envoyez ces informations par e-mail et un agent vous répondra dans les 24 à 48 heures.</label> 
+          <input type="hidden" role="uploadcare-uploader" name="[contact][photo]"  placeholder="Télécharger  une photo" />
+        </div>
+
+        <button type="submit" class="form__submit form__submit--centered button primary-btn button--primary button--min-width">Soumettre</button>
+
+      </form>
+  </div>
+
+      <div class="contact-form-wrapper appliance-wrapper custom-page-form-wrapper" data-title="furnitures">
+    <div id="success-msg" class="center"></div>
+    <form id="submit_offer_{{section.id}}" class="appliance_repair" action="{{ section.settings.webhook2 }}" method="post">
+        
+        <div class="input-grp">
+          <div class="field form__input-wrapper form__input-wrapper--labelled half-input">
+            <input id="customer-lastname" type="text" class="field__input form__field field__required form__field--text" name="customer-lastname" aria-label="{{ 'templates.contact.form.l_name' | t }}" placeholder="Name*" value="">
+            <span style="display:none;" class="error-msg">Veuillez remplir le champ.</span>
+            <label for="customer-lastname" class="field__label">Nom*</label>
+          </div>
+
+          <div class="field form__input-wrapper form__input-wrapper--labelled half-input">
+            <input id="customer-name" type="text" class="field__input form__field field__required form__field--text {% if customer.name != blank %}is-filled{% endif %}" name="customer-name" aria-label="{{ 'templates.contact.form.f_name' | t }}" required {% if customer %}value="{{ customer.name }}"{% endif %} placeholder="First Name*">          
+            <span style="display:none;" class="error-msg">Veuillez remplir le champ.</span>
+            <label for="customer-name" class="field__label">Prénom*</label>
+          </div>
+        </div>
+
+        <div class="field form__input-wrapper form__input-wrapper--labelled">
+          <input id="customer-Telephone" type="text" class="field__input form__field field__required form__field--text" name="customer-Telephone" aria-label="Phone" required placeholder="Phone number*" value="">
+          <span style="display:none;" class="error-msg">Veuillez remplir le champ.</span>
+          <label for="customer-Telephone" class="field__label">No. téléphone (lors de l'achat)*</label>
+        </div>
+        <div class="field form__input-wrapper form__input-wrapper--labelled">
+          <input id="customer-Address" type="text" class="field__input form__field field__required form__field--text" name="customer-Address" aria-label="Address" value="" placeholder="Adresse*">
+          <span style="display:none;" class="error-msg">Veuillez remplir le champ.</span>
+          <label for="customer-Address" class="field__label">Adresse*</label>
+        </div>
+        <div class="input-grp">
+          <div class="form__input-wrapper form__input-wrapper--labelled half-input">   
+            <input id="customer-Town" type="text" class="field__input form__field form__field--text" name="customer-Town" aria-label="Town" placeholder="Ville" value="">
+            <label for="customer-Town" class="field__label">Ville</label>
+          </div>
+          <div class="field form__input-wrapper form__input-wrapper--labelled half-input">
+            <input id="customer-Province" type="text" class="field__input form__field field__required form__field--text" name="customer-Province" aria-label="Province" required placeholder="State*" value="">
+            <span style="display:none;" class="error-msg">Veuillez remplir le champ.</span>
+            <label for="customer-Province" class="field__label">Province*</label>
+          </div>
+        </div>
+        <div class="form__input-wrapper form__input-wrapper--labelled">
+          <input id="customer-postal" type="text" class="field__input form__field form__field--text" name="customer-postal" aria-label="postal" placeholder="Code postal" value="">
+          <label for="customer-postal" class="field__label">Code postal</label>
+        </div>
+        <div class="form__input-wrapper form__input-wrapper--labelled">
+          <input id="customer-order" type="text" class="field__input form__field form__field--text" name="customer-order" aria-label="{{ 'contact.form.order' | t }}" placeholder="Order Number (Optional)" value="">
+          <label for="customer-order" class="field__label">No. commande (Optionnel)</label>
+        </div>
+        <div class="field form__input-wrapper form__input-wrapper--labelled">    
+          <input id="customer-phone" type="text" class="field__input form__field field__required form__field--text" name="customer-phone" aria-label="phone" required placeholder="Telephone Number*" value="">
+          <span style="display:none;" class="error-msg">Veuillez remplir le champ.</span>
+          <label for="customer-phone" class="field__label">No. téléphone pour vous joindre*</label>    
+        </div>
+        <div class="field form__input-wrapper form__input-wrapper--labelled">
+          <input id="customer-email" type="email" class="field__input form__field field__required form__field--text" name="customer-email" aria-label="{{ 'templates.contact.form.email' | t }}" required {% if customer %}value="{{ customer.email }}"{% endif %} placeholder="Email Address*">
+          <span style="display:none;" class="error-msg">Veuillez remplir le champ.</span>
+          <label for="customer-email" class="field__label">Adresse courriel*</label>
+        </div>
+
+        <div class="field select form__input-wrapper form__input-wrapper--labelled">
+          <label for="customer-furniture-type" class="field__label hidden">Type de meuble</label>
+          <select class="select__select form__field form__field--text" name="customer-furniture-type" >
+            <option value="" selected>Veuillez sélectionner</option>
+            <option value="Salon">Salon</option>
+            <option value="Salle à manger">Salle à manger</option>
+            <option value="Chambre à coucher">Chambre à coucher</option>
+          </select>
+          {% render 'icon-caret' %}
+        </div>
+        
+        <div class="form__input-wrapper form__input-wrapper--labelled">
+          
+          <input id="customer-Serial" type="text" class="field__input form__field form__field--text" name="customer-Serial" aria-label="customer-Serial" placeholder="Serial Number" value="">
+          <label for="customer-Serial" class="field__label">Numéro de série (si applicable)</label>
+        </div>
+        <div class="form__input-wrapper form__input-wrapper--labelled">
+          <input id="description-problem" type="text" class="field__input form__field form__field--text" name="description-problem" aria-label="description-problem" value="" placeholder="Description of the problem">
+          <label for="description-problem" class="field__label">Description du problème</label>   
+        </div>
+        <div class="fIW_file form__input-wrapper form__input-wrapper--labelled">
+          <label for="add-attch" class="form__floating-label">Télécharger une pièce jointe</label>
+          <input type="hidden" role="uploadcare-uploader" name="[contact][attachment]" />     
+        </div>
+
+        <button type="submit" class="form__submit form__submit--centered button button--primary button--min-width">{{ 'templates.contact.form.send' | t }}</button>
+      </form>
+  </div>
+    </div>
+
+  </div>
+  
+</div>
+
+
+<script>
+  UPLOADCARE_PUBLIC_KEY = "demopublickey";
+  {% if canonical_url contains '/en' %}
+  	UPLOADCARE_LOCALE = 'en';
+  {% else %}
+	UPLOADCARE_LOCALE = 'fr';
+  {% endif %}
+
+  if(document.querySelector('[name="customer-serial-no"]') != null){
+    document.querySelector('[name="customer-serial-no"]').addEventListener('change',function(){
+     this.closest('.field').nextElementSibling.classList.remove('hidden');
+    });  
+  }
+
+  document.querySelectorAll('.tab-wrapper ul li').forEach((lis) => {
+    lis.addEventListener('click',function(){
+        var get_title = lis.getAttribute('data-title');
+        lis.closest('ul').querySelector('li.active').classList.remove('active');
+        lis.classList.add('active');
+        lis.closest('.form-wrappwer').querySelector('.appliance-wrapper.active').classList.remove('active');
+        lis.closest('.form-wrappwer').querySelector('.appliance-wrapper[data-title="'+get_title+'"]').classList.add('active');   
+    })
+  })
+
+  $(".appliance_repair").submit(function(e) {
+
+    e.preventDefault(); 
+    console.log($(this).closest('.contact-form-wrapper').attr('data-title'));
+    
+    var form = $(this);
+    console.log(form.serialize());
+    var url = form.attr('action');
+
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: form.serialize(), 
+      success: function(data)
+      {
+        form.hide();
+        {% if canonical_url contains '/en' %}
+          form.closest('.custom-page-form-wrapper').find('#success-msg').html("<h3>Thank you!</h3><b>Your message has been received. We will review your offer and respond to you as soon as possible.</b>").fadeIn(300);
+        {% else %}
+          form.closest('.custom-page-form-wrapper').find('#success-msg').html("<h3>Merci!</h3><b>Votre message a été reçu.  Nous examinerons votre offre et vous répondrons dans les plus brefs délais.</b>").fadeIn(300);
+        {% endif %}
+      }
+    });
+
+  });
+</script>
+<script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js" charset="utf-8"></script>
+
+
+
+
+{% schema %}
+  {
+    "name": "Appliance Repair",
+    "settings": [
+      { 
+        "type": "header",
+        "content": "Repair Form Webhook"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title"
+      },
+      {
+        "type": "text",
+        "id": "webhook1",
+        "label": "Webhook Link Form 1"
+      },
+      {
+        "type": "text",
+        "id": "webhook2",
+        "label": "Webhook Link Form 2"
+      },
+      { 
+        "type": "header",
+        "content": "Contact Info"
+      },
+      {
+          "type": "text",
+          "id": "ct_main_title",
+          "label": "Contact us title",
+          "default": "Contactez-nous"
+      },
+      {
+          "type": "text",
+          "id": "phn_title",
+          "label": "Title",
+          "default": "Phone"
+      },
+      {
+        "type": "textarea",
+        "id": "phn_svg",
+        "label": "Icon",
+        "default": "Phone"
+       },
+      {
+          "type": "textarea",
+          "id": "phn_content",
+          "label": "Content",
+          "default": "Phone content"
+       },
+      {
+          "type": "text",
+          "id": "email_title",
+          "label": "Title",
+          "default": "Email"
+       },
+      {
+          "type": "textarea",
+          "id": "email_svg",
+          "label": "Icon",
+          "default": "Email"
+        },
+      {
+          "type": "textarea",
+          "id": "email_content",
+          "label": "Content",
+          "default": "Email content"
+       },
+      {
+          "type": "text",
+          "id": "hours_title",
+          "label": "Title",
+          "default": "Opening Hours"
+       },
+      {
+          "type": "textarea",
+          "id": "hours_svg",
+          "label": "Icon",
+          "default": "Hours"
+       },
+      {
+          "type": "textarea",
+          "id": "hrs_content",
+          "label": "Content",
+          "default": "Hours content"
+       },
+      {
+          "type": "header",
+          "content": "Query Info"
+       },
+      {
+          "type": "text",
+          "id": "qtn_text",
+          "label": "Question Text",
+          "default": "Have any questions?"
+       },
+      {
+          "type": "text",
+          "id": "faq_text",
+          "label": "FAQ Text",
+          "default": "Find your answer here in our FAQ"
+       },
+      {
+          "type": "url",
+          "id": "faq_url",
+          "label": "FAQ Link"
+       },
+      {
+        "type": "header",
+        "content": "t:sections.all.padding.section_padding_heading"
+      },
+      {
+        "type": "range",
+        "id": "padding_top",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "unit": "px",
+        "label": "t:sections.all.padding.padding_top",
+        "default": 36
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "unit": "px",
+        "label": "t:sections.all.padding.padding_bottom",
+        "default": 36
+      }
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

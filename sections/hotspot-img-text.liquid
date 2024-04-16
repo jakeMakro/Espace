@@ -1,0 +1,1506 @@
+<link rel="stylesheet" href="{{ 'component-image-with-text.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'hotspot-img-text.css' | asset_url }}" media="print" onload="this.media='all'">
+<noscript>{{ 'component-image-with-text.css' | asset_url | stylesheet_tag }}</noscript>
+<noscript>{{ 'hotspot-img-text.css' | asset_url | stylesheet_tag }}</noscript>
+
+{%- assign spacing-top = section.settings.spacing-top | times: 1 -%}
+{%- assign spacing-bottom = section.settings.spacing-bottom | times: 1 -%}
+{%- if spacing-top > 0 or spacing-bottom > 0 -%}
+  {%- if spacing-top == 0 %}{% assign spacing-top = '' %}{% endif -%}
+  {%- if spacing-top == 0 %}{% assign spacing-bottom = '' %}{% endif -%}
+  {%- style -%}
+    {%- if spacing-top >= 60 -%}
+      #shopify-section-{{ section.id }} {
+        padding-top: {{ spacing-top | times: 0.6 | round }}px;
+        padding-bottom: {{ spacing-bottom | times: 0.6 | round }}px;
+      }
+      @media screen and (min-width: 750px){
+        #shopify-section-{{ section.id }} { padding-top: {{ spacing-top }}px; padding-bottom: {{ spacing-bottom }}px; }
+      }
+    {%- else -%}
+      #shopify-section-{{ section.id }} { padding-top: {{ spacing-top }}px; padding-bottom: {{ spacing-bottom }}px; }
+    {%- endif -%}
+  {%- endstyle -%}  
+{%- endif -%}
+
+{% assign scheme1 = settings.color_schemes | first %}
+
+
+{%- capture hotspot_slide -%}
+  {%- for block in section.blocks -%}
+    <div class="swiper-slide">
+      <div class="hotspot-slide-box">
+        <div class="image-with-text__media gradient image-with-text__media--adapt{% if block.settings.image != blank %} media{% else %} image-with-text__media--placeholder placeholder{% endif %}"
+          style="padding-bottom: {{ 1 | divided_by: block.settings.image.aspect_ratio | times: 100 }}%;"
+          >
+          {%- if block.settings.image != blank -%}
+            {%- assign widths = '165, 360, 535, 750, 1070, 1500,1780,1920' -%}
+            {%- capture imgClass -%}{% if block.settings.img_mob != blank %}small-hide{% endif %}{%- endcapture -%}
+            {{ block.settings.image | image_url: width: 1500 | image_tag: loading: 'lazy', sizes: '100vw', widths: widths, class: imgClass }}
+          {%- else -%}
+            {{ 'detailed-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- endif -%}
+          {% if block.settings.img_mob != blank %}
+            {{ block.settings.img_mob  | image_url: width: 900  | image_tag: class: 'medium-hide large-up-hide', loading: 'lazy', sizes: '100vw', widths: '200, 300, 400, 500, 750, 900' }}
+          {% endif %}
+        </div>
+
+        {%- for i in (1..12) -%}
+          {%- capture productId -%}product_{{i}}{%- endcapture -%}
+          {%- capture dkTopPosId -%}top_{{i}}{%- endcapture -%}
+          {%- capture dkLeftPosId -%}left_{{i}}{%- endcapture -%}
+          {%- capture dkAlignmentId -%}alignment_{{i}}{%- endcapture -%}
+          {%- capture mbTopPosId -%}top_mob_{{i}}{%- endcapture -%}
+          {%- capture mbLeftPosId -%}left_mob_{{i}}{%- endcapture -%}
+          {%- capture mbAlignmentId -%}alignment_mob_{{i}}{%- endcapture -%}
+          
+          {%- assign pick_product = block.settings[productId] -%}
+          {%- assign dkTopPos = block.settings[dkTopPosId] -%}
+          {%- assign dkLeftPos = block.settings[dkLeftPosId] -%}
+          {%- assign dkAlignment = block.settings[dkAlignmentId] -%}
+          {%- assign mbTopPos = block.settings[mbTopPosId] -%}
+          {%- assign mbLeftPos = block.settings[mbLeftPosId] -%}
+          {%- assign mbAlignment = block.settings[mbAlignmentId] -%}
+
+          {% if pick_product != blank %}
+            {% assign product = pick_product %}
+            <div class="hotspots-product" id="hotspots-pro-{{ block.id }}-{{ i }}" data-hotspot-product>
+              {%- capture style -%}
+                .image-with-text__media-item #hotspots-pro-{{ block.id }}-{{ i }}{top:{{ dkTopPos }}%; left:{{ dkLeftPos }}%;}
+                @media(max-width: 749px){.image-with-text__media-item #hotspots-pro-{{ block.id }}-{{ i }}{top:{{ mbTopPos }}%; left:{{ mbLeftPos }}%;}}
+              {%- endcapture -%}
+              <style>{{- style -}}</style>
+              <span class="icon icon-hotspot" data-hotspot-btn>{% render 'icon-hotspots-2' %}</span>          
+              <div class="hotspots-pro-details {{ dkAlignment }} {{ mbAlignment }}">
+                <a class="link" href="{{ product.url }}"></a>
+                <div class="pro--img">
+                  {{ product.featured_image | image_url: width: 260 | image_tag: loading: 'lazy' }}
+                  {% if product.selected_or_first_available_variant.inventory_quantity > 0 %}<div class="pro-card-stock">En inventaire</div>{% endif %}
+                </div>
+                
+                <span class="pro-vendor-title"><strong>{{ product.vendor }}</strong> {{ product.title }}</span>
+                {% render 'price', product: product, price_class: 'pro-price', show_badges: false %}
+              </div>
+            </div>
+          {%- endif -%}
+          
+        {%- endfor -%}
+      </div>
+    </div>
+  {%- endfor -%}
+{%- endcapture -%}
+
+
+<div class="image-with-text page--width isolate{% if settings.text_boxes_border_thickness > 0 and settings.text_boxes_border_opacity > 0 and settings.media_border_thickness > 0 and settings.media_border_opacity > 0 %} collapse-borders{% endif %}{% unless section.settings.color_scheme == scheme1 and settings.media_border_thickness > 0 and settings.text_boxes_shadow_opacity == 0 and settings.text_boxes_border_thickness == 0 or settings.text_boxes_border_opacity == 0 %} collapse-corners{% endunless %} section-{{ section.id }}-padding{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
+  <div class="image-with-text__grid ">
+    <div class="image-with-text__text-item">
+      <div
+        id="ImageWithText--{{ section.id }}"
+        class="page-width full-page-width"
+      >
+        <div class="section-head section-head-index">
+          <div class="left-col">
+            {%- if section.settings.heading != blank -%}
+              <h2 class="image-with-text__heading inline-richtext {{ section.settings.heading_size }}">{{- section.settings.heading -}}</h2>
+            {%- endif -%}
+            {%- if section.settings.text != blank -%}
+              <div class="section-head-text">{{- section.settings.text -}}</div>
+            {%- endif -%}
+          </div>
+          <div class="small-hide right-col">
+            <div class="swiper-btns small-hide">
+              <div class="swiper-prev slider-btn">
+                {% render 'swiper-prev-icon' %}
+              </div>
+              <div class="swiper-next slider-btn">
+                {% render 'swiper-next-icon' %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {%- if hotspot_slide != blank -%}
+      <div class="image-with-text__media-item page-width full-page-width">
+        <div class="swiper hotspot-slider-wrap" data-hotspot-slider>
+          <div class="swiper-wrapper">{{ hotspot_slide }}</div>
+        </div>
+        <div class="swiper-pagination medium-hide large-up-hide"></div>
+      </div>
+    {%- endif -%}
+    
+  </div>
+</div>
+
+
+
+{% schema %}
+{
+  "name": "Hotspot image text",
+  "tag": "section",
+  "class": "section hotspot-img-text",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "default": "Create Your Personalized Space",
+      "label": "Heading"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h6",
+          "label": "h6"
+        },
+        {
+          "value": "h5",
+          "label": "h5"
+        },
+        {
+          "value": "h4",
+          "label": "h4"
+        },
+        {
+          "value": "h3",
+          "label": "h3"
+        },
+        {
+          "value": "h2",
+          "label": "h2"
+        },
+        {
+          "value": "h1",
+          "label": "h1"
+        }
+      ],
+      "default": "h3",
+      "label": "Heading size"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "default": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>",
+      "label": "Description"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "background-1"
+    },
+    {
+      "type": "header",
+      "content": "Section spacing"
+    },
+    {
+      "type": "range",
+      "id": "spacing-top",
+      "min": 0,
+      "max": 150,
+      "step": 10,
+      "default": 150,
+      "unit": "px",
+      "label": "Section margin top"
+    },
+    {
+      "type": "range",
+      "id": "spacing-bottom",
+      "min": 0,
+      "max": 150,
+      "step": 10,
+      "default": 0,
+      "unit": "px",
+      "label": "Section margin bottom"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Hotspot",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Desktop image"
+        },
+        {
+            "type": "image_picker",
+            "id": "img_mob",
+            "label": "Mobile image"
+        },
+        {
+          "type": "header",
+          "content": "Product 1"
+        },
+        {
+          "type": "product",
+          "id": "product_1",
+          "label": "Product"
+        },
+        {
+          "type": "paragraph",
+          "content": "Desktop Settings"
+        },
+        {
+          "type": "range",
+          "id": "top_1",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the top",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "left_1",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the Left",
+          "default": 0
+        },
+        {
+          "type": "select",
+          "id": "alignment_1",
+          "options": [
+            {
+              "value": "top_left",
+              "label": "Top Left"
+            },
+            {
+              "value": "top_right",
+              "label": "Top Right"
+            },
+            {
+              "value": "bottom_right",
+              "label": "Bottom Right"
+            },
+            {
+              "value": "bottom_left",
+              "label": "Bottom Left"
+            }
+          ],
+          "default": "bottom_right",
+          "label": "Box Alignment"
+        },
+        {
+          "type": "paragraph",
+          "content": "Mobile Settings"
+        },
+        {
+          "type": "range",
+          "id": "top_mob_1",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the top",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "left_mob_1",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the Left",
+          "default": 0
+        },
+        {
+          "type": "select",
+          "id": "alignment_mob_1",
+          "options": [
+            {
+              "value": "top_left_mob",
+              "label": "Top Left"
+            },
+            {
+              "value": "top_right_mob",
+              "label": "Top Right"
+            },
+            {
+              "value": "bottom_right_mob",
+              "label": "Bottom Right"
+            },
+            {
+              "value": "bottom_left_mob",
+              "label": "Bottom Left"
+            }
+          ],
+          "default": "bottom_right_mob",
+          "label": "Box Alignment"
+        },
+        {
+          "type": "header",
+          "content": "Product 2"
+        },
+        {
+          "type": "product",
+          "id": "product_2",
+          "label": "Product"
+        },
+        {
+          "type": "paragraph",
+          "content": "Desktop Settings"
+        },
+        {
+          "type": "range",
+          "id": "top_2",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the top",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "left_2",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the Left",
+          "default": 0
+        },
+        {
+          "type": "select",
+          "id": "alignment_2",
+          "options": [
+            {
+              "value": "top_left",
+              "label": "Top Left"
+            },
+            {
+              "value": "top_right",
+              "label": "Top Right"
+            },
+            {
+              "value": "bottom_right",
+              "label": "Bottom Right"
+            },
+            {
+              "value": "bottom_left",
+              "label": "Bottom Left"
+            }
+          ],
+          "default": "bottom_right",
+          "label": "Box Alignment"
+        },
+        {
+          "type": "paragraph",
+          "content": "Mobile Settings"
+        },
+        {
+          "type": "range",
+          "id": "top_mob_2",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the top",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "left_mob_2",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the Left",
+          "default": 0
+        },
+        {
+          "type": "select",
+          "id": "alignment_mob_2",
+          "options": [
+            {
+              "value": "top_left_mob",
+              "label": "Top Left"
+            },
+            {
+              "value": "top_right_mob",
+              "label": "Top Right"
+            },
+            {
+              "value": "bottom_right_mob",
+              "label": "Bottom Right"
+            },
+            {
+              "value": "bottom_left_mob",
+              "label": "Bottom Left"
+            }
+          ],
+          "default": "bottom_right_mob",
+          "label": "Box Alignment"
+        },
+        {
+          "type": "header",
+          "content": "Product 3"
+        },
+        {
+          "type": "product",
+          "id": "product_3",
+          "label": "Product"
+        },
+        {
+          "type": "paragraph",
+          "content": "Desktop Settings"
+        },
+        {
+          "type": "range",
+          "id": "top_3",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the top",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "left_3",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the Left",
+          "default": 0
+        },
+        {
+          "type": "select",
+          "id": "alignment_3",
+          "options": [
+            {
+              "value": "top_left",
+              "label": "Top Left"
+            },
+            {
+              "value": "top_right",
+              "label": "Top Right"
+            },
+            {
+              "value": "bottom_right",
+              "label": "Bottom Right"
+            },
+            {
+              "value": "bottom_left",
+              "label": "Bottom Left"
+            }
+          ],
+          "default": "bottom_right",
+          "label": "Box Alignment"
+        },
+        {
+          "type": "paragraph",
+          "content": "Mobile Settings"
+        },
+        {
+          "type": "range",
+          "id": "top_mob_3",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the top",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "left_mob_3",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the Left",
+          "default": 0
+        },
+        {
+          "type": "select",
+          "id": "alignment_mob_3",
+          "options": [
+            {
+              "value": "top_left_mob",
+              "label": "Top Left"
+            },
+            {
+              "value": "top_right_mob",
+              "label": "Top Right"
+            },
+            {
+              "value": "bottom_right_mob",
+              "label": "Bottom Right"
+            },
+            {
+              "value": "bottom_left_mob",
+              "label": "Bottom Left"
+            }
+          ],
+          "default": "bottom_right_mob",
+          "label": "Box Alignment"
+        },
+        {
+          "type": "header",
+          "content": "Product 4"
+        },
+        {
+          "type": "product",
+          "id": "product_4",
+          "label": "Product"
+        },
+        {
+          "type": "paragraph",
+          "content": "Desktop Settings"
+        },
+        {
+          "type": "range",
+          "id": "top_4",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the top",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "left_4",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the Left",
+          "default": 0
+        },
+        {
+          "type": "select",
+          "id": "alignment_4",
+          "options": [
+            {
+              "value": "top_left",
+              "label": "Top Left"
+            },
+            {
+              "value": "top_right",
+              "label": "Top Right"
+            },
+            {
+              "value": "bottom_right",
+              "label": "Bottom Right"
+            },
+            {
+              "value": "bottom_left",
+              "label": "Bottom Left"
+            }
+          ],
+          "default": "bottom_right",
+          "label": "Box Alignment"
+        },
+        {
+          "type": "paragraph",
+          "content": "Mobile Settings"
+        },
+        {
+          "type": "range",
+          "id": "top_mob_4",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the top",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "left_mob_4",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the Left",
+          "default": 0
+        },
+        {
+          "type": "select",
+          "id": "alignment_mob_4",
+          "options": [
+            {
+              "value": "top_left_mob",
+              "label": "Top Left"
+            },
+            {
+              "value": "top_right_mob",
+              "label": "Top Right"
+            },
+            {
+              "value": "bottom_right_mob",
+              "label": "Bottom Right"
+            },
+            {
+              "value": "bottom_left_mob",
+              "label": "Bottom Left"
+            }
+          ],
+          "default": "bottom_right_mob",
+          "label": "Box Alignment"
+        },
+        {
+          "type": "header",
+          "content": "Product 5"
+        },
+        {
+          "type": "product",
+          "id": "product_5",
+          "label": "Product"
+        },
+        {
+          "type": "paragraph",
+          "content": "Desktop Settings"
+        },
+        {
+          "type": "range",
+          "id": "top_5",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the top",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "left_5",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the Left",
+          "default": 0
+        },
+        {
+          "type": "select",
+          "id": "alignment_5",
+          "options": [
+            {
+              "value": "top_left",
+              "label": "Top Left"
+            },
+            {
+              "value": "top_right",
+              "label": "Top Right"
+            },
+            {
+              "value": "bottom_right",
+              "label": "Bottom Right"
+            },
+            {
+              "value": "bottom_left",
+              "label": "Bottom Left"
+            }
+          ],
+          "default": "bottom_right",
+          "label": "Box Alignment"
+        },
+        {
+          "type": "paragraph",
+          "content": "Mobile Settings"
+        },
+        {
+          "type": "range",
+          "id": "top_mob_5",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the top",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "left_mob_5",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the Left",
+          "default": 0
+        },
+        {
+          "type": "select",
+          "id": "alignment_mob_5",
+          "options": [
+            {
+              "value": "top_left_mob",
+              "label": "Top Left"
+            },
+            {
+              "value": "top_right_mob",
+              "label": "Top Right"
+            },
+            {
+              "value": "bottom_right_mob",
+              "label": "Bottom Right"
+            },
+            {
+              "value": "bottom_left_mob",
+              "label": "Bottom Left"
+            }
+          ],
+          "default": "bottom_right_mob",
+          "label": "Box Alignment"
+        },
+        {
+          "type": "header",
+          "content": "Product 6"
+        },
+        {
+          "type": "product",
+          "id": "product_6",
+          "label": "Product"
+        },
+        {
+          "type": "paragraph",
+          "content": "Desktop Settings"
+        },
+        {
+          "type": "range",
+          "id": "top_6",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the top",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "left_6",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the Left",
+          "default": 0
+        },
+        {
+          "type": "select",
+          "id": "alignment_6",
+          "options": [
+            {
+              "value": "top_left",
+              "label": "Top Left"
+            },
+            {
+              "value": "top_right",
+              "label": "Top Right"
+            },
+            {
+              "value": "bottom_right",
+              "label": "Bottom Right"
+            },
+            {
+              "value": "bottom_left",
+              "label": "Bottom Left"
+            }
+          ],
+          "default": "bottom_right",
+          "label": "Box Alignment"
+        },
+        {
+          "type": "paragraph",
+          "content": "Mobile Settings"
+        },
+        {
+          "type": "range",
+          "id": "top_mob_6",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the top",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "left_mob_6",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the Left",
+          "default": 0
+        },
+        {
+          "type": "select",
+          "id": "alignment_mob_6",
+          "options": [
+            {
+              "value": "top_left_mob",
+              "label": "Top Left"
+            },
+            {
+              "value": "top_right_mob",
+              "label": "Top Right"
+            },
+            {
+              "value": "bottom_right_mob",
+              "label": "Bottom Right"
+            },
+            {
+              "value": "bottom_left_mob",
+              "label": "Bottom Left"
+            }
+          ],
+          "default": "bottom_right_mob",
+          "label": "Box Alignment"
+        },
+        {
+          "type": "header",
+          "content": "Product 7"
+        },
+        {
+          "type": "product",
+          "id": "product_7",
+          "label": "Product"
+        },
+        {
+          "type": "paragraph",
+          "content": "Desktop Settings"
+        },
+        {
+          "type": "range",
+          "id": "top_7",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the top",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "left_7",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the Left",
+          "default": 0
+        },
+        {
+          "type": "select",
+          "id": "alignment_7",
+          "options": [
+            {
+              "value": "top_left",
+              "label": "Top Left"
+            },
+            {
+              "value": "top_right",
+              "label": "Top Right"
+            },
+            {
+              "value": "bottom_right",
+              "label": "Bottom Right"
+            },
+            {
+              "value": "bottom_left",
+              "label": "Bottom Left"
+            }
+          ],
+          "default": "bottom_right",
+          "label": "Box Alignment"
+        },
+        {
+          "type": "paragraph",
+          "content": "Mobile Settings"
+        },
+        {
+          "type": "range",
+          "id": "top_mob_7",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the top",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "left_mob_7",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the Left",
+          "default": 0
+        },
+        {
+          "type": "select",
+          "id": "alignment_mob_7",
+          "options": [
+            {
+              "value": "top_left_mob",
+              "label": "Top Left"
+            },
+            {
+              "value": "top_right_mob",
+              "label": "Top Right"
+            },
+            {
+              "value": "bottom_right_mob",
+              "label": "Bottom Right"
+            },
+            {
+              "value": "bottom_left_mob",
+              "label": "Bottom Left"
+            }
+          ],
+          "default": "bottom_right_mob",
+          "label": "Box Alignment"
+        },
+        {
+          "type": "header",
+          "content": "Product 8"
+        },
+        {
+          "type": "product",
+          "id": "product_8",
+          "label": "Product"
+        },
+        {
+          "type": "paragraph",
+          "content": "Desktop Settings"
+        },
+        {
+          "type": "range",
+          "id": "top_8",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the top",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "left_8",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the Left",
+          "default": 0
+        },
+        {
+          "type": "select",
+          "id": "alignment_8",
+          "options": [
+            {
+              "value": "top_left",
+              "label": "Top Left"
+            },
+            {
+              "value": "top_right",
+              "label": "Top Right"
+            },
+            {
+              "value": "bottom_right",
+              "label": "Bottom Right"
+            },
+            {
+              "value": "bottom_left",
+              "label": "Bottom Left"
+            }
+          ],
+          "default": "bottom_right",
+          "label": "Box Alignment"
+        },
+        {
+          "type": "paragraph",
+          "content": "Mobile Settings"
+        },
+        {
+          "type": "range",
+          "id": "top_mob_8",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the top",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "left_mob_8",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the Left",
+          "default": 0
+        },
+        {
+          "type": "select",
+          "id": "alignment_mob_8",
+          "options": [
+            {
+              "value": "top_left_mob",
+              "label": "Top Left"
+            },
+            {
+              "value": "top_right_mob",
+              "label": "Top Right"
+            },
+            {
+              "value": "bottom_right_mob",
+              "label": "Bottom Right"
+            },
+            {
+              "value": "bottom_left_mob",
+              "label": "Bottom Left"
+            }
+          ],
+          "default": "bottom_right_mob",
+          "label": "Box Alignment"
+        },
+        {
+          "type": "header",
+          "content": "Product 9"
+        },
+        {
+          "type": "product",
+          "id": "product_9",
+          "label": "Product"
+        },
+        {
+          "type": "paragraph",
+          "content": "Desktop Settings"
+        },
+        {
+          "type": "range",
+          "id": "top_9",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the top",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "left_9",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the Left",
+          "default": 0
+        },
+        {
+          "type": "select",
+          "id": "alignment_9",
+          "options": [
+            {
+              "value": "top_left",
+              "label": "Top Left"
+            },
+            {
+              "value": "top_right",
+              "label": "Top Right"
+            },
+            {
+              "value": "bottom_right",
+              "label": "Bottom Right"
+            },
+            {
+              "value": "bottom_left",
+              "label": "Bottom Left"
+            }
+          ],
+          "default": "bottom_right",
+          "label": "Box Alignment"
+        },
+        {
+          "type": "paragraph",
+          "content": "Mobile Settings"
+        },
+        {
+          "type": "range",
+          "id": "top_mob_9",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the top",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "left_mob_9",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the Left",
+          "default": 0
+        },
+        {
+          "type": "select",
+          "id": "alignment_mob_9",
+          "options": [
+            {
+              "value": "top_left_mob",
+              "label": "Top Left"
+            },
+            {
+              "value": "top_right_mob",
+              "label": "Top Right"
+            },
+            {
+              "value": "bottom_right_mob",
+              "label": "Bottom Right"
+            },
+            {
+              "value": "bottom_left_mob",
+              "label": "Bottom Left"
+            }
+          ],
+          "default": "bottom_right_mob",
+          "label": "Box Alignment"
+        },
+        {
+          "type": "header",
+          "content": "Product 10"
+        },
+        {
+          "type": "product",
+          "id": "product_10",
+          "label": "Product"
+        },
+        {
+          "type": "paragraph",
+          "content": "Desktop Settings"
+        },
+        {
+          "type": "range",
+          "id": "top_10",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the top",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "left_10",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the Left",
+          "default": 0
+        },
+        {
+          "type": "select",
+          "id": "alignment_10",
+          "options": [
+            {
+              "value": "top_left",
+              "label": "Top Left"
+            },
+            {
+              "value": "top_right",
+              "label": "Top Right"
+            },
+            {
+              "value": "bottom_right",
+              "label": "Bottom Right"
+            },
+            {
+              "value": "bottom_left",
+              "label": "Bottom Left"
+            }
+          ],
+          "default": "bottom_right",
+          "label": "Box Alignment"
+        },
+        {
+          "type": "paragraph",
+          "content": "Mobile Settings"
+        },
+        {
+          "type": "range",
+          "id": "top_mob_10",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the top",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "left_mob_10",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the Left",
+          "default": 0
+        },
+        {
+          "type": "select",
+          "id": "alignment_mob_10",
+          "options": [
+            {
+              "value": "top_left_mob",
+              "label": "Top Left"
+            },
+            {
+              "value": "top_right_mob",
+              "label": "Top Right"
+            },
+            {
+              "value": "bottom_right_mob",
+              "label": "Bottom Right"
+            },
+            {
+              "value": "bottom_left_mob",
+              "label": "Bottom Left"
+            }
+          ],
+          "default": "bottom_right_mob",
+          "label": "Box Alignment"
+        },
+        {
+          "type": "header",
+          "content": "Product 11"
+        },
+        {
+          "type": "product",
+          "id": "product_11",
+          "label": "Product"
+        },
+        {
+          "type": "paragraph",
+          "content": "Desktop Settings"
+        },
+        {
+          "type": "range",
+          "id": "top_11",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the top",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "left_11",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the Left",
+          "default": 0
+        },
+        {
+          "type": "select",
+          "id": "alignment_11",
+          "options": [
+            {
+              "value": "top_left",
+              "label": "Top Left"
+            },
+            {
+              "value": "top_right",
+              "label": "Top Right"
+            },
+            {
+              "value": "bottom_right",
+              "label": "Bottom Right"
+            },
+            {
+              "value": "bottom_left",
+              "label": "Bottom Left"
+            }
+          ],
+          "default": "bottom_right",
+          "label": "Box Alignment"
+        },
+        {
+          "type": "paragraph",
+          "content": "Mobile Settings"
+        },
+        {
+          "type": "range",
+          "id": "top_mob_11",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the top",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "left_mob_11",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the Left",
+          "default": 0
+        },
+        {
+          "type": "select",
+          "id": "alignment_mob_11",
+          "options": [
+            {
+              "value": "top_left_mob",
+              "label": "Top Left"
+            },
+            {
+              "value": "top_right_mob",
+              "label": "Top Right"
+            },
+            {
+              "value": "bottom_right_mob",
+              "label": "Bottom Right"
+            },
+            {
+              "value": "bottom_left_mob",
+              "label": "Bottom Left"
+            }
+          ],
+          "default": "bottom_right_mob",
+          "label": "Box Alignment"
+        },
+        {
+          "type": "header",
+          "content": "Product 12"
+        },
+        {
+          "type": "product",
+          "id": "product_12",
+          "label": "Product"
+        },
+        {
+          "type": "paragraph",
+          "content": "Desktop Settings"
+        },
+        {
+          "type": "range",
+          "id": "top_12",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the top",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "left_12",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the Left",
+          "default": 0
+        },
+        {
+          "type": "select",
+          "id": "alignment_12",
+          "options": [
+            {
+              "value": "top_left",
+              "label": "Top Left"
+            },
+            {
+              "value": "top_right",
+              "label": "Top Right"
+            },
+            {
+              "value": "bottom_right",
+              "label": "Bottom Right"
+            },
+            {
+              "value": "bottom_left",
+              "label": "Bottom Left"
+            }
+          ],
+          "default": "bottom_right",
+          "label": "Box Alignment"
+        },
+        {
+          "type": "paragraph",
+          "content": "Mobile Settings"
+        },
+        {
+          "type": "range",
+          "id": "top_mob_12",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the top",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "left_mob_12",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "to the Left",
+          "default": 0
+        },
+        {
+          "type": "select",
+          "id": "alignment_mob_12",
+          "options": [
+            {
+              "value": "top_left_mob",
+              "label": "Top Left"
+            },
+            {
+              "value": "top_right_mob",
+              "label": "Top Right"
+            },
+            {
+              "value": "bottom_right_mob",
+              "label": "Bottom Right"
+            },
+            {
+              "value": "bottom_left_mob",
+              "label": "Bottom Left"
+            }
+          ],
+          "default": "bottom_right_mob",
+          "label": "Box Alignment"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hotspot image text"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,107 @@
+{% capture announceData %}
+  {%- for block in section.blocks -%}
+    <div class="swiper-slide" tabindex="-1">
+      <div class="announcement-bar__announcement" role="region" aria-label="{{ 'sections.header.announcement' | t }}" {{ block.shopify_attributes }}>
+        {%- if block.settings.text != blank -%}
+          {%- if block.settings.link != blank -%}
+            <a href="{{ block.settings.link }}" class="announcement-bar__link link link--text focus-inset animate-arrow">
+          {%- endif -%}
+              <p class="announcement-bar__message h5">
+                <span>{{ block.settings.text | escape }}</span>
+                {% comment %}
+                {%- if block.settings.link != blank -%}
+                  {% render 'icon-arrow' %}
+                {%- endif -%}
+                {% endcomment %}
+              </p>
+          {%- if block.settings.link != blank -%}
+            </a>
+          {%- endif -%}
+        {%- endif -%}
+      </div>
+    </div>
+  {%- endfor -%}
+{% endcapture %}
+
+{% if announceData != blank %}
+{{ 'announcement-bar.css' | asset_url | stylesheet_tag: preload: true }}
+<style>
+  .announcement-bar__announcement,.announcement-bar__message{color:{{ section.settings.text_color }};}
+  .announcement-bar .slider-button svg path{stroke:{{ section.settings.text_color }};}
+</style>
+<div
+  class="utility-bar color-{{ section.settings.color_scheme }} gradient"
+  {{ block.shopify_attributes }}
+>
+    <div class="announcement-bar announcement-bar-slider page-width swiper-container{%- if section.blocks.size == 1 %} hide-arrow{% endif %}"
+      aria-label="{{ 'sections.announcements.announcement_bar' | t }}"
+      data-slider-announcement-bar
+    >
+
+      <button type="button" class="slider-button slider-button--prev hidden" name="previous" aria-label="{{ 'sections.announcements.previous_announcement' | t }}">
+        {% comment %}{% render 'icon-caret' %}{% endcomment %}
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="10" viewBox="0 0 18 10" fill="none" class="icon icon-long-arrow-left">
+          <path d="M6.01854 1L1.5 5M1.5 5L6.01854 9M1.5 5H17.5" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+      </button>
+      <div class="swiper-wrapper" aria-live="polite" aria-atomic="true">
+        {{ announceData }}
+      </div>
+      <button type="button" class="slider-button slider-button--next hidden" name="next" aria-label="{{ 'sections.announcements.next_announcement' | t }}">
+        {% comment %}{% render 'icon-caret' %}{% endcomment %}
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="10" viewBox="0 0 18 10" fill="none" class="icon icon-long-arrow-left">
+          <path d="M11.9815 1L16.5 5M16.5 5L11.9815 9M16.5 5H0.5" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+      </button>
+
+    </div>
+</div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "t:sections.announcement-bar.name",
+  "max_blocks": 12,
+  "class": "announcement-bar-section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "accent-1"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "default": "#ffffff",
+      "label": "Text Color"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "announcement",
+      "name": "t:sections.announcement-bar.blocks.announcement.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "default": "Welcome to our store",
+          "label": "t:sections.announcement-bar.blocks.announcement.settings.text.label"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "t:sections.announcement-bar.blocks.announcement.settings.link.label"
+        }
+      ]
+    }
+  ],
+  "default": {
+    "blocks": [
+      {
+        "type": "announcement"
+      }
+    ]
+  }
+}
+{% endschema %}

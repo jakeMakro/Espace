@@ -1,0 +1,533 @@
+{%- capture dataImg1 -%}{%- endcapture -%}
+{%- capture dataImg2 -%}{%- endcapture -%}
+
+{% for block in section.blocks %}
+
+  {% comment %}
+  ================================================ 
+                    FOR IMAGE 1
+  ================================================
+  {% endcomment %}
+  {% if block.type == 'text' %}
+    {% if block.settings.product != blank %}
+      {%- capture dataImg1 -%}
+        {{ dataImg1 }}
+        <div class="hotspots-product" id="hotspots-pro-{{ block.id }}" data-hotspot-product>
+          {%- capture style -%}
+            .hotspots-item #hotspots-pro-{{ block.id }}{top:{{ block.settings.top }}%; left:{{ block.settings.left }}%;}
+            @media(max-width: 749px){.hotspots-item #hotspots-pro-{{ block.id }}{top:{{ block.settings.top_mob }}%; left:{{ block.settings.left_mob }}%;}}
+          {%- endcapture -%}
+          <style>{{- style -}}</style>
+          <span class="icon icon-hotspot" data-hotspot-btn>{% render 'icon-hotspots' %}</span>          
+          <div class="hotspots-pro-details {{ block.settings.alignment }} {{ block.settings.alignment_mob }}">
+            <a class="link" href="{{ product.url }}"></a>
+            {% assign product = block.settings.product %}
+            <span class="pro-vendor">{{ product.vendor }}</span>
+            <p class="pro-title">{{ product.title }}</p>
+            {% render 'price', product: product, price_class: 'pro-price' %}
+            <span class="icon">{% render 'icon-link-right-arr' %}</span>
+          </div>
+        </div>
+      {%- endcapture -%}
+    {% endif %}
+  {% endif %}
+
+  {% comment %}
+  ================================================ 
+                    FOR IMAGE 2
+  ================================================
+  {% endcomment %}
+  {% if block.type == 'richtext' %}
+    {% if block.settings.product != blank %}
+      {%- capture dataImg2 -%}
+        {{ dataImg2 }}
+        <div class="hotspots-product" id="hotspots-pro-{{ block.id }}" data-hotspot-product>
+          {%- capture style -%}
+            .hotspots-item #hotspots-pro-{{ block.id }}{top:{{ block.settings.top }}%; left:{{ block.settings.left }}%;}
+            @media(max-width: 749px){.hotspots-item #hotspots-pro-{{ block.id }}{top:{{ block.settings.top_mob }}%; left:{{ block.settings.left_mob }}%;}}
+          {%- endcapture -%}
+          <style>{{- style -}}</style>
+          <span class="icon icon-hotspot" data-hotspot-btn>{% render 'icon-hotspots' %}</span>          
+          <div class="hotspots-pro-details {{ block.settings.alignment }} {{ block.settings.alignment_mob }}">
+            <a class="link" href="{{ product.url }}"></a>
+            {% assign product = block.settings.product %}
+            <span class="pro-vendor">{{ product.vendor }}</span>
+            <p class="pro-title">{{ product.title }}</p>
+            {% render 'price', product: product, price_class: 'pro-price' %}
+            <span class="icon">{% render 'icon-link-right-arr' %}</span>
+          </div>
+        </div>
+      {%- endcapture -%}
+    {% endif %}
+  {% endif %}
+  
+{% endfor %}
+
+{%- capture hotspotData -%}
+
+  {% comment %}
+  ================================================ 
+                    FOR IMAGE 1
+  ================================================
+  {% endcomment %}
+  {% if section.settings.img1 != blank %}
+  <div class="hotspots-item hotspots-item-left">
+    <div class="img-box">
+      {%- capture sizes -%}
+        (min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 100 | divided_by: 2 }}px,
+        (min-width: 750px) calc((100vw - 130px) / 2), calc((100vw - 50px) / 2)
+      {%- endcapture -%}
+      {% capture class -%}{% if section.settings.img1_mob != blank %}small-hide{% endif %}{%- endcapture %}
+      {%- capture alt -%}
+        {{- section.settings.img1.alt | default: section.settings.head -}}
+      {%- endcapture -%}
+      {{
+        section.settings.img1
+        | image_url: width: 1500
+        | image_tag:
+          class: class,
+          loading: 'lazy',
+          sizes: sizes,
+          widths: '50, 75, 100, 150, 200, 300, 400, 500, 750, 1000, 1250, 1500',
+          alt: alt
+      }}
+      {% if section.settings.img1_mob != blank %}
+        {%- capture altMob -%}
+          {{- section.settings.img1_mob.alt | default: section.settings.head -}}
+        {%- endcapture -%}
+        {{
+          section.settings.img1_mob
+          | image_url: width: 750
+          | image_tag:
+            class: 'medium-hide large-up-hide',
+            loading: 'lazy',
+            sizes: '100vw',
+            widths: '50, 75, 100, 150, 200, 300, 400, 500, 750',
+            alt: altMob
+        }}
+      {% endif %}
+    </div>
+    {{ dataImg1 }}
+  </div>
+  {% endif %}
+
+  {% comment %}
+  ================================================ 
+                    FOR IMAGE 2
+  ================================================
+  {% endcomment %}
+  {% if section.settings.img2 != blank %}
+  <div class="hotspots-item hotspots-item-right">
+    <div class="img-box">
+      {%- capture sizes -%}
+        (min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 100 | divided_by: 2 }}px,
+        (min-width: 750px) calc((100vw - 130px) / 2), calc((100vw - 50px) / 2)
+      {%- endcapture -%}
+      {% capture class -%}{% if section.settings.img2_mob != blank %}small-hide{% endif %}{%- endcapture %}
+      {%- capture alt -%}
+        {{- section.settings.img2.alt | default: section.settings.head -}}
+      {%- endcapture -%}
+      {{
+        section.settings.img2
+        | image_url: width: 1500
+        | image_tag:
+          class: class,
+          loading: 'lazy',
+          sizes: sizes,
+          widths: '50, 75, 100, 150, 200, 300, 400, 500, 750, 1000, 1250, 1500',
+          alt: alt
+      }}
+      {% if section.settings.img2_mob != blank %}
+        {%- capture altMob -%}
+          {{- section.settings.img2_mob.alt | default: section.settings.head -}}
+        {%- endcapture -%}
+        {{
+          section.settings.img2_mob
+          | image_url: width: 750
+          | image_tag:
+            class: 'medium-hide large-up-hide',
+            loading: 'lazy',
+            sizes: '100vw',
+            widths: '50, 75, 100, 150, 200, 300, 400, 500, 750',
+            alt: altMob
+        }}
+      {% endif %}
+      {{ dataImg2 }}
+    </div>
+    {% if section.settings.title != blank %}
+    <div class="hotspot-right-info">
+      <div class="section-head small-hide">
+        <h2>{{ section.settings.title }}</h2>
+        {% if section.settings.text != blank %}<div class="section-head-text">{{ section.settings.text }}</div>{% endif %}
+      </div>
+      
+      {% if section.settings.link_label != blank %}
+        <a href="{{ section.settings.link_url | default:"#" }}" class="link link-btn-arrow hotspot-link">{{ section.settings.link_label }}
+          <svg xmlns="http://www.w3.org/2000/svg" width="21" height="12" viewBox="0 0 21 12" fill="none">
+            <path d="M14.3518 1L20 6M20 6L14.3518 11M20 6H0" stroke="black" stroke-width="1.2"/>
+          </svg>
+        </a>
+      {% endif %}
+      
+    </div>
+    {% endif %}
+    
+  </div>
+  {% endif %}
+  
+{%- endcapture -%}
+
+{% if hotspotData != blank %}
+<link rel="stylesheet" href="{{ 'hotspots.css' | asset_url }}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="{{ 'hotspots.css' | asset_url }}"></noscript>
+
+{%- assign spacing-top = section.settings.spacing-top | times: 1 -%}
+{%- assign spacing-bottom = section.settings.spacing-bottom | times: 1 -%}
+{%- if spacing-top > 0 or spacing-bottom > 0 -%}
+  {%- if spacing-top == 0 %}{% assign spacing-top = '' %}{% endif -%}
+  {%- if spacing-top == 0 %}{% assign spacing-bottom = '' %}{% endif -%}
+  {%- style -%}
+    {%- if spacing-top >= 60 -%}
+      #shopify-section-{{ section.id }} {
+        padding-top: {{ spacing-top | times: 0.7 | round | at_least: 20 }}px;
+        padding-bottom: {{ spacing-bottom | times: 0.7 | round | at_least: 20 }}px;
+      }
+      @media screen and (min-width: 750px){
+        #shopify-section-{{ section.id }} { padding-top: {{ spacing-top }}px; padding-bottom: {{ spacing-bottom }}px; }
+      }
+    {%- else -%}
+      #shopify-section-{{ section.id }} { padding-top: {{ spacing-top }}px; padding-bottom: {{ spacing-bottom }}px; }
+    {%- endif -%}
+  {%- endstyle -%}  
+{%- endif -%}
+
+<div class="hotspots-main">
+  <div class="page--width">
+    {% if section.settings.title != blank %}
+      <div class="section-head medium-hide large-up-hide">
+        <div class="page-width">
+          <h2>{{ section.settings.title }}</h2>
+          {% if section.settings.text != blank %}<div class="section-head-text">{{ section.settings.text }}</div>{% endif %}
+        </div>
+      </div>
+    {% endif %}
+    <div class="hotspots-grid">
+      {{ hotspotData }}
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% schema %}
+  {
+    "name": "Product's Hotspots",
+    "tag":"section",
+    "class":"hotspots-section section-padding-largepb-0",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Left side Image [Image1]",
+        "info":"to Add Hotspots for Image1, Add block with name like: Image1 Hotspot"
+      },
+      {
+        "type": "image_picker",
+        "id": "img1",
+        "label": "Image for Desktop"
+      },
+      {
+        "type": "image_picker",
+        "id": "img1_mob",
+        "label": "Image for Mobile"
+      },
+      {
+        "type": "header",
+        "content": "Right side Image [Image2]",
+        "info":"to Add Hotspots for Image2, Add block with name like: Image2 Hotspot"
+      },
+      {
+        "type": "image_picker",
+        "id": "img2",
+        "label": "Image for Desktop"
+      },
+      {
+        "type": "image_picker",
+        "id": "img2_mob",
+        "label": "Image for Mobile"
+      },
+      {
+          "type": "inline_richtext",
+          "id": "title",
+          "default": "Bring your outdoors to life",
+          "label": "Title"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>From comfortable patio furniture and stylish loungers to functional grills and fire pits, we offer everything you need to transform your outdoor space into a breathtaking retreat.</p>"
+        },
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "Link label",
+          "default": "Explore Outdoors Collection"
+        },
+        {
+          "type": "url",
+          "id": "link_url",
+          "label": "Url to navigate"
+        },
+    {
+      "type": "header",
+      "content": "Section spacing"
+    },
+    {
+      "type": "range",
+      "id": "spacing-top",
+      "min": 0,
+      "max": 150,
+      "step": 10,
+      "default": 150,
+      "unit": "px",
+      "label": "Section margin top"
+    },
+    {
+      "type": "range",
+      "id": "spacing-bottom",
+      "min": 0,
+      "max": 150,
+      "step": 10,
+      "default": 0,
+      "unit": "px",
+      "label": "Section margin bottom"
+    }
+    ],
+    "blocks": [
+      {
+        "type": "text",
+        "name": "Image1 Hotspot",
+        "settings": [
+          {
+            "type": "product",
+            "id": "product",
+            "label": "Product"
+          },
+          {
+            "type": "header",
+            "content": "Desktop Settings"
+          },
+          {
+            "type": "range",
+            "id": "top",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "unit": "%",
+            "label": "to the top",
+            "default": 0
+          },
+          {
+            "type": "range",
+            "id": "left",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "unit": "%",
+            "label": "to the Left",
+            "default": 0
+          },
+          {
+            "type": "select",
+            "id": "alignment",
+            "options": [
+              {
+                "value": "top_left",
+                "label": "Top Left"
+              },
+              {
+                "value": "top_right",
+                "label": "Top Right"
+              },
+              {
+                "value": "bottom_right",
+                "label": "Bottom Right"
+              },
+              {
+                "value": "bottom_left",
+                "label": "Bottom Left"
+              }
+            ],
+            "default": "bottom_right",
+            "label": "Box Alignment"
+          },
+          {
+            "type": "header",
+            "content": "Mobile Settings"
+          },
+          {
+            "type": "range",
+            "id": "top_mob",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "unit": "%",
+            "label": "to the top",
+            "default": 0
+          },
+          {
+            "type": "range",
+            "id": "left_mob",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "unit": "%",
+            "label": "to the Left",
+            "default": 0
+          },
+          {
+            "type": "select",
+            "id": "alignment_mob",
+            "options": [
+              {
+                "value": "top_left_mob",
+                "label": "Top Left"
+              },
+              {
+                "value": "top_right_mob",
+                "label": "Top Right"
+              },
+              {
+                "value": "bottom_right_mob",
+                "label": "Bottom Right"
+              },
+              {
+                "value": "bottom_left_mob",
+                "label": "Bottom Left"
+              }
+            ],
+            "default": "bottom_right_mob",
+            "label": "Box Alignment"
+          }
+        ]
+      },
+      {
+        "type": "richtext",
+        "name": "Image2 Hotspot",
+        "settings": [
+          {
+            "type": "product",
+            "id": "product",
+            "label": "Product"
+          },
+          {
+            "type": "header",
+            "content": "Desktop Settings"
+          },
+          {
+            "type": "range",
+            "id": "top",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "unit": "%",
+            "label": "to the top",
+            "default": 0
+          },
+          {
+            "type": "range",
+            "id": "left",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "unit": "%",
+            "label": "to the Left",
+            "default": 0
+          },
+          {
+            "type": "select",
+            "id": "alignment",
+            "options": [
+              {
+                "value": "top_left",
+                "label": "Top Left"
+              },
+              {
+                "value": "top_right",
+                "label": "Top Right"
+              },
+              {
+                "value": "bottom_right",
+                "label": "Bottom Right"
+              },
+              {
+                "value": "bottom_left",
+                "label": "Bottom Left"
+              }
+            ],
+            "default": "bottom_right",
+            "label": "Box Alignment"
+          },
+          {
+            "type": "header",
+            "content": "Mobile Settings"
+          },
+          {
+            "type": "range",
+            "id": "top_mob",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "unit": "%",
+            "label": "to the top",
+            "default": 0
+          },
+          {
+            "type": "range",
+            "id": "left_mob",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "unit": "%",
+            "label": "to the Left",
+            "default": 0
+          },
+          {
+            "type": "select",
+            "id": "alignment_mob",
+            "options": [
+              {
+                "value": "top_left_mob",
+                "label": "Top Left"
+              },
+              {
+                "value": "top_right_mob",
+                "label": "Top Right"
+              },
+              {
+                "value": "bottom_right_mob",
+                "label": "Bottom Right"
+              },
+              {
+                "value": "bottom_left_mob",
+                "label": "Bottom Left"
+              }
+            ],
+            "default": "bottom_right_mob",
+            "label": "Box Alignment"
+          }
+        ]
+      }
+    ],
+    "presets":[
+      {
+        "name":"Product's Hotspots"
+      }
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

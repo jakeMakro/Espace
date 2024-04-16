@@ -1,0 +1,154 @@
+.multi-card-grid{
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: -40px;
+}
+.multi-card-item {
+  width: 33.33%;
+  padding-left: 40px;
+}
+.multi-card-section .box-col{
+  background-color: #F9F9F9;
+  padding: 30px;
+  display: block;
+  text-decoration: none;
+  color: #000;
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.multi-card-section .box-col h6{
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 120%;
+  /* text-transform: capitalize; */
+  color: #000;
+  margin: 0;
+}
+.multi-card-section .card-caption{
+  font-size: 14px;
+  line-height: 160%;
+  margin: 10px 0 0;
+}
+.multi-card-section .top-box{
+  padding-right: 70px;
+}
+.multi-card-section .bottom-box{
+  margin-top: 100px;
+}
+.multi-card-section .card-title{
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 120%;
+  margin: 0;
+}
+.multi-card-section .box-col .link{
+  margin-top: 10px;
+}
+.multi-card-section .box-col .card-svg{
+  border-radius: 0px 0px 0px 100px;
+  width: 80px;
+  height: 80px;
+  background-color: #EBFF00;
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.multi-card-section .card-svg svg{
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+@media screen and (min-width:750){
+  .multi-card-section .card-caption {
+    height: 44px;
+  }
+}
+@media screen and (max-width:1350px){
+  .multi-card-section .card-title{
+    font-size: 24px;
+  }
+}
+@media screen and (max-width: 1199px){
+  .multi-card-section .card-title{
+    display: none;
+  }
+  .multi-card-section .top-box{
+    flex: 1;
+  }
+  .multi-card-section .bottom-box {
+    margin-top: 50px;
+  }
+  .multi-card-section .box-col h6{
+    font-size: 18px;
+  }
+}
+@media screen and (max-width: 989px){
+  .section-padding{
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+  .multi-card-grid{
+    margin-left: -8px;
+  }
+  .multi-card-item {
+    padding-left: 8px;
+  }
+  .multi-card-section .box-col .card-svg{
+    width: 60px;
+    height: 60px;
+    bottom: 0;
+    top: auto;
+    border-radius: 100px 0px 0px 0px;
+  }
+  .multi-card-section .card-svg svg {
+    position: absolute;
+    top: auto;
+    right: 10px;
+    bottom: 10px;
+  }
+  .multi-card-section .top-box {
+    padding-right: 0;
+  }
+  .multi-card-section .bottom-box {
+    margin-top: 30px;
+  }
+  .multi-card-section .box-col{
+    padding: 20px;
+  }
+}
+@media screen and (max-width: 749px){
+  .multi-card-grid {
+    margin-left: 0;
+  }
+  .multi-card-item {
+    padding-left: 0;
+    width: 100%;
+  }
+  .multi-card-item:not(:last-child){
+    margin-bottom: 20px;
+  }
+  .multi-card-section .box-col{
+    text-align: center;
+    padding: 40px;
+  }
+  .multi-card-section .bottom-box {
+    margin-top: 15px;
+  }
+  .multi-card-section .card-svg svg {
+    right: 12px;
+    bottom: 12px;
+  }
+  .multi-card-item:nth-child(2) .box-col .card-svg{
+    border-radius: 0px 100px 0px 0px;
+    right: auto;
+    left: 0;
+  }
+  .multi-card-item:nth-child(2) .card-svg svg {
+    right: auto;
+    left: 12px;
+  }
+}

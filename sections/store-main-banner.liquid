@@ -1,0 +1,101 @@
+{{ 'section-main-page.css' | asset_url | stylesheet_tag }}
+{{ 'store-main-banner.css' | asset_url | stylesheet_tag }}
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{%- assign _count = 0 -%}
+{% capture content %}
+<div class="custom-breadcrumb">
+  {% render "breadcrumb" %}
+</div>
+{% if section.settings.title %}
+  <h1 class="section-title">
+   {{ section.settings.title }}
+  </h1>
+  {%- assign _count = _count | plus: 1 -%}
+{% endif %}
+{% endcapture %}
+<div class="page-width full-page-width section-{{ section.id }}-padding">
+  <div class="banner-section">
+    <div class="content-sect{% if _count == 1 %} only-content{% endif %}">
+      {{ content }}
+    </div>
+    {% if section.settings.bg_img != blank %}
+    <div class="banner-img media">
+      {%- liquid
+        assign height = section.settings.bg_img.width | divided_by: section.settings.bg_img.aspect_ratio | round        
+        assign sizes = '50vw'
+        assign widths = '375, 550, 750, 1100, 1500, 1780, 2000, 3000, 3840'
+        assign _class = 'desktop-bg'
+        if section.settings.bg_mobi_img != blank
+          assign _class = _class | append:' small-hide'
+        endif
+      -%}
+      {{
+        section.settings.bg_img
+        | image_url: width: 3840
+        | image_tag: loading: 'lazy', height: height, sizes: sizes, widths: widths, class: _class
+      }}  
+      
+      {% if section.settings.bg_mobi_img != blank %}
+        {%- liquid
+          assign height = section.settings.bg_mobi_img.width | divided_by: section.settings.bg_mobi_img.aspect_ratio | round        
+          assign sizes = '100vw'
+          assign widths = '375, 550, 750, 1100, 1500, 1780, 2000, 3000, 3840'
+          assign _class = 'mob-bg medium-hide large-up-hide' 
+        -%}
+        {{
+          section.settings.bg_mobi_img
+          | image_url: width: 3840
+          | image_tag: loading: 'lazy', height: height, sizes: sizes, widths: widths, class: _class
+        }}          
+      {% endif %}  
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "Main Banner",
+    "tag": "section",
+    "class": "section store-main-banner",    
+    "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading"           
+        },
+		{
+          "type": "paragraph",         
+          "content": "Desktop Image"           
+        },
+		{
+          "type": "image_picker",
+          "id": "bg_img",
+          "label": "Desktop Banner Image"
+        },		
+		{
+          "type": "image_picker",
+          "id": "bg_mobi_img",
+          "label": "Mobile Banner Image"           
+        }
+     ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

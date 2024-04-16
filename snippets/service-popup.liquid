@@ -1,0 +1,25 @@
+{% comment %}
+<div id="small-dialogs" class="zoom-anim-dialog mfp-hide cart-service-popup-wrapper">
+  <i class="shild-icon pop-icon">{% render 'circle-info' %}</i>
+  <h5>Service de Ramassage</h5>
+  <p>You will need to unplug the appliance before the removal service can be conducted</p>
+  <button class="final-accept">Je comprends</button>
+</div>
+{% endcomment %}
+
+{% capture popDetail %}
+<div id='small-dialogs' class='zoom-anim-dialog cart-service-popup-wrapper'>  
+  {% if section.settings.pcup_ser_title != blank %}<h5>{{ section.settings.pcup_ser_title }}</h5>{% endif %}
+  {% if section.settings.pcup_ser_desc_top != blank %}{{ section.settings.pcup_ser_desc_top }}{% endif %}
+  <div class='accept-check'>
+    <input type='checkbox' class='final-accept'>
+    {% if section.settings.pcup_ser_chkbox_title != blank %}<span>{{ section.settings.pcup_ser_chkbox_title }}</span>{% endif %}
+  </div>
+  <div class='popup-footer'>{{ section.settings.pcup_ser_desc_botom }}{% if section.settings.pcup_ser_link_txt != blank %}<a href='{{ section.settings.pcup_ser_link | default: '#' }}' class='link-btn'>{{ section.settings.pcup_ser_link_txt }}</a>{% endif %}</div>
+  <button title='Close (Esc)' type='button' class='mfp-close'>×</button>
+</div>
+{% endcapture %}
+
+<div class="hidden" data-service-html="{{ popDetail | strip_newlines }}"></div>
+ 
+ 

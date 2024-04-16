@@ -1,0 +1,163 @@
+{{ 'section-main-page.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+  
+{%- endstyle -%}
+
+<div class="page-width section-{{ section.id }}-padding">
+  {% if section.settings.title != blank %}
+  <h1 class="main-page-title page-title h0{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %} center">
+    {{ section.settings.title }}
+  </h1>
+  {% endif %}
+  <div class="pick-del-wrap">
+    <div class="pick-del-item pick-wrap">
+      <div class="iconWrap">
+        <span class="circle"></span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">          
+          <path d="M23.3569 5.10763C23.3569 4.80315 23.173 4.52881 22.8914 4.41308L12.286 0.0563145C12.1032 -0.0187715 11.8982 -0.0187715 11.7154 0.0563145L1.11006 4.41308C0.828445 4.52876 0.644531 4.80315 0.644531 5.10763V18.8924C0.644531 19.1968 0.828398 19.4712 1.11006 19.5869L11.7154 23.9437C11.8963 24.018 12.0995 24.0196 12.2851 23.9436C12.2942 23.9406 11.8926 24.1053 22.8914 19.5869C23.173 19.4712 23.3569 19.1968 23.3569 18.8924V5.10763ZM12.0007 8.71579L8.09306 7.1105L16.5379 3.42655L20.7069 5.13921L12.0007 8.71579ZM2.14625 6.29098L5.51766 7.67599V11.5835C5.51766 11.9981 5.85385 12.3343 6.26852 12.3343C6.68318 12.3343 7.01937 11.9981 7.01937 11.5835V8.29291L11.2499 10.0308V22.1289L2.14625 18.3891V6.29098ZM12.0007 1.56259L14.6037 2.6319L6.1588 6.31585L3.2945 5.13916L12.0007 1.56259ZM12.7516 10.0308L21.8552 6.29098V18.3891L12.7516 22.1289V10.0308Z" fill="black" stroke="black" stroke-width="0.2"/>          
+        </svg>
+      </div>
+      {% if section.settings.pickup_title != blank %}
+      <div class="h2">
+        {{ section.settings.pickup_title }}
+      </div>
+      {% endif %}
+      {% if section.settings.pickup_text != blank %}
+      <div class="section-desc rte">
+        {{ section.settings.pickup_text }}
+      </div>
+      {% endif %}
+    </div>
+    <div class="pick-del-item del-wrap">
+      <div class="iconWrap">
+        <span class="circle"></span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="18" viewBox="0 0 26 18" fill="none">
+          <path d="M5.56787 1H16.2397V14.7631M5.56787 14.7631H3.31543V11.0194M25.0008 7.27572V14.7631H23.0746M25.0008 7.27572L21.9407 1.85437H16.2397M25.0008 7.27572H16.2397M18.2591 14.7631H16.2397M16.2397 14.7631H10.43M8.73677 3.82717H3.11348M5.76982 6.63884H0.146484M23.1057 14.5612C23.1057 15.9081 22.0138 17 20.6669 17C19.32 17 18.2281 15.9081 18.2281 14.5612C18.2281 13.2142 19.32 12.1223 20.6669 12.1223C22.0138 12.1223 23.1057 13.2142 23.1057 14.5612ZM10.43 14.5612C10.43 15.9081 9.3381 17 7.99117 17C6.64424 17 5.55233 15.9081 5.55233 14.5612C5.55233 13.2142 6.64424 12.1223 7.99117 12.1223C9.3381 12.1223 10.43 13.2142 10.43 14.5612Z" stroke="black" stroke-width="2" stroke-miterlimit="10"/>
+        </svg>
+      </div>
+      {% if section.settings.delivery_title != blank %}
+      <div class="h2">
+        {{ section.settings.delivery_title }}
+      </div>
+      {% endif %}
+      {% if section.settings.delivery_text != blank %}
+      <div class="section-desc rte">
+        {{ section.settings.delivery_text }}
+      </div>
+      {% endif %}     
+    </div>  
+  </div>
+</div>
+
+{% stylesheet %}  
+  .pick-del-wrap { display: flex; justify-content: space-between; margin-top: 80px; }
+    .pick-del-wrap .pick-del-item { padding: 40px; width: calc(50% - 20px); display: flex; flex-direction: column; position: relative; background: #F9F9F9; }
+      .pick-del-item .h2 { font-weight: 700; margin-bottom: 50px; padding-right: 46px; }
+      .pick-del-item .iconWrap { position: absolute; right: 0; top: 0; overflow: hidden; width: 80px; height: 80px; }
+      .pick-del-item .iconWrap:before { content: ''; position: absolute; top: -100%; right: -100%; width: 200%; height: 200%; border-radius: 50%; background: #EBFF00; }
+        .pick-del-item .iconWrap svg { display: block; margin: 20px 20px 0 0; margin-left: auto; position: relative; }
+
+      .pick-del-item .section-desc { margin-top: auto; max-width: 570px; line-height: 1.6; letter-spacing: -0.0004em; }        
+  
+  @media screen and (max-width: 989px){
+    .pick-del-item .h2 { padding-right: 66px; }
+    .pick-del-wrap .pick-del-item { padding: 20px; width: calc(50% - 10px); }
+  }
+  @media screen and (max-width: 749px){
+    .pick-del-wrap { margin-top: 40px; flex-wrap: wrap; }
+    .pick-del-wrap .pick-del-item { width: 100%; padding-top: 30px; padding-bottom: 30px; }
+      .pick-del-wrap .pick-del-item + .pick-del-item { margin-top: 20px; }
+
+    .pick-del-item .iconWrap { width: 60px; height: 60px; }
+      .pick-del-item .iconWrap svg { height: auto; width: 100%; margin: 0; padding: 15px 15px 0 25px; }
+    
+    .pick-del-item .h2 { font-size: 20px; margin-bottom: 15px; padding-right: 0; }
+    .pick-del-item .section-desc { letter-spacing: normal; font-size: 14px; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+  {
+    "name": "Pickup & Delivery",
+    "class":"section-pickup-delivery",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title",
+        "default": "Pick-up and delivery"
+      },
+      {
+        "type": "header",
+        "content": "Pickup"
+      },
+      {
+        "type": "text",
+        "id": "pickup_title",
+        "label": "Title",
+        "default": "Pick up"
+      },
+      {
+        "type": "richtext",
+        "id": "pickup_text",
+        "label": "Text",
+        "default": "<p>For in-store pick-up, please note that Espace 67stores needs 5 business days to transfer your items from our warehouse to the desired location. For a pick-up at our Espace 67store, a delay of 48h is required.</p>"
+      },
+      {
+        "type": "header",
+        "content": "Delivery"
+      },
+      {
+        "type": "text",
+        "id": "delivery_title",
+        "label": "Title",
+        "default": "Delivery"
+      },
+      {
+        "type": "richtext",
+        "id": "delivery_text",
+        "label": "Text",
+        "default": "<p>Our delivery service offers a fast and professional experience. Items are delivered within 3 to 5 days depending on your region, if your product is in stock. We offer the possibility of retrieving your old appliance free of charge, if it is unplugged and ready to go. Moreover, our service will make sure to recover the cartons and any other packaging product to keep your environment clean.</p>"
+      },
+      {
+        "type": "header",
+        "content": "t:sections.all.padding.section_padding_heading"
+      },
+      {
+        "type": "range",
+        "id": "padding_top",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "unit": "px",
+        "label": "t:sections.all.padding.padding_top",
+        "default": 36
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "unit": "px",
+        "label": "t:sections.all.padding.padding_bottom",
+        "default": 36
+      }
+    ]
+  }
+{% endschema %}
+
+{% javascript %}
+{% endjavascript %}

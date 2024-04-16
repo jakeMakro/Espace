@@ -1,0 +1,158 @@
+<script defer>
+  
+/*
+  DO NOT MODIFY THIS CUSTOMIZATION - IT IS INTENDED FOR SINGLE PURPOSE.
+*/ 
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+window.SwymBeforeRender = window.SwymBeforeRender || [];
+window.SwymBeforeRender.push(function (UIObj) {
+  UIObj.Registry.preloadComponent("addToCartBtn", function (OriginalAddToCartBtn) {
+    var CustomATCButtonComponent = /*#__PURE__*/function (_OriginalAddToCartBtn) {
+      _inherits(CustomATCButtonComponent, _OriginalAddToCartBtn);
+
+      var _super = _createSuper(CustomATCButtonComponent);
+
+      function CustomATCButtonComponent(props) {
+        
+        var _this;
+
+        _classCallCheck(this, CustomATCButtonComponent);
+
+        _this = _super.call(this, props);
+        _this.state = {
+          tagFound: false,
+          tagNames: ["StartingAt","Zero"],
+          buttonText: "Coming Soon!",
+          du: "",
+          btnClass: "swym-tagged-atc-button"
+        };
+        _this.__isMounted = false;
+        return _this;
+      }
+
+      _createClass(CustomATCButtonComponent, [{
+        key: "tagLookup",
+        value: function tagLookup(props) {
+          var _ref = props.item ? props.item : props.listItem,
+              du = _ref.du,
+              epi = _ref.epi,
+              empi = _ref.empi;
+
+          var ctx = this;
+          var productUrl = du + "?variant=" + epi;
+          
+          this.setState({
+            du: productUrl
+          });
+          var tags = this.state.tagNames;
+
+          if (window._swat) {
+            window._swat.getProductDetails({
+              du: du,
+              epi: epi,
+              empi: empi
+            }, function (p) {
+              var intersection = p.tags.filter(function (pTag) {
+                return tags.includes(pTag);
+              });
+
+              if (intersection.length > 0) {
+                // Ensure component is unmounted!
+                if (ctx.__isMounted) {
+                  // Found the tag so returing true;
+                  ctx.changeState(true);
+                }
+              }
+
+              return;
+            });
+          }
+        }
+      }, {
+        key: "changeState",
+        value: function changeState(isTagFound) {
+          this.setState(function (prevState, props) {
+            return {
+              tagFound: isTagFound
+            };
+          });
+        }
+      }, {
+        key: "componentDidMount",
+        value: function componentDidMount() {
+          this.__isMounted = true;
+          this.tagLookup(this.props);
+        }
+      }, {
+        key: "componentWillUnmount",
+        value: function componentWillUnmount() {
+          this.__isMounted = false;
+        }
+      }, {
+        key: "handleClick",
+        value: function handleClick(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          location.href = this.state.du;
+          return;
+        }
+      }, {
+        key: "render",
+        value: function render() {
+          var _this2 = this;
+
+          return this.state.tagFound ? UIObj.Renderer.createElement("button", {
+            onClick: function onClick(e) {
+              _this2.handleClick(e);
+            },
+            className: this.props["class"] + " " + this.state.btnClass
+          }, this.state.buttonText) : UIObj.Renderer.createElement(OriginalAddToCartBtn, this.props);
+        }
+      }]);
+
+      return CustomATCButtonComponent;
+    }(OriginalAddToCartBtn);
+    
+    
+
+    UIObj.Registry.register("WishlistModal.Container.Detail.Grid.Item.AddToCartBtn", CustomATCButtonComponent);
+    UIObj.Registry.register("WishlistModal.Container.Detail.Detail.Content.AddToCartBtn", CustomATCButtonComponent);
+  });
+});
+  
+  
+  function swymCallbackFn(swat){
+    // your API calls go here
+    document.addEventListener("swym:collections-loaded", function(){
+      swat.initializeActionButtons("boost-pfs-filter-products");
+    })    
+  }
+  if(!window.SwymCallbacks){
+    window.SwymCallbacks = [];
+  }
+  window.SwymCallbacks.push(swymCallbackFn);
+
+  
+</script>

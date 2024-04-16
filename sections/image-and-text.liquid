@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="{{ 'image-and-text.css' | asset_url }}" media="print" onload="this.media='all'"> 
+<noscript><link rel="stylesheet" href="{{ 'image-and-text.css' | asset_url }}"></noscript>
+
+<div class="page-width">
+  
+  <div class="contents-wrapper">
+      <div class="image-and-text-box">
+         <div class="img-part"><img src="https://cdn.shopify.com/s/files/1/0641/3995/2353/files/img-001.png?v=1696248225" /></div>
+      </div>
+    
+      <div class="content-part">
+         <span class="slogan">Bring your outdoors to life</span>
+         <h3 class="cont-title">From comfortable patio furniture and stylish loungers to functional grills and fire pits, we offer everything you need to transform your outdoor space into a breathtaking retreat.</h3>
+         <a href="#" class="box-link">Shop Outdoors Picks</a>  
+      </div>
+  </div>
+  
+</div>
+
+ 
+{% schema %}
+{
+  "name": "Image and Text",
+  "tag": "section",
+  "class": "section image-and-text-wrapper section-padding-large",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },  
+  "presets": [
+    {
+      "name": "Image and Text"
+    }
+  ]
+}
+{% endschema %}

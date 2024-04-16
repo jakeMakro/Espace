@@ -1,0 +1,42 @@
+.banner-with-text-wrapper { width:100%; position:relative; }
+
+.banner-with-text-wrapper .cont-wrapper { position:absolute; left:0; bottom:0; width:100%; padding:83px 0; z-index:1; }
+.banner-with-text-wrapper .cont-wrapper .banner-title { font-style: normal; font-weight: 300; font-size: 54px; line-height: 60px; display: flex; align-items: flex-end;
+text-transform: capitalize; color: #FFFFFF; max-width:577px; margin:0 0 20px 0; }
+
+.banner-with-text-wrapper .cont-wrapper .content { max-width:699px; }
+.banner-with-text-wrapper .cont-wrapper .content,
+.banner-with-text-wrapper .cont-wrapper .content p { font-style: normal; font-weight: 400; font-size: 16px; line-height: 160%; color: #FFFFFF; }
+.banner-with-text-wrapper .btn-wrap{    margin-top: 40px;}
+.banner-with-text-wrapper .button + .button { margin-left: 5px;}
+.banner-with-text-wrapper .button{    background: #FA817C;    color: #fff;-webkit-transition: all 0.3s ease 0s;   -moz-transition: all 0.3s ease 0s;    -ms-transition: all 0.3s ease 0s;     -o-transition: all 0.3s ease 0s;        transition: all 0.3s ease 0s;}
+.banner-with-text-wrapper .button:hover, .banner-with-text-wrapper .button:focus, .banner-with-text-wrapper .button:active{    background: #000;  }
+
+.banner-with-text-wrapper .images-wrapper { width:100%; height:560px; position:relative; }
+.banner-with-text-two .banner-with-text-wrapper .images-wrapper { height:430px;  }
+.banner-with-text-wrapper .images-wrapper img { position:absolute; width:100%; height:100%; top:50%; left:50%; transform:translate(-50%,-50%); object-fit: cover; }
+
+@media (min-width: 641px) {  
+.banner-with-text-wrapper .images-wrapper img.mobi-img { display:none; }
+  
+}
+
+@media (max-width: 640px) {  
+
+  .banner-with-text-wrapper .images-wrapper  { height:390px; }
+  .banner-with-text-wrapper .images-wrapper img.desk-img { display:none; }
+  .banner-with-text-wrapper .images-wrapper img.mobi-img { display:block; }  
+
+  .banner-with-text-wrapper .cont-wrapper { padding: 51px 0; }
+  .banner-with-text-wrapper .cont-wrapper .banner-title { font-style: normal; font-weight: 300; font-size: 32px; line-height: 120%; text-transform: capitalize; 
+      color: #FFFFFF; margin:0; }
+/*   .banner-with-text-wrapper .cont-wrapper .content { display:none; }    */
+  .banner-with-text-wrapper .button{padding: 0 10px;}
+  .banner-with-text .banner-with-text-wrapper .images-wrapper{min-height: 80vh;}
+  .container .banner-with-text-wrapper .button{width: 100%;}
+  .container .banner-with-text-wrapper .button + .button { margin-top: 5px;margin-left: 0;}
+}
+
+@media (max-width: 374px){
+  .banner-with-text-wrapper .button{    font-size: 13px;}
+}

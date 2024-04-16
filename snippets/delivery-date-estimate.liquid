@@ -1,0 +1,217 @@
+{%- if section.settings.show_availability_widget -%}
+
+  {%- assign dateShopMetafield = shop.metafields.JCP.BrandDelay -%}
+  
+  {%- assign proTag = product.vendor -%}
+  {% comment %}
+  {%- for tag in product.tags -%}
+    {%- if tag contains 'Brand_' -%}
+      {%- assign proTag = tag -%}
+      {%- break -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {% endcomment %}
+  
+  {%- if product.available == false or product.variants.first.inventory_quantity <= 0 -%}
+    {%- if dateShopMetafield != blank and proTag != blank -%}
+      <div class="cart-shipping-bar hidden product-availability">
+        {% render 'icon-truck' %}
+        <span class="text">
+          <span class="leb-cont"><strong>Product Availability:</strong></span>
+          <span class="lbl-txt">Get it by </span>
+          <span class="loading" data-calc-date>January 15th – January 30th</span>
+        </span>
+      </div>
+      <div class="hide" style="display: none" data-pd-tag="{{ proTag | prepend:'Brand_' }}" data-brand-date>
+        {{- dateShopMetafield -}}
+      </div>
+      <div class="other-info-item shipp-item">
+         <i class="icon">{% render 'icon-shipping' %}</i>
+         <span class="details">{{ block.settings.delivery-title }}: <span class="ship-date loading" data-calc-date>June, 5</span></span>
+       </div>
+    {%- endif -%}
+  {%- else -%}
+  {%- endif -%}
+  
+  {% style %}
+   html[lang="fr"] [data-calc-date]{
+     text-transform: capitalize;
+   }
+  .loading[data-calc-date]{
+    overflow: hidden;
+    position: relative;
+    color: transparent;
+    margin-left: 10px;
+  }
+  .loading[data-calc-date]::before{
+    position: absolute;
+    content: "";
+    height: 100%;
+    border-radius: 15px;
+    width: 100%;
+    background-image: linear-gradient(to right, #d9d9d9 0%, rgba(0,0,0,0.07) 20%, #d9d9d9 40%, #d9d9d9 100%);
+    background-repeat: no-repeat;
+    background-size: 450px 400px;
+    animation: shimmer 1.5s linear infinite;
+  }
+    @media screen and (max-width: 414px) {
+  	.loading[data-calc-date] {
+      margin-left: 0;
+      display: inline-block;
+      margin-top: 5px;
+    }
+  }
+  @keyframes shimmer {
+    0%{
+      background-position: -450px 0;
+    }
+    100%{
+      background-position: 450px 0;
+    }
+  }
+  {% endstyle %}
+  
+    
+  <script type="text/javascript" defer="defer">
+     document.addEventListener("DOMContentLoaded", function(){
+      ETADateCalculate();
+    });
+
+    if (Shopify.designMode) {
+       document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener('shopify:section:load', function(){
+          ETADateCalculate();
+        });
+      });
+    }
+
+    function ETADateCalculate(){
+      const avlEleContainer = document.querySelector("[data-brand-date] table") || null;
+      const productTag = document.querySelector("[data-brand-date]") ? document.querySelector("[data-brand-date]").dataset.pdTag : null;
+      const dateHtmlSelector = document.querySelector(".ship-date") || null;
+      const todaytDate = new Date().getTime();
+      let oneDayMiliSeconds = 86400000;
+      let monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      if(Shopify.locale == 'fr'){
+       monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"]; 
+      }
+  
+      const oneDateLabel = '{{ section.settings.avl_date_1 }}';
+      const twoDateLabel = '{{ section.settings.avl_date_2 }}';
+      
+      if(avlEleContainer && productTag){
+        const metafildJsonDat = tableToJson(avlEleContainer);
+        let date1,date2,estDate1,estDate2,monthName1,monthName2;
+        //console.table(metafildJsonDat);
+
+        let store_count = metafildJsonDat.length;
+        let findcounter = 0;
+  
+        metafildJsonDat.some((e,index) => {
+  
+          if(e.tag === productTag){
+
+            findcounter = 1;
+            
+            //remove hide class from date element
+            if(document.querySelector('.cart-shipping-bar:not(.for-instock)')){
+              document.querySelector('.cart-shipping-bar:not(.for-instock)').classList.remove('hide');
+            }
+            
+            date1 = Number(e.estimateDate1); // return weeks value;
+            date2 = Number(e.estimateDate2); // return weeks value;
+            
+            if(date1 && !isNaN(date1)){
+              let calcTime = todaytDate+(oneDayMiliSeconds*(date1*7)); //convert week to days using multiply by 7 and covert it to miliseconds
+              estDate1 = new Date(calcTime).getDate();
+              monthName1 =  monthNames[new Date(calcTime).getMonth()];
+            }
+            if(date2 && !isNaN(date2)){
+              let calcTime = todaytDate+(oneDayMiliSeconds*(date2*7)); //convert week to days using multiply by 7 and covert it to miliseconds
+              estDate2 = new Date(calcTime).getDate();
+              monthName2 =  monthNames[new Date(calcTime).getMonth()];
+            }
+            // console.table(e);
+            // console.log('week 1-->',date1,'week 2-->',date2);
+            // console.log('Date1-->',estDate1,'Date2-->',estDate2);
+            // console.log('monthName1-->',monthName1,'monthName2-->',monthName2);
+            
+            //create input field for passing this value to properties
+            let inputEle = document.createElement("input");
+            inputEle.type = "hidden";
+            inputEle.name = "properties[_Availability]";
+                      
+            if(dateHtmlSelector){
+  
+              if(estDate1 && monthName1){
+                document.querySelector('.cart-shipping-bar:not(.for-instock) .lbl-txt').textContent = `${oneDateLabel} `;
+                if(Shopify.locale == 'fr'){
+                  dateHtmlSelector.textContent = `${estDate1} ${monthName1}`;
+                  inputEle.value = `${estDate1} ${monthName1}`;
+                }else{
+                  // dateHtmlSelector.textContent = `${monthName1} ${ordinalSuffix(estDate1)}`;
+                  // inputEle.value = `${monthName1} ${ordinalSuffix(estDate1)}`;
+                  dateHtmlSelector.textContent = `${monthName1}, ${(estDate1)}`;
+                  inputEle.value = `${monthName1} ${(estDate1)}`;
+                }
+              } 
+              if(estDate2 && monthName2){
+                document.querySelector('.cart-shipping-bar:not(.for-instock) .lbl-txt').textContent = `${twoDateLabel} `;
+                let oldTextVal = dateHtmlSelector.textContent.replace(',','');
+                if(Shopify.locale == 'fr'){
+                  dateHtmlSelector.textContent = `${oldTextVal} – ${estDate2} ${monthName2}`;
+                  inputEle.value = `${oldTextVal} – ${estDate2} ${monthName2}`;
+                }else{
+                  // dateHtmlSelector.textContent = `${oldTextVal} – ${monthName2} ${ordinalSuffix(estDate2)}`;
+                  // inputEle.value = `${oldTextVal} – ${monthName2} ${ordinalSuffix(estDate2)}`;
+                  dateHtmlSelector.textContent = `${oldTextVal} – ${monthName2} ${(estDate2)}`;
+                  inputEle.value = `${oldTextVal} – ${monthName2} ${(estDate2)}`;
+                }
+              }
+              if((estDate1 && monthName1) || (estDate2 && monthName2)){
+                //dateHtmlSelector.closest('.product-form .form').appendChild(inputEle);
+                setTimeout(() => {
+                  dateHtmlSelector.classList.remove('loading');
+                },350);
+              }else{
+                //if no any date found or all the weeks value is zero then hide main widget and clear dummy date from html
+                dateHtmlSelector.textContent = '';
+                if(dateHtmlSelector.closest('.cart-shipping-bar:not(.for-instock)')){
+                  dateHtmlSelector.closest('.cart-shipping-bar:not(.for-instock)').classList.add('hidden');
+                }
+              }
+            }
+          }else{
+            if(index == (store_count - 1) && findcounter == 0){
+              //if no any date found or all the weeks value is zero then hide main widget and clear dummy date from html
+              dateHtmlSelector.textContent = '';
+              dateHtmlSelector.classList.remove('loading');
+              dateHtmlSelector.closest('.shipp-item').classList.add('hidden');
+            }
+          }
+        });
+        
+      }
+    }
+    
+    function tableToJson(table) {
+      var header = ['tag','estimateDate1','estimateDate2'];
+      var rows = [];
+      for (var i = 1; i < table.rows.length; i++) {
+        var row = {};
+        for (var j = 0; j < table.rows[i].cells.length; j++) {
+          row[header[j]] = table.rows[i].cells[j].textContent.trim();
+        }
+        rows.push(row);
+      }
+      return rows;
+    }
+    
+    function ordinalSuffix(dt){
+      return dt+((dt % 10 == 1 && dt != 11) ? 'st' : (dt % 10 == 2 && dt != 12) ? 'nd' : (dt % 10 == 3 && dt != 13) ? 'rd' : 'th'); 
+    }
+   
+  </script>
+
+  
+{%- endif -%}

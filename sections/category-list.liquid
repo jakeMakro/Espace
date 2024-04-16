@@ -1,0 +1,173 @@
+{%- capture categoryList -%}
+  {% for block in section.blocks %}
+    {% if block.settings.image != blank %}
+      {% if block.settings.collection != blank or block.settings.url != blank %}
+      <div class="box-col">
+        <a class="category-list-item" href="{{ block.settings.collection.url | default:block.settings.url }}">
+          {{ block.settings.image | image_url: width: 300 | image_tag: loading: 'lazy', class: 'category-list-img' }}
+          <span class="category-list-title">{{ block.settings.title }}</span>
+          <svg class="box-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M5.80199 1.1617L13.0005 1M13.0005 1L12.8388 8.19847M13.0005 1L1 13" stroke="black" stroke-width="1.5"/>
+          </svg>
+        </a>
+      </div>
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+{%- endcapture -%}
+
+{% if categoryList != blank %}
+<link rel="stylesheet" href="{{ 'category-list.css' | asset_url }}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="{{ 'category-list.css' | asset_url }}"></noscript>
+
+{%- assign spacing-top = section.settings.spacing-top | times: 1 -%}
+{%- assign spacing-bottom = section.settings.spacing-bottom | times: 1 -%}
+{%- if spacing-top > 0 or spacing-bottom > 0 -%}
+  {%- if spacing-top == 0 %}{% assign spacing-top = '' %}{% endif -%}
+  {%- if spacing-top == 0 %}{% assign spacing-bottom = '' %}{% endif -%}
+  {%- style -%}
+    {%- if spacing-top >= 60 -%}
+      #shopify-section-{{ section.id }} {
+        padding-top: {{ spacing-top | times: 0.6 | round }}px;
+        padding-bottom: {{ spacing-bottom | times: 0.6 | round }}px;
+      }
+      @media screen and (min-width: 750px){
+        #shopify-section-{{ section.id }} { padding-top: {{ spacing-top }}px; padding-bottom: {{ spacing-bottom }}px; }
+      }
+    {%- else -%}
+      #shopify-section-{{ section.id }} { padding-top: {{ spacing-top }}px; padding-bottom: {{ spacing-bottom }}px; }
+    {%- endif -%}
+  {%- endstyle -%}  
+{%- endif -%}
+  
+<div class="category-list">
+  <div class="page-width">
+    {% if section.settings.head != blank %}
+    <div class="section-head section-head-index">
+      <h2 class="{{ section.settings.heading_size }}">{{ section.settings.head }}</h2>
+      {% if section.settings.text != blank %}<div class="section-head-text">{{ section.settings.text }}</div>{% endif %}
+    </div>
+    {% endif %}
+    <div class="category-list-grid">
+      {{ categoryList }}
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% schema %}
+  {
+    "name": "Category list",
+    "class": "section-category-list",
+    "tag":"section",
+    "settings": [
+      {
+        "type": "inline_richtext",
+        "id": "head",
+        "label": "Heading"
+      },
+      {
+        "type": "select",
+        "id": "heading_size",
+        "options": [
+          {
+            "value": "h6",
+            "label": "h6"
+          },
+          {
+            "value": "h5",
+            "label": "h5"
+          },
+          {
+            "value": "h4",
+            "label": "h4"
+          },
+          {
+            "value": "h3",
+            "label": "h3"
+          },
+          {
+            "value": "h2",
+            "label": "h2"
+          },
+          {
+            "value": "h1",
+            "label": "h1"
+          }
+        ],
+        "default": "h3",
+        "label": "t:sections.all.heading_size.label"
+      },
+      {
+        "type": "richtext",
+        "id": "text",
+        "label": "Text"
+      },
+      {
+        "type": "header",
+        "content": "Section spacing"
+      },
+      {
+        "type": "range",
+        "id": "spacing-top",
+        "min": 0,
+        "max": 150,
+        "step": 10,
+        "default": 0,
+        "unit": "px",
+        "label": "Section margin top"
+      },
+      {
+        "type": "range",
+        "id": "spacing-bottom",
+        "min": 0,
+        "max": 150,
+        "step": 10,
+        "default": 0,
+        "unit": "px",
+        "label": "Section margin bottom"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "image_picker",
+        "name": "Category Item",
+        "limit": 12,
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "inline_richtext",
+            "id": "title",
+            "label": "Title"
+          },
+          {
+            "type": "collection",
+            "id": "collection",
+            "label": "Collection"
+          },
+          {
+            "type": "url",
+            "id": "url",
+            "label": "Url to navigate",
+            "info":"If collection is not selected, than its apply."
+          }
+        ]
+      }
+    ],
+    "presets":[
+      {
+        "name":"Category list"
+      }
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

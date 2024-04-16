@@ -1,0 +1,76 @@
+
+.inline-page.is-active { opacity: 1;visibility:visible; }
+.inline-page.is-active { right: 0;  z-index: 999999; }
+
+.inline-page {
+  background: #fff none repeat scroll 0 0;
+  height: calc(100vh - 53px);
+  overflow-y: auto;
+  padding-bottom: 120px;
+  position: fixed;
+  right: -100%;
+  top: 0px;
+  transition: all 0.25s ease 0s;
+  width: 100%;
+  z-index: 3;
+  max-height: 100%;
+    overflow: auto;
+}
+.inline-page {
+  height: auto;
+  max-width: 88%;
+  opacity: 0;
+  padding-bottom: 0;
+  right: -382px;
+  top: 0;
+}
+
+
+#overlay.is-active {
+  opacity: 1;
+  visibility: visible;
+  z-index: 99999;
+}
+
+
+#overlay {
+  background: rgba(44, 44, 44, 0.8) none repeat scroll 0 0;
+  bottom: 0;
+  height: 100%;
+  left: 0;
+  opacity: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  transition: all 0.25s ease 0s;
+  visibility: hidden;
+  width: 100%;
+  z-index: 8;
+  display:block;
+}
+
+
+.inline-page {
+  height: auto;
+  max-width: 88%;
+  opacity: 0;
+  visibility: hidden;
+  padding-bottom: 0;
+  right: -100%;
+  top: 0;
+}
+@media screen and (max-width: 766px) {
+  .inline-page {max-width: 100%;}
+}
+
+.crossdiv {
+    width: 30px;
+    position: fixed;
+    z-index: 9999;
+    right: 30px;
+    top: 18px; cursor:pointer;
+}
+
+.crossdiv img { width:100%; }
+
+

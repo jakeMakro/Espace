@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="{{ locale }}" dir="{{ direction }}" class="{{ checkout_html_classes }}">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, height=device-height, minimum-scale=1.0, user-scalable=0">
+    <meta name="referrer" content="origin">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+    <title>{{ page_title }}</title>
+
+    {{ content_for_header }}
+
+    {{ checkout_stylesheets }}
+    {{ checkout_scripts }}
+  </head>
+  <body>
+    {{ skip_to_content_link }}
+
+    <header class="banner" data-header role="banner">
+      <div class="wrap">
+        {{ content_for_logo }}
+      </div>
+    </header>
+
+    {{ order_summary_toggle }}
+    <div class="content" data-content>
+      <div class="wrap">
+        <div class="main">
+          <header class="main__header" role="banner">
+            {{ content_for_logo }}
+            {{ breadcrumb }}
+            {{ alternative_payment_methods }}
+          </header>
+          <main class="main__content" role="main">
+            {{ content_for_layout }}
+          </main>
+          <footer class="main__footer" role="contentinfo">
+            {{ content_for_footer }}
+          </footer>
+        </div>
+        <aside class="sidebar" role="complementary">
+          <div class="sidebar__header">
+            {{ content_for_logo }}
+          </div>
+          <div class="sidebar__content">
+            {{ content_for_order_summary }}
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    {{ tracking_code }}
+
+
+    <script>
+      (function($) {
+        $(document).on("page:load page:change", function() {
+
+          /*ADDRESS FIELD VALIDATION*/
+          var addressField = $('[data-shipping-address] [data-address-field="address1"] input');
+          var btnContinue = $('#continue_button');
+          if(addressField){
+            $(addressField).on('change keyup input paste', function(e){
+              let inputLength = e.target.value.length;
+              if(inputLength <= 30){
+                $(this).closest('[data-address-field="address1"]').removeClass('field--error');
+                $(this).closest('[data-address-field="address1"] .field__message--error').remove();
+              }else{
+                $(this).closest('[data-address-field="address1"]').addClass('field--error');
+                $('[data-shipping-address] [data-address-field="address1"] .field__message--error').remove();
+                $(this).closest('[data-address-field="address1"]').append('<p class="field__message field__message--error">Maximum 30 characters allowed</p>');
+              }
+              
+            });
+          }
+          
+          if(continue_button){
+            $(continue_button).on('click',function(e){
+              var addressField = $('[data-shipping-address] [data-address-field="address1"] input');
+              if(addressField){
+                let inputLength = addressField.val().length;
+                if(inputLength > 30){
+                  e.preventDefault();
+                  $('[data-shipping-address] [data-address-field="address1"]').addClass('field--error');
+                  $('[data-shipping-address] [data-address-field="address1"] .field__message--error').remove();
+                  $('[data-shipping-address] [data-address-field="address1"]').append('<p class="field__message field__message--error">Maximum 30 characters allowed</p>');  
+                  return false;
+                }
+              }
+            })
+          }
+          /*ADDRESS FIELD VALIDATION*/
+          
+        });
+      })(Checkout.$);
+    </script>
+    {% if checkout.attributes['Checkout-Method'] == 'pickup' %}
+    <script type="text/javascript">
+      if(Shopify.Checkout.step == 'contact_information'){
+        var querySelectorArray = ['.section--shipping-address [data-address-field="country"]',
+                                  '.section--shipping-address [data-address-field="address1"]',
+                                  '.section--shipping-address [data-address-field="city"]', 
+                                  '.section--shipping-address [data-address-field="province"]',
+                                  '.section--shipping-address [data-address-field="zip"]'];
+        setTimeout(function(){
+          querySelectorArray.forEach(function(item, index){
+            var _ele = document.querySelector(item);
+            if( index == 0 || index == 3 ){
+              console.log(index, item, _ele.querySelector('select').value);
+              if(_ele.querySelector('select').value != ''){
+                _ele.style.display = 'none';      
+              }
+            }else{
+              console.log(index, item, _ele.querySelector('input').value);            
+              if(_ele.querySelector('input').value != ''){
+                if( index == 1 ){
+                  document.querySelector('.section--shipping-address [data-address-field="address2"]').style.display = 'none';
+                }
+                _ele.style.display = 'none';
+              }       
+            }
+          });
+        },350);
+      }      
+
+      {% if request.locale.iso_code == "en" %}
+
+      $(document).on("page:load page:change", function() {
+        $(".breadcrumb .breadcrumb__item").eq(2).find(".breadcrumb__text").html("Pickup");
+        $(".breadcrumb .breadcrumb__item").eq(2).find(".breadcrumb__link").html("Pickup");
+        $(".total-line--shipping .total-line__name span").html("Method");
+        $(".total-line--shipping .total-line__price span").html("Free Pickup");
+        if(Shopify.Checkout.step == 'contact_information'){
+          $("#section-delivery-title").html("Store Pickup");
+          $("#continue_button span").html("Continue to Pickup");
+        }else if(Shopify.Checkout.step == 'shipping_method'){
+          $(".section--shipping-method #main-header").html("Pickup Method");
+          $("form.edit_checkout .step__sections .section .review-block").eq(1).find(".review-block__label").html("Pickup");
+          $('[data-shipping-method-label-title="Retrait en magasin"]').html("Store Pickup");
+
+          setTimeout(function(){
+            $(".total-line--shipping .total-line__name span").html("Method");
+            $(".total-line--shipping .total-line__price span").html("Free Pickup");
+          },1000);
+        }else if(Shopify.Checkout.step == 'payment_method'){
+          $('#checkout_different_billing_address_true').click();
+          $(".step__sections .section .review-block").eq(1).find(".review-block__label").html("Pickup");
+          $('[data-review-section="shipping-cost"]').html("Store Pickup <strong class='emphasis'>Free</strong>");
+          $('.step__footer__previous-link .step__footer__previous-link-content').html("Return to Pickup");
+        }
+
+        {% if checkout_html_classes contains 'page--thank-you' %}
+          $("div[data-order-updates] p").html("You will receive pickup updates via email.");
+          $("div[data-order-updates] form button span").html("Receive pickup updates by message.");
+        {% endif %}
+
+      });
+
+      {% else %}
+
+      $(document).on("page:load page:change", function() {
+        $(".breadcrumb .breadcrumb__item").eq(2).find(".breadcrumb__text").html("Ramassage");
+        $(".breadcrumb .breadcrumb__item").eq(2).find(".breadcrumb__link").html("Ramassage");
+        $(".total-line--shipping .total-line__name span").html("Méthode");
+        $(".total-line--shipping .total-line__price span").html("Ramassage gratuit");
+        if(Shopify.Checkout.step == 'contact_information'){
+          $("#section-delivery-title").html("Ramassage en magasin");
+          $("#continue_button span").html("Continuer à Ramasser");
+        }else if(Shopify.Checkout.step == 'shipping_method'){
+          $(".section--shipping-method #main-header").html("Ramassage");
+          $("form.edit_checkout .step__sections .section .review-block").eq(1).find(".review-block__label").html("Magasin");
+
+          setTimeout(function(){
+            $(".total-line--shipping .total-line__name span").html("Méthode");
+            $(".total-line--shipping .total-line__price span").html("Ramassage gratuit");
+          },1000);
+        }else if(Shopify.Checkout.step == 'payment_method'){
+        $('#checkout_different_billing_address_true').click();
+        $(".step__sections .section .review-block").eq(1).find(".review-block__label").html("Magasin");
+        $('[data-review-section="shipping-cost"]').html("Ramassage en magasin <strong class='emphasis'>Gratuit</strong>");
+        $('.step__footer__previous-link .step__footer__previous-link-content').html("Retour au ramassage");              
+        }
+
+        {% if checkout_html_classes contains 'page--thank-you' %}
+          $("div[data-order-updates] p").html("Vous recevrez des mises à jour de ramassage par e-mail.");
+          $("div[data-order-updates] form button span").html("Recevez des mises à jour de ramassage par message.");
+        {% endif %}
+
+
+      });
+
+      {% endif %}
+    </script>
+    {% endif %}
+    
+  </body>
+</html>

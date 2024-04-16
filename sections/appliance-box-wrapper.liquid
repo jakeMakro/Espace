@@ -1,0 +1,203 @@
+{{ 'appliance-box.css' | asset_url | stylesheet_tag }} 
+
+{% if section.settings.title != blank or section.settings.small-title != blank %}
+<div class="appliance-box-wrapper">
+  <div class="page-width">
+    <div class="sec-header section-head center">
+       {% if section.settings.title != blank %}<h2 class="sec-title">{{ section.settings.title }}</h2>{% endif %}
+       {% if section.settings.small-title != blank %}
+       <div class="cont section-head-text rte">
+         <p>{{ section.settings.small-title }}</p>
+       </div>
+       {% endif %}
+    </div>      
+    {% if section.blocks.size > 0 %}
+    <div class="appli-boxs">
+
+      {% for block in section.blocks %}
+      <div class="boxs-item {% cycle '', '', 'odd', 'odd' %}">
+        {% if block.settings.img != blank %}
+        <figure>
+          {%- liquid
+            assign height = block.settings.img.width | divided_by: block.settings.img.aspect_ratio | round        
+            assign sizes = '160'
+            assign widths = '375, 550, 750, 1100, 1500, 1780, 2000, 3000, 3840'
+            assign _class = ''            
+          -%}
+          {{
+            block.settings.img
+            | image_url: width: 320
+            | image_tag: loading: 'lazy', height: height, sizes: sizes, widths: widths, class: _class
+          }}
+        </figure>
+        {% endif %}
+        <div class="content">
+          {% if block.settings.title != blank %}<div class="box-title h2">{{ block.settings.title }}</div>{% endif %}
+
+          {% if block.settings.des != blank %}
+            <div class="cont rte">
+            <p>{{ block.settings.des }}</p>
+            </div>
+          {% endif %}
+
+          {% if block.settings.tooltip-1 != blank or block.settings.tooltip-2 != blank or block.settings.tooltip-3 != blank or block.settings.tooltip-4 != blank %}
+          <div class="monthly-plans">
+            <div class="item-wrapper">
+            {% if block.settings.tooltip-1 != blank or block.settings.tooltip-2 != blank %}            
+              {% if block.settings.tooltip-1 != blank %}
+              <div class="pl-item">{{ block.settings.tooltip-1 }}
+                {% if block.settings.tooltip-text-1 != blank %}
+                <div class="com-site-tooltip">
+                  <div class="tooltip-wrap info-tooltip">
+                    {% render 'info-icon' %}
+                    <div class="tooltip-info">{{ block.settings.tooltip-text-1 }}</div>
+                  </div>
+                </div>
+                {% endif %}
+              </div>
+              {% endif %}
+
+              {% if block.settings.tooltip-2 != blank %}
+              <div class="pl-item">{{ block.settings.tooltip-2 }}
+                {% if block.settings.tooltip-text-2 != blank %}
+                <div class="com-site-tooltip">
+                  <div class="tooltip-wrap info-tooltip">
+                    {% render 'info-icon' %}
+                    <div class="tooltip-info">{{ block.settings.tooltip-text-2 }}</div>
+                  </div>
+                </div>
+                {% endif %}
+              </div>
+              {% endif %}
+            {% endif %}
+
+            {% if block.settings.tooltip-3 != blank or block.settings.tooltip-4 != blank %}            
+
+              {% if block.settings.tooltip-3 != blank %}
+              <div class="pl-item">{{ block.settings.tooltip-3 }}
+                {% if block.settings.tooltip-text-3 != blank %}
+                <div class="com-site-tooltip">
+                  <div class="tooltip-wrap info-tooltip">
+                    {% render 'info-icon' %}
+                    <div class="tooltip-info">{{ block.settings.tooltip-text-3 }}</div>
+                  </div>
+                </div>
+                {% endif %}
+              </div>
+              {% endif %}
+
+              {% if block.settings.tooltip-4 != blank %}
+              <div class="pl-item">{{ block.settings.tooltip-4 }}
+                {% if block.settings.tooltip-text-4 != blank %}
+                <div class="com-site-tooltip">
+                  <div class="tooltip-wrap info-tooltip">
+                    {% render 'info-icon' %}
+                    <div class="tooltip-info">{{ block.settings.tooltip-text-4 }}</div>
+                  </div>
+                </div>
+                {% endif %}
+              </div>
+              {% endif %}              
+            
+            {% endif %}
+            </div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+
+{% schema %}
+  {
+    "name": "Appliance Box",
+    "tag": "section",
+    "class":"section section-appliance-box-wrapper section-padding-large pb-0",
+    "settings": [
+      {
+        "type":"text",
+        "id":"title",
+        "label":"Title"
+      },
+      {
+        "type":"textarea",
+        "id":"small-title",
+        "label":"Description Text"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "Coverage-block",
+        "name": "Coverage-block",
+        "settings": [
+    		{
+              "type": "image_picker",
+              "id": "img",
+              "label": "Image"
+            },
+            {
+              "type": "text",
+              "id": "title",
+              "label": "Title"
+            },
+            {
+              "type": "html",
+              "id": "des",
+              "label": "Description"
+            },
+            {
+              "type": "html",
+              "id": "tooltip-1",
+              "label": "Tooltip 1 label"
+            },
+            {
+              "type": "text",
+              "id": "tooltip-text-1",
+              "label": "Tooltip 1 text"
+            },
+            {
+              "type": "html",
+              "id": "tooltip-2",
+              "label": "Tooltip 2 label"
+            },
+            {
+              "type": "text",
+              "id": "tooltip-text-2",
+              "label": "Tooltip 2 text"
+            },
+            {
+              "type": "html",
+              "id": "tooltip-3",
+              "label": "Tooltip 3 label"
+            },
+            {
+              "type": "text",
+              "id": "tooltip-text-3",
+              "label": "Tooltip 3 text"
+            },
+            {
+              "type": "html",
+              "id": "tooltip-4",
+              "label": "Tooltip 4 label"
+            },
+            {
+              "type": "text",
+              "id": "tooltip-text-4",
+              "label": "Tooltip 4 text"
+            }
+        ]
+      }
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

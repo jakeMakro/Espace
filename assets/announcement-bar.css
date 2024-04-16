@@ -1,0 +1,44 @@
+.announcement-bar{
+  height: 33px; overflow: hidden; transition: all 0.25s ease;
+}
+.announcement-bar__message{
+  padding: 10px 0;
+  font-size: 12px;
+  line-height: 110%;
+  letter-spacing: -0.02em;
+  overflow: hidden;
+}
+.announcement-bar__message span { display: block; }
+.announcement-bar-slider .slider-button{
+  height: 33px; align-self: center;
+}
+.announcement-bar-slider:not(.swiper-initialized) .slider-button{
+  display: none;
+}
+.announcement-bar-section .announcement-bar, .announcement-bar-section .announcement-bar__announcement{
+  flex-wrap: nowrap;
+}
+
+@media screen and (min-width: 990px){
+  .announcement-bar-section .announcement-bar-slider{
+    max-width: 600px;
+  }
+  .announcement-bar-section .announcement-bar-slider.largeAnnocement { max-width: 1060px; width: 100%; }
+}
+
+@media screen and (max-width: 989px){
+  /* .announcement-bar-slider .slider-button{
+    display: none;
+  } */
+  .announcement-bar.largeAnnocement .announcement-bar__message { padding: 2.5px 0; display: flex; align-items: center; }
+}
+@media screen and (max-width: 749px){
+  .announcement-bar__message{
+    font-size: 10px;
+  }
+  /*.announcement-bar-slider .slider-button {
+    height: 30px;
+  }*/
+  .announcement-bar.largeAnnocement .announcement-bar__message { padding: 0px; display: flex; align-items: center; }
+  .announcement-bar .slider-button { min-width: 33px; }
+}

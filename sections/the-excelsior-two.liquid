@@ -1,0 +1,436 @@
+{{ 'the-excelsior.css' | asset_url | stylesheet_tag }}
+
+<div class="the-excelsior-wrapper">
+
+<div class="page-width">
+   <!--  Excelsior Contents -->
+   <div class="cont-wrapper">
+      <div class="title-part">
+          {% if section.settings.short_title != blank %}
+         <h3 class="sub-title">{{ section.settings.short_title }}</h3>
+         {% endif %}
+         {% if section.settings.head != blank %}
+         <h2 class="sec-title">{{ section.settings.head }}</h2>
+         {% endif %}
+      </div>
+      <div class="cont-part">
+         {% if section.settings.desc != blank %}
+         <div class="content rte">
+            {{ section.settings.desc }}
+         </div>
+         {% endif %}
+      </div>
+   </div>
+   <!-- ALL STAIN Experience -->
+   <div class="stain-experience-wrapper">
+      {% for block in section.blocks %}
+      {% if block.type == 'text' %}
+      <div class="stain-item">
+          <span class="card-svg">{{ forloop.index }}</span>
+         {% if block.settings.subtitle != blank %}
+         <h3 class="sub-title">{{ block.settings.subtitle }}</h3>
+         {% endif %}
+         {% if block.settings.title != blank %}
+         <h2 class="item-title">{{ block.settings.title }}</h2>
+         {% endif %}
+         {% if block.settings.desc != blank or block.settings.tooltiptext != blank %}
+         <div class="cont">
+            {{ block.settings.desc }}
+            <!-- for tooltip -->
+            {% if block.settings.tooltiptext != blank and block.settings.tooltip != blank %}
+            <div>
+               {{ block.settings.tooltiptext }} 
+               <div class="com-site-tooltip">
+                  <div class="tooltip-wrap info-tooltip">
+                     {% render 'info-icon' %}
+                     <div class="tooltip-info">{{ block.settings.tooltip }}</div>
+                  </div>
+               </div>
+            </div>
+            {% endif %}
+         </div>
+         {% endif %}
+         {% if block.settings.btntext != blank %}
+         <div class="note">{{ block.settings.btntext }}</div>
+         {% endif %}
+      </div>
+      {% endif %}
+      {% if block.type == 'image' %}
+      <div class="stain-item">
+          <span class="card-svg">{{ forloop.index }}</span>
+         {% if block.settings.subtitle != blank %}
+         <h3 class="sub-title">{{ block.settings.subtitle }}</h3>
+         {% endif %}
+         {% if block.settings.title != blank %}
+         <h2 class="item-title">{{ block.settings.title }}</h2>
+         {% endif %}
+         <div class="kit-list">
+            {%- liquid              
+              assign sizes = '160'
+              assign widths = '100,120,160,200'                    
+            -%}
+            {% if block.settings.pimg1 != blank or block.settings.ptitle1 != blank or block.settings.ptext1 != blank %}
+            <div class="kit-item">
+               {% if block.settings.pimg1 != blank %}
+               <figure>
+                  {%- liquid
+                    assign height = block.settings.pimg1.width | divided_by: block.settings.pimg1.aspect_ratio | round                            
+                  -%}
+                  {{
+                    block.settings.pimg1
+                    | image_url: width: 160
+                    | image_tag: loading: 'lazy', height: height, sizes: sizes, widths: widths, class: _class
+                  }}
+               </figure>
+               {% endif %}
+               {% if block.settings.ptitle1 != blank or block.settings.ptext1 != blank %}
+               <div class="content">
+                  {% if block.settings.ptitle1 != blank %}
+                  <h5>{{ block.settings.ptitle1 }}</h5>
+                  {% endif %}
+                  {% if block.settings.ptext1 != blank %}
+                  <span class="info">{{ block.settings.ptext1 }}</span>
+                  {% endif %}
+               </div>
+               {% endif %}
+            </div>
+            {% endif %}
+            {% if block.settings.pimg2 != blank or block.settings.ptitle2 != blank or block.settings.ptext2 != blank %}
+            <div class="kit-item">
+               {% if block.settings.pimg2 != blank %}
+               <figure>
+                  {%- liquid
+                    assign height = block.settings.pimg2.width | divided_by: block.settings.pimg2.aspect_ratio | round                            
+                  -%}
+                  {{
+                    block.settings.pimg2
+                    | image_url: width: 160
+                    | image_tag: loading: 'lazy', height: height, sizes: sizes, widths: widths, class: _class
+                  }}                 
+               </figure>
+               {% endif %}
+               {% if block.settings.ptitle2 != blank or block.settings.ptext2 != blank %}
+               <div class="content">
+                  {% if block.settings.ptitle2 != blank %}
+                  <h5>{{ block.settings.ptitle2 }}</h5>
+                  {% endif %}
+                  {% if block.settings.ptext2 != blank %}
+                  <span class="info">{{ block.settings.ptext2 }}</span>
+                  {% endif %}
+               </div>
+               {% endif %}
+            </div>
+            {% endif %}
+         </div>
+      </div>
+      {% endif %}  
+      {% if block.type == 'range' %}
+      <div class="stain-item {{ block.type }}">
+          <span class="card-svg">{{ forloop.index }}</span>
+         {% if block.settings.title != blank %}
+         <h3 class="sub-title">{{ block.settings.title }}</h3>
+         {% endif %}
+         {% if block.settings.title1 != blank %}
+         <h2 class="item-title">{{ block.settings.title1 }}</h2>
+         {% endif %}
+         {% if block.settings.text1 != blank %}
+         <div class="cont rte">
+            <p>{{ block.settings.text1 }}</p>
+         </div>
+         {% endif %}
+         {% if block.settings.title2 != blank %}
+         <h3 class="item-title">{{ block.settings.title2 }}</h3>
+         {% endif %}
+         {% if block.settings.text2 != blank %}
+         <div class="cont rte">
+            <p>{{ block.settings.text2 }}</p>
+         </div>
+         {% endif %}
+         <div class="process-list-wrapper">
+            {% if block.settings.range_title1 != blank or block.settings.range_text1 != blank %}
+            <div class="proc-item">
+               <div class="bar-item">
+                  <span class="bar-thumb" style="width:{{ block.settings.range1 }}%;"></span>
+               </div>
+               <div class="cont">
+                  <div class="name">{{ block.settings.range_title1 }}</div>
+                  {% if block.settings.range_text1 != blank %}
+                  <span class="times">{{ block.settings.range_text1 }}</span>
+                  {% endif %}
+               </div>
+            </div>
+            {% endif %}
+            {% if block.settings.range_title2 != blank or block.settings.range_text2 != blank %}
+            <div class="proc-item">
+               <div class="bar-item">
+                  <span class="bar-thumb" style="width:{{ block.settings.range2 }}%;"></span>
+               </div>
+               <div class="cont">
+                  <div class="name">{{ block.settings.range_title2 }}</div>
+                  {% if block.settings.range_text2 != blank %}
+                  <span class="times">{{ block.settings.range_text2 }}</span>
+                  {% endif %}
+               </div>
+            </div>
+            {% endif %}
+            {% if block.settings.range_title3 != blank or block.settings.range_text3 != blank %}
+            <div class="proc-item">
+               <div class="bar-item">
+                  <span class="bar-thumb" style="width:{{ block.settings.range3 }}%;"></span>
+               </div>
+               <div class="cont">
+                  <div class="name">{{ block.settings.range_title3 }}</div>
+                  {% if block.settings.range_text3 != blank %}
+                  <span class="times">{{ block.settings.range_text3 }}</span>
+                  {% endif %}
+               </div>
+            </div>
+            {% endif %}
+         </div>
+      </div>
+         {% endif %}
+         {% endfor %}        
+      </div>
+   </div>
+</div>
+
+
+{% schema %}
+  {
+    "name": "The Excelsior Two",
+    "tag": "section",
+    "class":"section the-excelsior section-padding-large pb-0",
+    "settings": [
+      
+      {
+        "type":"text",
+        "id":"short_title",
+        "label":"Short Title"
+      },
+      {
+        "type":"text",
+        "id":"head",
+        "label":"Heading"
+      },
+      {
+        "type":"html",
+        "id":"desc",
+        "label":"Description"
+      }
+    ],
+    "blocks":[
+      {
+        "type":"text",
+        "name":"Title-Desc",
+        "limit":2,
+        "settings":[
+          
+              {
+                "type":"text",
+                "id":"title",
+                "label":"Title"
+              },
+              {
+                "type":"text",
+                "id":"subtitle",
+                "label":"SubTitle"
+              },
+              {
+                "type":"html",
+                "id":"desc",
+                "label":"Description"
+              },
+              {
+                "type":"header",
+                "content":"For tooltip"
+              },
+              {
+                "type":"text",
+                "id":"tooltiptext",
+                "label":"Text with Tooltip"
+              },
+              {
+                "type":"html",
+                "id":"tooltip",
+                "label":"Tooltip Content"
+              },
+              {
+                "type":"text",
+                "id":"btntext",
+                "label":"Bottom Text"
+              }
+          
+        ]
+      },
+      {
+        "type":"image",
+        "name":"Image-Title-Text",
+        "limit":1,
+        "settings":[
+          
+              {
+                "type":"text",
+                "id":"title",
+                "label":"Title"
+              },
+              {
+                "type":"text",
+                "id":"subtitle",
+                "label":"SubTitle"
+              },
+              {
+                "type":"header",
+                "content":"For Product 1"
+              },
+              {
+                "type":"image_picker",
+                "id":"pimg1",
+                "label":"Image"
+              },
+              {
+                "type":"text",
+                "id":"ptitle1",
+                "label":"Title"
+              },
+              {
+                "type":"text",
+                "id":"ptext1",
+                "label":"Text"
+              },
+              {
+                "type":"header",
+                "content":"For Product 2"
+              },
+              {
+                "type":"image_picker",
+                "id":"pimg2",
+                "label":"Image"
+              },
+              {
+                "type":"text",
+                "id":"ptitle2",
+                "label":"Title"
+              },
+              {
+                "type":"text",
+                "id":"ptext2",
+                "label":"Text"
+              }
+          
+        ]
+      },
+      {
+        "type":"range",
+        "name":"Title-Text-Range",
+        "limit":1,
+        "settings":[
+          
+              {
+                "type":"text",
+                "id":"title",
+                "label":"Sub Title"
+              },
+              {
+                "type":"header",
+                "content":"Title 1"
+              },
+              {
+                "type":"text",
+                "id":"title1",
+                "label":"Title"
+              },
+              {
+                "type":"text",
+                "id":"text1",
+                "label":"Text"
+              },
+              {
+                "type":"header",
+                "content":"Title 2"
+              },
+              {
+                "type":"text",
+                "id":"title2",
+                "label":"Title"
+              },
+              {
+                "type":"text",
+                "id":"text2",
+                "label":"Text"
+              },
+              {
+                "type":"header",
+                "content":"Text with Range"
+              },
+              {
+                "type": "range",
+                "id": "range1",
+                "min": 0,
+                "max": 100,
+                "step": 1,
+                "unit": "%",
+                "label": "Range 1",
+                "default": 100
+              },
+              {
+                "type":"text",
+                "id":"range_title1",
+                "label":"Range Title 1"
+              },
+              {
+                "type":"text",
+                "id":"range_text1",
+                "label":"Range Text 1"
+              },
+              {
+                "type": "range",
+                "id": "range2",
+                "min": 0,
+                "max": 100,
+                "step": 1,
+                "unit": "%",
+                "label": "Range 2",
+                "default": 50
+              },
+              {
+                "type":"text",
+                "id":"range_title2",
+                "label":"Range Title 2"
+              },
+              {
+                "type":"text",
+                "id":"range_text2",
+                "label":"Range Text 2"
+              },
+              {
+                "type": "range",
+                "id": "range3",
+                "min": 0,
+                "max": 100,
+                "step": 1,
+                "unit": "%",
+                "label": "Range 3",
+                "default": 50
+              },
+              {
+                "type":"text",
+                "id":"range_title3",
+                "label":"Range Title 3"
+              },
+              {
+                "type":"text",
+                "id":"range_text3",
+                "label":"Range Text 3"
+              }
+          
+        ]
+      }
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

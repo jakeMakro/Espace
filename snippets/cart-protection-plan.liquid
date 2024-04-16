@@ -1,0 +1,351 @@
+{%- comment -%}
+  Renders a cart product protection plan
+  Accepts:
+  - line_item: {Object} cart item liquid object
+  - isProtectionPlanSelected: {Boolean} is protection plan already added ? if added then pass true else false
+  Usage:
+  {% render "cart-protection-plan", line_item: item, isProtectionPlanSelected: true %}
+{%- endcomment -%}
+
+{%- assign price_threshold = shop.metafields.JCP.priceminimum | first | times: 100 -%}
+{%- assign lineItemAssociatedProduct = line_item.product.metafields.JCP.AssociatedProducts -%}
+{%- assign show_assembly_service = false -%}
+{%- assign show_other_services = false -%}
+{%- assign applince_product = false -%}
+{%- assign antitache_product = false -%}
+
+
+{%- comment -%}
+----------------------------------------------------
+** FOR ASSEMBLY SERVICE METAFIELD TAGS VALUE **
+----------------------------------------------------
+{%- endcomment -%}
+{%- assign assemblyServiceTagsValue = shop.metafields.JCP.AssemblyService -%}
+{%- if assemblyServiceTagsValue contains ',' -%}
+  {%- assign assemblyServiceTags = assemblyServiceTagsValue | split: ',' -%}
+{%- else -%}
+  {%- assign assemblyServiceTags = assemblyServiceTagsValue -%}
+{%- endif -%}
+
+{%- comment -%}
+--------------------------------------------
+** FOR OTHER SERVICE METAFIELD VALUE **
+--------------------------------------------
+{%- endcomment -%}
+{%- assign otherServiceTagsValue = shop.metafields.JCP.service_collections -%}
+{%- if otherServiceTagsValue contains '|' -%}
+  {%- assign otherServiceTags = otherServiceTagsValue | split: '|' -%}
+{%- else -%}
+  {%- assign otherServiceTags = otherServiceTagsValue -%}
+{%- endif -%}
+
+
+{%- comment -%}
+--------------------------------------------
+** FOR APPLIANCE METAFIELD TAGS VALUE **
+--------------------------------------------
+{%- endcomment -%}
+{%- assign applinceTagsValue = shop.metafields.tags.appliance_plan -%}
+{%- if applinceTagsValue contains '|' -%}
+  {%- assign applinceTags = applinceTagsValue | split: '|' -%}
+{%- else -%}
+  {%- assign applinceTags = applinceTagsValue -%}
+{%- endif -%}
+
+{%- comment -%}
+--------------------------------------------
+** FOR FURNITURE METAFIELD TAGS VALUE **
+--------------------------------------------
+{%- endcomment -%}
+{%- assign antitacheTagsValue = shop.metafields.tags.antitache_plan -%}
+{%- if antitacheTagsValue contains '|' -%}
+  {%- assign antitacheTags = antitacheTagsValue | split: '|' -%}
+{%- else -%}
+  {%- assign antitacheTags = antitacheTagsValue -%}
+{%- endif -%}
+
+
+
+{%- comment -%}** PRODUCT TAGS FOR EACH INDIVIDUAL LINE ITEM **{%- endcomment -%}
+{%- for tag in line_item.product.tags -%}
+  {%- assign tagDownCase = tag | downcase -%}
+
+  {%- comment -%}** For Applince **{%- endcomment -%}
+  {%- unless isProtectionPlanSelected -%}
+    {%- if applinceTags != blank -%}
+      {%- for applinceTag in applinceTags -%}
+        {%- assign applinceTagDownCase = applinceTag | downcase -%}
+        {%- if tagDownCase == applinceTagDownCase -%}
+          {%- assign applince_product = true -%}
+          {%- break -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endif -%}
+  {%- endunless -%}
+    
+  {%- comment -%}** For Furniture **{%- endcomment -%}
+  {%- unless isProtectionPlanSelected -%}
+    {%- if antitacheTags != blank -%}
+      {%- for antitacheTag in antitacheTags -%}
+        {%- assign antitacheTagDownCase = antitacheTag | downcase -%}
+        {%- if tagDownCase == antitacheTagDownCase -%}
+          {%- assign antitache_product = true -%}
+          {%- break -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endif -%}
+  {%- endunless -%}
+
+
+  {%- comment -%}** For Assembly Service **{%- endcomment -%}  
+  {%- if assemblyServiceTags != blank -%}
+    {%- for assemblyTag in assemblyServiceTags -%}
+      {%- assign assemblyTagDownCase = assemblyTag | downcase -%}
+      {%- if tagDownCase == assemblyTagDownCase -%}
+        {%- if line_item.price >= price_threshold -%}
+          {%- assign show_assembly_service = true -%}
+          {%- break -%}
+        {%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+    
+{%- endfor -%}
+
+
+{%- comment -%}** For Other Service Logic **{%- endcomment -%}
+{%- if otherServiceTags != blank -%}
+  {%- for lineItemCollection in line_item.product.collections -%}
+    {%- for otherServiceTag in otherServiceTags -%}
+      {%- assign coll_obj = collections[otherServiceTag] -%}
+      {%- if coll_obj.handle == lineItemCollection.handle -%}
+        {%- assign show_other_services = true -%}
+        {%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
+    {%- if show_other_services -%}{% break %}{%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+
+
+
+{%- if applince_product or antitache_product -%}
+
+  
+  {%- assign lineFinalPrice = line_item.final_price -%}
+  {%- assign lineFinalPriceDivided = lineFinalPrice | divided_by: 100 -%}
+  {%- assign lastVariantIndexFor2YearPlan = protectionPlan_2year.variants.size | minus: 1 -%}
+  {%- assign lastVariantIndexFor4YearPlan = protectionPlan_4year.variants.size | minus: 1 -%}
+  {%- assign lastVariantIndexForFurniturePlan = protectionPlanFurniture.variants.size | minus: 1 -%}
+
+  {%- comment -%}** PROTECTION PLAN PRODUCTS **{%- endcomment -%}
+  {%- assign protectionPlan_2year = all_products['plan-de-protection-2-ans'] -%}
+  {%- assign protectionPlan_4year = all_products['plan-de-protection-4-ans'] -%}
+  {%- assign protectionPlanFurniture = all_products['plan-de-protection-antitache'] -%}
+
+  {%- comment -%}** PROTECTION/WARRENTY GUIDE LINKS FROM CUSTOMIZER **{%- endcomment -%}
+  {% assign furniture_protection_guide_link = section.settings.furniture_protection_guide_link %}
+  {% assign protection_guide_link = section.settings.protection_guide_link %}
+
+
+  {%- comment -%}** 2 YEAR PROTECTION PLAN **{%- endcomment -%}
+  {%- for variant in protectionPlan_2year.variants -%}
+    {%- assign priceFor2Year = variant.title | split: '-' | first -%}
+    {%- assign basePrice2Year = priceFor2Year | times: 100 -%}
+    {%- if basePrice2Year > lineFinalPrice -%}
+      {%- break -%}
+    {%- else -%}
+      {%- assign plan2YearPrice = variant.price -%}
+      {%- assign plan2YearId = variant.id -%}
+      {%- assign plan2YearSKU = variant.sku -%}
+    {%- endif -%}
+  {%- endfor -%}
+
+  {%- comment -%}** 4 YEAR PROTECTION PLAN **{%- endcomment -%}
+  {%- for variant in protectionPlan_4year.variants -%}
+    {%- assign priceFor4Year = variant.title | split: '-' | first -%}
+    {%- assign basePrice4Year = priceFor4Year | times: 100 -%}
+    {%- if basePrice4Year > lineFinalPrice -%}
+      {%- break -%}
+    {%- else -%}
+      {%- assign plan4YearPrice = variant.price -%}
+      {%- assign plan4YearId = variant.id -%}
+      {%- assign plan4YearSKU = variant.sku -%}
+    {%- endif -%}
+  {%- endfor -%}
+
+  {%- comment -%}** FURNITURE PROTECTION PLAN **{%- endcomment -%}
+  {%- for variant in protectionPlanFurniture.variants -%}
+    {%- assign priceForFurniture = variant.title | split: '-' | first -%}
+    {%- assign basePriceFurniture = priceForFurniture | times: 100 -%}
+    {%- if basePriceFurniture > lineFinalPrice -%}
+      {%- break -%}
+    {%- else -%}
+      {%- assign furniturePrice = variant.price -%}
+      {%- assign furnitureId = variant.id -%}
+      {%- assign furnitureSKU = variant.sku -%}
+    {%- endif -%}
+  {%- endfor -%}
+
+
+  <div class="cart-service-appliance">
+
+
+    <div class="appliance-col">
+      <h4 class="icon-dot">{% render 'icon-protect' %}
+        {%- if applince_product -%}
+          {{- 'sections.cart.protection_plan_appliance_label' | t -}}
+        {%- elsif antitache_product -%}
+          {{- 'sections.cart.protection_plan_furniture_label' | t -}}
+        {%- else -%}
+          {{- 'sections.cart.protection_plan_label' | t -}}
+        {%- endif -%}
+      </h4>
+      <div class="cart-appliance-list">
+    
+        {%- if applince_product -%}
+           <!-- 2 year protection plan -->
+          {%- capture Object2year -%}
+            {%- if lineFinalPriceDivided > 75000 -%}
+              {
+                "id": {{ protectionPlan_2year.variants[lastVariantIndexFor2YearPlan].id | json }},
+                "sku": {{ protectionPlan_2year.variants[lastVariantIndexFor2YearPlan].sku | json }},
+                "qty": {{ line_item.quantity | json }}
+              }
+            {%- else -%}
+              {
+                "id": {{ plan2YearId | json }},
+                "sku": {{ plan2YearSKU | json }},
+                "qty": {{ line_item.quantity | json }}
+              }
+            {%- endif -%}
+          {%- endcapture -%}
+          <protection-plan class="cart-appliance-box">
+            <div class="service-label" data-object='{{ Object2year }}'>
+              <input type="radio" id="protection_plan_2year_{{line_item.key}}" name="protection_plan_{{line_item.key}}" data-service-type="applince_product">
+              <div class="label-text">
+                <div class="pro-plan-title-wrap">
+                  <label for="protection_plan_2year_{{line_item.key}}">Plan de protection 2 ans</label>
+                  <span class="tooltip applince-tooltip">
+                    <a href="{{protection_guide_link}}" data-protection-content>
+                      {%- render 'icon-tooltip' -%}
+                    </a>
+                  </span>
+                </div>
+                <span class="label-price">
+                  {%- if lineFinalPriceDivided > 75000 -%}
+                    {{- 'Free' -}}
+                  {%- else -%}
+                    {{ plan2YearPrice | times: line_item.quantity | money }}
+                  {%- endif -%}
+                </span>
+              </div>
+            </div>
+          </protection-plan>
+  
+          <!-- 4 year protection plan -->
+          {%- capture Object4year -%}
+            {%- if lineFinalPriceDivided > 75000 -%}
+              {
+                "id": {{ protectionPlan_4year.variants[lastVariantIndexFor4YearPlan].id | json }},
+                "sku": {{ protectionPlan_4year.variants[lastVariantIndexFor4YearPlan].sku | json }},
+                "qty": {{ line_item.quantity | json }}
+              }
+            {%- else -%}
+              {
+                "id": {{ plan4YearId | json }},
+                "sku": {{ plan4YearSKU | json }},
+                "qty": {{ line_item.quantity | json }}
+              }
+            {%- endif -%}
+          {%- endcapture -%}
+          <protection-plan class="cart-appliance-box">
+            <div class="service-label" data-object='{{ Object4year }}'>
+              <input type="radio" id="protection_plan_4year_{{line_item.key}}" name="protection_plan_{{line_item.key}}" data-service-type="applince_product">
+              <div class="label-text">
+                <div class="pro-plan-title-wrap">
+                  <label for="protection_plan_4year_{{line_item.key}}">Plan de protection 4 ans</label>
+                  <span class="tooltip applince-tooltip">
+                    <a href="{{protection_guide_link}}" data-protection-content>
+                      {%- render 'icon-tooltip' -%}
+                    </a>
+                  </span>
+                </div>
+                <span class="label-price">
+                  {%- if lineFinalPriceDivided > 75000 -%}
+                    {{- 'Free' -}}
+                  {%- else -%}
+                    {{ plan4YearPrice | times: line_item.quantity | money }}
+                  {%- endif -%}
+                </span>
+              </div>
+            </div>
+          </protection-plan>
+        {%- endif -%}
+        
+        {%- if antitache_product -%}
+          <!-- furniture protection plan -->
+          {%- capture ObjectFurniture -%}
+            {%- if lineFinalPriceDivided > 75000 -%}
+              {
+                "id": {{ protectionPlanFurniture.variants[lastVariantIndexForFurniturePlan].id | json }},
+                "sku": {{ protectionPlanFurniture.variants[lastVariantIndexForFurniturePlan].sku | json }},
+                "qty": {{ line_item.quantity | json }}
+              }
+            {%- else -%}
+              {
+                "id": {{ furnitureId | json }},
+                "sku": {{ furnitureSKU | json }},
+                "qty": {{ line_item.quantity | json }}
+              }
+            {%- endif -%}
+          {%- endcapture -%}
+          <protection-plan class="cart-appliance-box">
+            <div class="service-label" data-object='{{ ObjectFurniture }}'>
+              <input type="radio" id="protection_plan_furniture_{{line_item.key}}" name="protection_plan_{{line_item.key}}" data-service-type="furniture_product">
+              <div class="label-text">
+                <div class="pro-plan-title-wrap">
+                  <label for="protection_plan_furniture_{{line_item.key}}">Plan de protection Antitache</label>
+                  <span class="tooltip furniture-tooltip">
+                    <a href="{{furniture_protection_guide_link}}" data-protection-content>
+                      {%- render 'icon-tooltip' -%}
+                    </a>
+                  </span>
+                </div>
+                <span class="label-price">
+                  {%- if lineFinalPriceDivided > 75000 -%}
+                    {{- 'Free' -}}
+                  {%- else -%}
+                    {{ furniturePrice | times: line_item.quantity | money }}
+                  {%- endif -%}
+                </span>
+              </div>
+            </div>
+          </protection-plan>
+        {%- endif -%}
+        
+      </div>
+    </div>
+    
+    {%- if show_assembly_service or show_other_services -%}
+      {%- render 'cart-additional-services',
+         show_assembly_service: show_assembly_service,
+         show_other_services: show_other_services,
+         line_item: line_item
+      -%}
+    {%- endif -%}
+    
+  </div>
+  
+{%- else -%}
+  
+  {%- if show_assembly_service or show_other_services -%}
+    {%- render 'cart-additional-services',
+       show_assembly_service: show_assembly_service,
+       show_other_services: show_other_services,
+       line_item: line_item
+    -%}
+  {%- endif -%}
+  
+{%- endif -%}
+

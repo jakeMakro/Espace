@@ -1,0 +1,134 @@
+.section-faq .section-head {
+  margin-bottom: 60px;
+}
+.section-faq .section-head-text p{
+  color: #000;
+}
+.faq-btn-wrap .primary-btn{
+  display: flex;
+  align-items: center;
+}
+.faq-btn-wrap{
+  display: flex;
+  align-items: center;
+}
+
+
+.faq-btn-wrap .faq-or {
+  margin: 0 18px;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 160%;
+  color: #B8B8B8;
+}
+
+.faq-btn-wrap .faq-chat,
+.faq-btn-wrap .faq-or { display:none; }
+
+
+.faq-btn-wrap .faq-or svg{
+  vertical-align: top;
+}
+.section-faq .faq-grid{
+  display: flex;
+}
+.section-faq .left-item{
+  width: 45%;
+  padding-right: 50px;
+}
+.section-faq .faq-questions{
+  width: 55%;
+}
+.section-faq .faq-que{
+  padding: 30px 40px 30px 0;
+  background: transparent;
+  border: none;
+  text-align: left;
+  position: relative;
+  width: 100%;
+  cursor: pointer;
+  color: currentcolor;
+  letter-spacing: 0;
+}
+.section-faq .faq-que svg{
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translate(0, -50%);
+}
+.faq-que-item{
+  border-top: 1px solid #000;
+}
+.section-faq .faq-que-item:last-child{
+  border-bottom: 1px solid #000;
+}
+.section-faq .faq-ans{
+  display: none;
+  padding-bottom: 30px;
+  padding-right: 40px;
+}
+.faq-ans p:first-child{
+  margin-top: 0;
+}
+.faq-ans p:last-child{
+  margin-bottom: 0;
+}
+.section-faq .faq-ans p{
+  font-weight: 400;
+  line-height: 160%;
+}
+.section-faq .faq-ans p a{
+  color: currentcolor;
+}
+.faq-que-item.active .faq-que svg{
+  transform: translate(0, -50%) rotate(180deg);
+}
+
+@media screen and (max-width: 1199px){
+  .section-faq .faq-que{
+    padding: 25px 40px 25px 0;
+  }
+  .faq-btn-wrap .faq-or{
+    display: none;
+  }
+  .faq-btn-wrap{
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .faq-btn-wrap .faq-chat{
+    margin-bottom: 30px;
+  }
+  .section-faq .section-head {
+    margin-bottom: 40px;
+  }
+}
+@media screen and (max-width: 989px){
+  .section-faq .faq-que{
+    padding: 20px 40px 20px 0;
+  }
+  .section-faq .faq-grid{
+    flex-direction: column;
+  }
+  .section-faq .left-item {
+    width: 100%;
+    padding-right: 0;
+    padding-top: 0;
+  }
+  .faq-btn-wrap{
+    align-items: center;
+    margin-top: 40px;
+  }
+  .section-faq .faq-questions {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 749px){
+  .faq-btn-wrap .faq-chat {
+    width: 100%;
+  }
+}
+
+
+
+
+

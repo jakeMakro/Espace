@@ -1,0 +1,96 @@
+{{ 'items-picked-for-you.css' | asset_url | stylesheet_tag }}
+<div class="items-picked-box">
+  <div class="page-width">
+      <div class="sec-head scroll-trigger animate--slide-in">
+         <h2 class="sec-title">{{ section.settings.title }}</h2>
+         <ul class="prolist-tags-list">
+           {% for block in section.blocks %}
+             {% if block.settings.title != blank %}
+               <li class="tag-item {% if forloop.first %}active{% endif %}" data-title="title-{{ forloop.index }}">{{ block.settings.title }}</li>
+             {% endif %}
+           {% endfor %}
+         </ul>
+       </div>
+      {% for block in section.blocks %}
+      {% assign collection = block.settings.collection %}
+      <div class="slide-main-wrapper scroll-trigger animate--slide-in" {% unless forloop.first %}style="display:none;"{% endunless %} data-content="content-{{ forloop.index }}">
+        {% render 'item-picked-tab' %}
+      </div>
+      {% endfor %}  
+  </div>  
+  
+</div>
+
+<script>
+
+  $( document ).ready(function() {
+    
+    var swiper = new Swiper(".items-picked", {
+      slidesPerView: 4,
+      spaceBetween: 0,      
+      pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
+      },
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+      },
+    });
+  $(".tag-item").click(function(){
+    $(".tag-item").removeClass("active");
+    $(this).addClass("active");
+    $(".slide-main-wrapper").hide();
+    var GetTitle = $(this).attr("data-title");
+    GetTitle = GetTitle.split("-");
+    GetTitle = GetTitle[1];
+    GetTitle = ("content-"+GetTitle);
+    $(".slide-main-wrapper[data-content='"+GetTitle+"']").show();
+  })
+  });
+</script>
+
+{% schema %}
+  {
+    "name": "Items Picked for You",
+    "class":"items-picked-for-you-wrapper",
+    "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default":"Items Picked for You"
+    }
+    ],
+    "blocks": [
+      {
+        "type": "collection",
+        "name": "Collection",
+        "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title",
+        "default":"Title"
+       },
+       {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+       }
+      ]
+    }
+  ],
+    "presets": [
+      {
+        "name": "Items Picked for You"
+      }
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

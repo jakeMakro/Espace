@@ -1,0 +1,1090 @@
+{{ 'hero-banner-new.css' | asset_url | stylesheet_tag }}
+{{ 'new-hero-section.css' | asset_url | stylesheet_tag }}
+
+{%- assign spacing-top = section.settings.spacing-top | times: 1 -%}
+{%- assign spacing-bottom = section.settings.spacing-bottom | times: 1 -%}
+{%- if spacing-top > 0 or spacing-bottom > 0 -%}
+  {%- if spacing-top == 0 %}{% assign spacing-top = '' %}{% endif -%}
+  {%- if spacing-top == 0 %}{% assign spacing-bottom = '' %}{% endif -%}
+  {%- style -%}
+    {%- if spacing-top >= 60 -%}
+      #shopify-section-{{ section.id }} {
+        padding-top: {{ spacing-top | times: 0.7 | round | at_least: 20 }}px;
+        padding-bottom: {{ spacing-bottom | times: 0.7 | round | at_least: 20 }}px;
+      }
+      @media screen and (min-width: 750px){
+        #shopify-section-{{ section.id }} { padding-top: {{ spacing-top }}px; padding-bottom: {{ spacing-bottom }}px; }
+      }
+    {%- else -%}
+      #shopify-section-{{ section.id }} { padding-top: {{ spacing-top }}px; padding-bottom: {{ spacing-bottom }}px; }
+    {%- endif -%}
+  {%- endstyle -%}  
+{%- endif -%}
+
+{%- assign loadingType = 'lazy' -%}
+{%- assign fetchPriorityType = 'auto' -%}
+
+{%- liquid
+  assign desktop_content_position = section.settings.desktop_content_position | split:' align-'
+  assign mobile_content_position = section.settings.mobile_content_position | split:' align-'
+  assign stack_in_mobile = section.settings.stack_in_mobile | default: false
+  
+  assign contentAlign = desktop_content_position | last
+  assign desktop_content_position = desktop_content_position | first | strip
+
+  assign contentAlignMobile = mobile_content_position | last
+  assign mobile_content_position = mobile_content_position | first | strip
+  if mobile_content_position contains 'true'
+    assign stack_in_mobile = true
+    assign mobile_content_position = mobile_content_position | split:' true'
+    assign mobile_content_position = mobile_content_position | first | strip  
+  endif
+
+  assign secondImagelayout = false
+  assign secondImagelayoutMobile = false
+  if desktop_content_position contains 'twoImg-TLay-'
+    if section.settings.image != blank and section.settings.image_1 != blank
+     assign secondImagelayout = true
+    endif
+  endif
+  if mobile_content_position contains 'twoImg-TLay-'
+    if section.settings.image != blank and section.settings.image_1 != blank
+     assign secondImagelayoutMobile = true
+    endif
+  endif
+
+  assign hasVideo = false
+  assign hasVideoMobile = false
+  assign imgVideoLayout = false
+  assign imgVideoLayoutMobile = false
+  if section.settings.video_url_dk != blank or section.settings.mp4_video_url_dk != blank
+    if desktop_content_position contains 'videoLayout-'
+      assign hasVideo = true
+    endif
+    if mobile_content_position contains 'videoLayout-'
+      assign hasVideoMobile = true
+    endif
+    
+    if desktop_content_position contains 'imgVi-TLay-'
+      assign hasVideo = true
+      assign imgVideoLayout = true
+    endif
+    if mobile_content_position contains 'imgVi-TLay-'
+      assign hasVideoMobile = true
+      assign imgVideoLayoutMobile = true
+    endif
+  endif
+-%}
+
+{%- if section.settings.adapt_height_first_image and section.settings.image != blank -%}
+  {%- style -%}
+  @media screen and (max-width: 749px) {
+    #Banner-{{ section.id }}::before,
+    #Banner-{{ section.id }} .banner__media::before,
+    #Banner-{{ section.id }}:not(.banner--mobile-bottom) .banner__content::before {
+    {%- if section.settings.image_mobile != blank -%}
+        padding-bottom: {{ 1 | divided_by: section.settings.image_mobile.aspect_ratio | times: 100 }}%;
+    {% else %}
+          padding-bottom: {{ 1 | divided_by: section.settings.image.aspect_ratio | times: 100 }}%;
+    {% endif %}
+      content: '';
+      display: block;
+    }
+  }
+
+  @media screen and (min-width: 750px) {
+    {% if section.settings.image != blank and section.settings.image_1 != blank and secondImagelayout %}
+      #Banner-{{ section.id }}::before{
+        padding-bottom: {{ 0.5 | divided_by: section.settings.image.aspect_ratio | times: 100 }}%;        
+        content: '';
+        display: block;
+      }      
+      #Banner-{{ section.id }} .banner__media::before {
+        padding-bottom: {{ 1 | divided_by: section.settings.image.aspect_ratio | times: 100 }}%;
+        content: '';
+        display: block;
+      }
+    {% else %}
+      #Banner-{{ section.id }}::before,
+      #Banner-{{ section.id }} .banner__media::before {        
+        padding-bottom: {{ 1 | divided_by: section.settings.image.aspect_ratio | times: 100 }}%;        
+        content: '';
+        display: block;
+      }
+    {%- endif -%}
+  }
+  {%- endstyle -%}
+{%- endif -%}
+
+{%- style -%}
+  {%- if section.settings.image != blank and section.settings.image_1 != blank -%}    
+    #Banner-{{ section.id }} .banner__media_1::after{ opacity: {{ section.settings.image_overlay_opacity_m | divided_by: 100.0 }}; }
+    #Banner-{{ section.id }} .banner__media_2::after{ opacity: {{ section.settings.image_overlay_opacity_m_2 | divided_by: 100.0 }}; }
+    @media screen and (min-width: 750px) {
+      #Banner-{{ section.id }} .banner__media_1::after{ opacity: {{ section.settings.image_overlay_opacity | divided_by: 100.0 }}; }
+      #Banner-{{ section.id }} .banner__media_2::after{ opacity: {{ section.settings.image_overlay_opacity_2 | divided_by: 100.0 }}; }
+    }
+  {%- else -%}
+    #Banner-{{ section.id }}::after { opacity: {{ section.settings.image_overlay_opacity_m | divided_by: 100.0 }}; }
+    @media screen and (min-width: 750px) {
+      #Banner-{{ section.id }}::after { opacity: {{ section.settings.image_overlay_opacity | divided_by: 100.0 }}; }
+    }    
+  {%- endif -%}
+{%- endstyle -%}
+
+{% capture _mainCalss %}  
+  banner--content-align-{{ contentAlign }} bannerConAlign-{{ contentAlignMobile }}-moible banner--content-align-mobile-{{ mobile_content_position }} banner--{{ section.settings.image_height }} 
+  {% if desktop_content_position == "twoImg-TLay-4" and secondImagelayout %} banner--{{ desktop_content_position }}{% endif %} dk-banner--{{ desktop_content_position }}
+  {% if stack_in_mobile and mobile_content_position != "twoImg-TLay-4" %} banner--contentStacked{% endif %}
+  {% if section.settings.adapt_height_first_image and section.settings.image != blank %} banner--adapt{% endif %}
+  {% if section.settings.adapt_height_window and section.settings.image != blank %} banner--adaptWindow{% endif %}
+   secondImgMobile-{{ secondImagelayoutMobile }} banner--desktop-transparent
+{% endcapture %}{%- assign _mainCalss = _mainCalss | strip_newlines | replace:'  ',' ' | replace:'  ',' ' -%}
+
+
+
+<div id="Banner-{{ section.id }}" class="banner newHero-banner {{ _mainCalss }}" >
+
+  {%- assign button_link_1 = section.settings.button_link_1 -%}
+  {%- assign button_link_1_titl4 = section.settings.button_link_1_titl4 -%}
+  {%- assign button_link_1_m = section.settings.button_link_1_m -%}
+  {%- assign button_link_1_titl4_m = section.settings.button_link_1_titl4_m -%}
+  
+  {%- assign buttons = section.blocks | where: 'type', 'buttons' -%}
+  {%- assign button1 = blank -%}
+  {%- assign button2 = blank -%}  
+  {%- for button in buttons -%}{%- endfor -%}
+  
+  {%- assign _linkClass = '' -%}
+  {% assign moConPo = mobile_content_position | split:' ' | first %}
+  {% if desktop_content_position == "twoImg-TLay-4" and moConPo != "twoImg-TLay-4" %}
+    {%- assign _linkClass = 'firstLink half-link_secondLink half-link small-hide' -%}
+  {% elsif desktop_content_position != "twoImg-TLay-4" and moConPo == "twoImg-TLay-4" %}
+    {%- assign _linkClass = 'firstLink half-link_secondLink half-link medium-hide large-up-hide' -%}
+  {% elsif desktop_content_position == "twoImg-TLay-4" and moConPo == "twoImg-TLay-4" %}
+    {%- assign _linkClass = 'firstLink half-link_secondLink half-link' -%}
+  {% endif -%}
+  
+  {%- capture button1 -%}
+    {%- if button_link_1 != blank %}
+      <a href="{{ button_link_1 }}" class="full-width-link {{ _linkClass | split:'_' | first }}"
+      {% if button_link_1_m != blank %}
+        onclick="window.innerWidth > 749 ? '' : ( event.preventDefault(), window.open('{{ button_link_1_m }}', '_self'))" 
+      {% endif %}
+        ></a>
+    {% endif -%}    
+  {%- endcapture -%}
+  {%- capture button2 -%}
+  {%- if button_link_1_titl4 != blank and desktop_content_position == "twoImg-TLay-4" or moConPo == "twoImg-TLay-4" -%}      
+    <a href="{{ button_link_1_titl4 }}" class="full-width-link {{ _linkClass | split:'_' | last }}"
+      {% if button_link_1_titl4_m != blank %}
+        onclick="window.innerWidth > 749 ? '' : ( event.preventDefault(), window.open('{{ button_link_1_titl4_m }}', '_self'))" 
+      {% endif %}
+      ></a>
+  {%- endif -%}
+  {%- endcapture -%}
+
+  {% capture _video %}
+  {%- if section.settings.video_url_dk != blank -%}
+
+    {%- assign videoIdDesk = section.settings.video_url_dk.id -%}
+    {%- if section.settings.video_url_dk contains 'youtu' -%}
+      <iframe class="autoplay-true" width="100%" src="https://www.youtube.com/embed/{{ videoIdDesk }}?enablejsapi=1&modestbranding=1&rel=0&autoplay=0&muted=1&controls=0&loop=1&playlist={{videoIdDesk}}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    {%- else  -%}
+        
+      {%- if section.settings.autoplay == true -%}
+          <iframe class="autoplay-true" width="100%" src="https://player.vimeo.com/video/{{ videoIdDesk }}?autoplay=1&muted=1&controls=0&loop=1&autopause=0" frameborder='0' webkitAllowFullScreen mozallowfullscreen allowFullScreen allow=autoplay></iframe>
+      {%- else -%}
+        <video-holder>
+        <figure>
+          <div class="figure-wrap">
+            <span class="video-play-icon">{%- render 'icon-play' -%}</span>
+            {%- if section.settings.image != blank -%}
+              {%- liquid
+                  assign height = section.settings.image.width | divided_by: section.settings.image.aspect_ratio | round
+                  assign width = section.settings.image.width
+                  assign sizes = '100vw'
+                  assign widths = '375, 550, 750, 1100, 1500, 1780, 2000, 3000, 3840'
+              -%}
+              {%- comment -%}{%- capture class -%}{%- if section.settings.image_mobile != blank -%}small-hide{%- endif -%}{%- endcapture -%}{%- endcomment -%}
+              {{ section.settings.image | image_url: width: 3840 | image_tag: loading: loadingType, fetchPriorityType: fetchPriorityType, height: height, width: width, sizes: sizes, widths: widths }}
+            {%- endif -%}
+          </div>
+        </figure>
+          <iframe width="100%" class="video" data-autoplay="false" data-src="https://player.vimeo.com/video/{{ videoIdDesk }}?autoplay=1&muted=0&controls=0&loop=1&autopause=0" frameborder='0' webkitAllowFullScreen mozallowfullscreen allowFullScreen allow=autoplay></iframe>
+        </video-holder>
+      {%- endif -%}
+        
+    {%- endif -%}
+
+  {%- comment -%} display MP4 video [ FOR DESKTOP ] {%- endcomment -%}
+  {%- elsif section.settings.mp4_video_url_dk != blank -%}
+
+    {%- if section.settings.autoplay == true -%}
+        {%- capture class_vidDK -%}video autoplay-true{%- endcapture -%}
+        {%- comment -%}
+        {{ section.settings.mp4_video_url_dk | video_tag: image_size: "1920x",
+            loop: true,
+            controls: false,
+            muted: true,
+            autoplay: true,
+            class: class_vidDK
+        }}
+        {%- endcomment -%}
+        <video class="video autoplay-true vid-lazyload" poster="{{ section.settings.mp4_video_url_dk.preview_image | image_url: width: 1920 }}" playsinline {% if section.settings.autoplay %}muted loop autoplay{% else %}controls{% endif %}>
+          <source src="{{ section.settings.mp4_video_url_dk.sources[1].url }}" type="{{ section.settings.mp4_video_url_dk.sources[1].mime_type }}">
+          {{ section.settings.mp4_video_url_dk.preview_image | image_url: width: 1920 | image_tag: loading: loadingType, fetchPriority: fetchPriorityType }}
+        </video>
+      {%- else -%}
+
+        <video-holder>
+          <figure>
+            <div class="figure-wrap">
+              <span class="video-play-icon">{%- render 'icon-play' -%}</span>
+            </div>
+          </figure>
+          {{ section.settings.mp4_video_url_dk | video_tag: image_size: "1920x",
+              loop: true,
+              controls: true,
+              muted: false,
+              class: "video autoplay-true"
+          }}
+        </video-holder>
+        
+      {%- endif -%}
+  {%- endif -%}
+  {% endcapture %}{%- assign _video = _video | strip | strip_newlines -%}
+  
+  {%- if section.settings.image != blank or section.settings.image_1 != blank -%}
+    {%- liquid
+      assign DkSizes = '100vw'
+      if secondImagelayout
+        assign DkSizes = '@media (min-width:750px) 50vw, 100vw'
+      endif
+    -%}
+    {%- capture secondImg -%}
+      {%- if section.settings.image_1 != blank -%}
+      <div class="banner__media banner__media_2 media RRR">
+        {%- liquid
+          assign height = section.settings.image_1.width | divided_by: section.settings.image_1.aspect_ratio | round
+          assign width = section.settings.image_1.width
+          assign sizes = DkSizes
+          assign widths = '375, 550, 750, 1100, 1500, 1780, 2000, 3000, 3840'
+        -%}
+        {{ section.settings.image_1 | image_url: width: 3840 | image_tag: 
+            height: height,
+            width: width,
+            sizes: sizes,
+            widths: widths,
+            loading: loadingType, 
+            fetchPriorityType: fetchPriorityType,
+            class: ""
+        }}        
+        {%- if section.settings.image_mobile_1 != blank -%}
+          {%- liquid
+            assign height = section.settings.image_mobile_1.width | divided_by: section.settings.image_mobile_1.aspect_ratio | round
+            assign width = section.settings.image_mobile_1.width
+            assign sizes = '100vw'
+            assign widths = '375, 550, 750'
+          -%}          
+          {{ section.settings.image_mobile_1 | image_url: width: 750 | image_tag: 
+              height: height,
+              width: width,
+              sizes: sizes,
+              widths: widths,
+              loading: loadingType, 
+              fetchPriorityType: fetchPriorityType,
+              class: "medium-hide large-up-hide"
+          }}        
+        {%- endif -%}        
+      </div>
+    {%- endif -%}
+    {%- endcapture -%}{%- assign secondImg = secondImg | strip | strip_newlines -%}    
+    {%- capture firstImg -%}
+    <div class="banner__media banner__media_1 media RRR{% if section.settings.image == blank and section.settings.image_2 == blank %} placeholder{% endif %}{% if section.settings.image_2 != blank %} banner__media-half{% endif %}">
+      {%- liquid
+        assign height = section.settings.image.width | divided_by: section.settings.image.aspect_ratio | round
+        assign width = section.settings.image.width
+        assign sizes = DkSizes
+        assign widths = '375, 550, 750, 1100, 1500, 1780, 2000, 3000, 3840'
+      -%}          
+      {{ section.settings.image | image_url: width: 3840 | image_tag: 
+          height: height,
+          width: width,
+          sizes: sizes,
+          widths: widths,
+          loading: loadingType, 
+          fetchPriorityType: fetchPriorityType,
+          class: ""
+      }}
+      {%- if section.settings.image_mobile != blank -%}
+        {%- liquid
+          assign height = section.settings.image_mobile.width | divided_by: section.settings.image_mobile.aspect_ratio | round
+          assign width = section.settings.image_mobile.width
+          assign sizes = '100vw'
+          assign widths = '375, 550, 750'
+        -%}          
+        {{ section.settings.image_mobile | image_url: width: 750 | image_tag: 
+            height: height,
+            width: width,
+            sizes: sizes,
+            widths: widths,
+            loading: loadingType, 
+            fetchPriorityType: fetchPriorityType,
+            class: "medium-hide large-up-hide"
+        }}
+      {%- endif -%}
+    </div>
+    {% endcapture %}{%- assign firstImg = firstImg | strip | strip_newlines -%}
+
+    {%- assign hideImages = false -%}    
+    {% if hasVideo and hasVideoMobile %}
+      <div class="banner__media media media--video">{{ _video }}</div>
+      {%- assign hideImages = true -%}
+    {% elsif hasVideo and hasVideoMobile == false %}
+      <div class="banner__media media media--video small-hide">{{ _video }}</div>      
+    {% elsif hasVideoMobile and hasVideo == false %}
+      <div class="banner__media media media--video large-up-hide medium-hide">{{ _video }}</div>      
+    {% endif %}
+    
+    {% unless hideImages %}
+      {%- if secondImg != blank and section.settings.image != blank and secondImagelayout == true -%}
+        {{ firstImg | replace:'RRR', 'banner__media-half banner__media-small--full' }}              
+        {{ secondImg | replace:'RRR', 'banner__media-half small-hide' }}
+      {%- elsif secondImg != blank and section.settings.image != blank and secondImagelayout == false and secondImagelayoutMobile == true -%}
+        {{ firstImg | replace:'RRR', 'banner__media-small--full' }}              
+        {{ secondImg | replace:'RRR', 'medium-hide large-up-hide' }}      
+      {%- elsif secondImg != blank and section.settings.image == blank -%}
+        {{ secondImg | replace:'RRR', '' }}
+      {%- else -%}      
+        {{ firstImg | replace:'RRR', '' }}      
+      {%- endif -%}  
+    {% endunless %}
+    
+  {%- elsif section.settings.image_2 == blank -%}
+    <div class="banner__media media{% if section.settings.image == blank and section.settings.image_2 == blank %} placeholder{% endif %}{% if section.settings.image_2 != blank %} banner__media-half{% endif %}">
+      {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' }}
+    </div>
+  {%- endif -%}
+  
+  {{ button1 }}
+  <div class="banner__content newHeroBanner__content banner__content--{{ desktop_content_position }} page-width new-page-width">
+    
+    {% if imgVideoLayout and imgVideoLayoutMobile %}
+      {{ firstImg | replace:'RRR', '' }}
+    {% elsif imgVideoLayout %}      
+      {{ firstImg | replace:'RRR', 'small-hide' }}
+    {% elsif imgVideoLayoutMobile %}
+      {{ firstImg | replace:'RRR', 'media--video large-up-hide medium-hide' }}
+    {% endif %}
+    
+    <div class="banner__box content-container content-container--full-width-mobile">
+      {%- assign _blockSize = section.blocks.size -%}
+      {%- assign _secondlast = _blockSize | minus : 1 -%}
+      {%- assign twoImgTLay-4_content = blank -%}      
+
+      {%- assign blockId = section.id -%}
+      {%- assign heading = section.settings.heading -%}
+      {%- assign heading_titl4 = section.settings.heading_titl4 -%}
+      {%- assign heading_mobile = section.settings.heading_mobile | default: heading -%}
+      {%- assign heading_mobile_titl4 = section.settings.heading_mobile_titl4 | default: heading_titl4 -%}
+      {%- assign subHeading = section.settings.subHeading -%}      
+
+      {%- assign text = section.settings.text -%}
+      {%- assign text_titl4 = section.settings.text_titl4 -%}
+      {%- assign text_mobile = section.settings.text_mobile | default: text -%}
+      {%- assign text_mobile_titl4 = section.settings.text_mobile_titl4 | default: text_titl4 -%}
+  
+      {% assign text_style = 'h5 caption-with-letter-spacing' %}
+      {%- if desktop_content_position == "imgTextLayout-6" -%}
+        {% assign text_style = 'body' %}
+      {% endif %}
+
+      {% assign heading_size = 'h0' %}
+      {%- if desktop_content_position contains "imgTextLayout-3" or desktop_content_position contains "twoImg-TLay-3" -%}
+        {% assign heading_size = 'h0 x-large' %}
+      {%- elsif desktop_content_position contains "imgTextLayout-4" or desktop_content_position contains "twoImg-TLay-4" or desktop_content_position contains "imgVi-TLay-6" -%}
+        {% assign heading_size = 'h1' %}
+      {% endif %}
+
+      {% assign heading_size_mobile = 'h0' %}
+      {%- if mobile_content_position contains "imgTL-1-mobile" or mobile_content_position contains "imgTL-1-two-mobile" or mobile_content_position contains "imgVi-TLay-6" -%}
+        {% assign heading_size_mobile = 'h1' %}            
+      {%- elsif mobile_content_position contains "imgTL-7-mobile" -%}
+        {% assign heading_size_mobile = 'h0 x-large' %}
+      {% endif %}
+  
+      {%- assign button_style_secondary_1 = 'new-btn button button--primary' -%}      
+      {%- if desktop_content_position contains "imgTextLayout-3" or desktop_content_position contains "imgTextLayout-4" or desktop_content_position contains "twoImg-TLay-3"
+            or desktop_content_position contains "twoImg-TLay-4" or desktop_content_position contains "imgVi-TLay-6" or desktop_content_position contains "imgTextLayout-5" 
+            or desktop_content_position contains "videoLayout-1"
+      -%}
+        {%- assign button_style_secondary_1 = 'link link-btn big-link-btn underline-link-btn' -%}          
+      {% endif %}
+      {%- assign button_style_secondary_1_m = 'new-btn button button--primary' -%}
+      {%- if mobile_content_position contains "imgTL-1-mobile" or mobile_content_position contains "imgTL-7-mobile" or mobile_content_position contains "imgTL-1-two-mobile"
+            or mobile_content_position contains "twoImg-TLay-4" or mobile_content_position contains "imgVi-TLay-6" or mobile_content_position contains "imgTextLayout-5" -%}
+        {%- assign button_style_secondary_1_m = 'link link-btn big-link-btn underline-link-btn' -%}
+      {% endif %}
+      
+      {% capture _subHeading %}
+        {%- if desktop_content_position contains "imgTextLayout-5" or mobile_content_position contains "imgTextLayout-5" -%}
+          <h5 class="banner__subHeading titl-clr-{{ blockId }} RRR">
+            <span class="">{{ subHeading | escape }}</span>
+          </h5>
+        {% endif %}
+      {% endcapture %}
+      
+      {% capture _heading %}
+        {% if heading_size != heading_size_mobile  %}
+            <h2 class="banner__heading {{ heading_size }} titl-clr-{{ blockId }} RRR small-hide{% if section.settings.main_title_style %} uppercase{% endif %}">                  
+              <span class="">{{ heading | escape }}</span>                  
+            </h2>
+            <h2 class="banner__heading {{ heading_size_mobile }} titl-clr-{{ blockId }} RRR medium-hide large-up-hide{% if section.settings.main_title_style %} uppercase{% endif %}">                  
+              <span>{{ heading_mobile | escape }}</span>
+            </h2>               
+        {% else %}
+          {%- if heading != blank or heading_mobile != blank -%}
+            <h2 class="banner__heading {{ heading_size }} titl-clr-{{ blockId }} RRR {% if section.settings.main_title_style %} uppercase{% endif %}">
+              {%- if heading == heading_mobile -%}
+                <span>{{ heading | escape }}</span>
+              {%- else -%}
+                <span class="small-hide">{{ heading | escape }}</span>
+                <span class="medium-hide large-up-hide">{{ heading_mobile | escape }}</span>
+              {%- endif -%}
+            </h2>
+          {%- endif -%}
+        {% endif %}
+        
+        {%- capture twoImgTLay-4_content -%}
+          {{ twoImgTLay-4_content }}
+            {%- if heading_titl4 != blank or heading_mobile_titl4 != blank -%}
+            <h2 class="banner__heading h1 titl-clr-{{ blockId }} RRR {% if section.settings.main_title_style %} uppercase{% endif %}">
+              {%- if heading_titl4 == heading_mobile_titl4 -%}              
+                <span>{{ heading_titl4 | escape }}</span>
+              {%- else -%}
+                <span class="small-hide">{{ heading_titl4 | escape }}</span>
+                <span class="medium-hide large-up-hide">{{ heading_mobile_titl4 | escape }}</span>
+              {%- endif -%}
+            </h2>
+          {%- endif -%}
+        {%- endcapture -%}
+      {%- endcapture -%}
+      
+      {% capture _text %}           
+        {%- if text != blank or text_mobile != blank -%}
+        <div class="banner__text {{ text_style }} banner__text-clr-{{ blockId }} RRR">
+          {%- if text == text_mobile -%}
+            <span>{{ text | escape }}</span>
+          {%- else -%}
+            <span class="small-hide">{{ text | escape }}</span>
+            <span class="medium-hide large-up-hide">{{ text_mobile | escape }}</span>
+          {%- endif -%}
+        </div>
+        {%- endif -%}        
+      {%- endcapture -%}
+      
+      {% capture _buttons %}
+        <div class="banner__buttons RRR">
+          {% assign _mobileClass = '' %}
+          {%- assign noMobileLink = false -%}
+          {% comment %}Button for the mobile{% endcomment %}
+          {%- if section.settings.button_label_1_m != blank -%}                                
+            <a{% if section.settings.button_link_1_m == blank %} role="link" aria-disabled="true"{% else %} href="{{ section.settings.button_link_1_m }}"{% endif %} 
+            class="large-up-hide medium-hide {{ button_style_secondary_1_m }} clr-btn-1-{{ blockId }}">{{ section.settings.button_label_1_m | escape }} <span class="icon">{%- render 'icon-long-arrow-right' -%}</span></a>
+            {%- assign noMobileLink = true -%}
+            {% assign _mobileClass = 'small-hide' %}
+          {%- endif -%}
+          {% comment %}Button for the mobile{% endcomment %}
+          {%- if section.settings.button_label_1 != blank -%}                
+            {%- if button_style_secondary_1_m != button_style_secondary_1 and noMobileLink == false -%}
+              <a{% if section.settings.button_link_1 == blank %} role="link" aria-disabled="true"{% else %} href="{{ section.settings.button_link_1 }}"{% endif %} class="large-up-hide medium-hide {{ button_style_secondary_1_m }} clr-btn-1-{{ blockId }}">{{ section.settings.button_label_1 | escape }} <span class="icon">{%- render 'icon-long-arrow-right' -%}</span></a>
+              {% assign _mobileClass = 'small-hide' %}
+            {% endif %}
+            <a{% if section.settings.button_link_1 == blank %} role="link" aria-disabled="true"{% else %} href="{{ section.settings.button_link_1 }}"{% endif %} class="{{ _mobileClass }} {{ button_style_secondary_1 }} clr-btn-1-{{ blockId }}">{{ section.settings.button_label_1 | escape }} <span class="icon">{%- render 'icon-long-arrow-right' -%}</span></a>
+          {%- endif -%}
+        </div>
+        {%- capture twoImgTLay-4_content -%}
+          {{ twoImgTLay-4_content }}
+          <div class="banner__buttons RRR">
+            {%- if section.settings.button_label_1_titl4 != blank -%}
+              <a{% if section.settings.button_link_1_titl4 == blank %} role="link" aria-disabled="true"{% else %} href="{{ section.settings.button_link_1_titl4 }}"{% endif %} 
+              class="link link-btn big-link-btn underline-link-btn{% if section.settings.button_label_1_titl4_m != blank %} small-hide{% endif %} clr-btn-1-{{ blockId }}">
+              {{ section.settings.button_label_1_titl4 | escape }} <span class="icon">{%- render 'icon-long-arrow-right' -%}</span></a>
+            {%- endif -%}
+            {%- if section.settings.button_label_1_titl4_m != blank -%}
+              <a{% if section.settings.button_link_1_titl4_m == blank %} role="link" aria-disabled="true"{% else %} href="{{ section.settings.button_link_1_titl4_m }}"{% endif %} 
+              class="link link-btn big-link-btn underline-link-btn large-up-hide medium-hide clr-btn-1-{{ blockId }}">{{ section.settings.button_label_1_titl4_m | escape }} <span class="icon">{%- render 'icon-long-arrow-right' -%}</span></a>
+            {%- endif -%}
+          </div>
+        {%- endcapture -%}
+      {%- endcapture -%}
+
+      
+      {%- if desktop_content_position == "imgTextLayout-5" and mobile_content_position contains "imgTextLayout-5" -%}
+        {{ _subHeading | replace:'RRR','' }}
+      {%- elsif mobile_content_position contains "imgTextLayout-5" -%}
+        {{ _subHeading | replace:'RRR','medium-hide large-up-hide' }}
+      {%- elsif desktop_content_position == "imgTextLayout-5" -%}
+        {{ _subHeading | replace:'RRR','small-hide' }}
+      {%- endif -%}
+      
+      {%- if desktop_content_position == "imgTextLayout-6" -%}
+        {{ _heading | replace:'RRR','' }}
+        {{ _text | replace:'RRR','secondClass' }}
+        {{ _buttons | replace:'RRR',''  }}
+      {% else %}
+        {% if mobile_content_position contains "imgTL-2-mobile" %}
+          {{ _heading | replace:'RRR','medium-hide large-up-hide' }}
+          {{ _text | replace:'RRR','medium-hide large-up-hide secondClass' | replace:'caption-with-letter-spacing','' }}
+          {{ _text | replace:'RRR','small-hide' }}
+          {{ _heading | replace:'RRR','small-hide secondClass' }}        
+        {% else %}
+          {{ _text | replace:'RRR','' }}
+          {{ _heading | replace:'RRR','secondClass' }}
+        {% endif %}
+          {{ _buttons | replace:'RRR','' }}
+      {% endif %}      
+    </div>
+  </div>
+  {%- assign twoImgTLay-4_content = twoImgTLay-4_content | strip | strip_newlines -%}
+  {%- if desktop_content_position == "twoImg-TLay-4" or mobile_content_position contains "twoImg-TLay-4" and twoImgTLay-4_content != blank -%}  
+  {%- capture secondBannerClass -%}banner__content banner__content_2 newHeroBanner__content banner__content--{{ desktop_content_position }} page-width new-page-width 
+    {% if desktop_content_position != "twoImg-TLay-4" and secondImagelayoutMobile == true %} medium-hide large-up-hide{% endif %}     
+    {% if desktop_content_position == "twoImg-TLay-4" and secondImagelayoutMobile == false %} small-hide{% endif %}
+    {%- endcapture -%}{%- assign secondBannerClass = secondBannerClass | strip_newlines -%}
+  {{ button2 }}
+  <div class="{{ secondBannerClass }}">
+      <div class="banner__box content-container content-container--full-width-mobile">
+        {{ twoImgTLay-4_content }}
+      </div>
+    </div>
+  {%- endif -%}
+</div>
+
+{% capture _style %}
+{% comment %}{%- for block in section.blocks -%}{%- endfor -%}{% endcomment %}
+  {% if section.settings.main_title_clr != blank and section.settings.main_title_clr != 'rgba(0,0,0,0)' %}
+     .banner__heading.titl-clr-{{ blockId }} {color: {{section.settings.main_title_clr}};}
+  {%- endif -%}
+  {% if section.settings.text_color != blank and section.settings.text_color != 'rgba(0,0,0,0)' %}      
+    .banner__text-clr-{{ blockId }} { --color-foreground: {{ section.settings.text_color | color_to_rgb | remove:'rgb(' | remove:')' }}; color: {{section.settings.text_color}};}
+  {%- endif -%}
+
+  .newHero-banner.banner .button.clr-btn-1-{{ blockId }} {
+    {% if button_style_secondary_1 contains "button--primary" %}
+      {% if section.settings.btn_1_txt_clr != blank and section.settings.btn_1_txt_clr != 'rgba(0,0,0,0)' %}
+        color: {{ section.settings.btn_1_txt_clr }};{% endif %}
+      {% if section.settings.btn_1_bg != blank and section.settings.btn_1_bg != 'rgba(0,0,0,0)' %}
+        background-color: {{ section.settings.btn_1_bg }};{% endif %}
+    {% endif %}
+
+    {% if button_style_secondary_1 contains "button--secondary" %}
+      {% if section.settings.btn_1_txt_clr != blank and section.settings.btn_1_txt_clr != 'rgba(0,0,0,0)' %}
+        color: {{ section.settings.btn_1_txt_clr }};
+        background-color: {{ section.settings.btn_1_txt_clr }};{% endif %}
+    {% endif %}
+   }
+   {% if section.settings.btn_1_txt_clr != blank and section.settings.btn_1_txt_clr != 'rgba(0,0,0,0)' and button_style_secondary_1 contains "link" %}
+    .newHero-banner.banner .link.clr-btn-1-{{ blockId }} {
+      --color-foreground: {{ section.settings.btn_1_txt_clr | color_to_rgb | remove:'rgb(' | remove:')' }}; }
+     {% if section.settings.btn_1_txt_clr_hover != blank and section.settings.btn_1_txt_clr_hover != 'rgba(0,0,0,0)' %}
+    .full-width-link:hover+.newHeroBanner__content .link.clr-btn-1-{{ blockId }} { 
+      --color-foreground: {{ section.settings.btn_1_txt_clr_hover | color_to_rgb | remove:'rgb(' | remove:')' }}; }
+     {% endif %}
+   {% endif %}
+  .full-width-link:hover+.newHeroBanner__content .button.clr-btn-1-{{ blockId }},
+  .newHero-banner.banner .button.clr-btn-1-{{ blockId }}:hover {  
+    {% if button_style_secondary_1 contains "button--primary" %}
+      {% if section.settings.btn_1_txt_clr_hover != blank and section.settings.btn_1_txt_clr_hover != 'rgba(0,0,0,0)' %}
+        color: {{ section.settings.btn_1_txt_clr_hover }};{% endif %}
+      {% if section.settings.btn_1_bg_hover != blank and section.settings.btn_1_bg_hover != 'rgba(0,0,0,0)' %}
+        background-color: {{ section.settings.btn_1_bg_hover }};{% endif %}
+    {% endif %}
+
+    {% if button_style_secondary_1 contains "button--secondary" %}
+      {% if section.settings.btn_1_txt_clr_hover != blank and section.settings.btn_1_txt_clr_hover != 'rgba(0,0,0,0)' %}
+        color: {{ section.settings.btn_1_txt_clr_hover }};
+        background-color: {{ section.settings.btn_1_txt_clr_hover }};{% endif %}
+    {% endif %}
+   }
+  
+  {%- if stack_in_mobile -%}
+  @media only screen and (max-width: 749px){
+  .newHero-banner.banner .button.clr-btn-1-{{ blockId }} {
+    {% if button_style_secondary_1 contains "button--primary" %}
+      {% if section.settings.btn_1_txt_clr_hover != blank and section.settings.btn_1_txt_clr_hover != 'rgba(0,0,0,0)' %}
+        background-color: {{ section.settings.btn_1_txt_clr_hover }};{% endif %}
+      {% if section.settings.btn_1_bg_hover != blank and section.settings.btn_1_bg_hover != 'rgba(0,0,0,0)' %}
+        color: {{ section.settings.btn_1_bg_hover }};{% endif %}
+    {% endif %}
+    
+    {% if button_style_secondary_1 contains "button--secondary" %}
+      {% if section.settings.btn_1_txt_clr_hover != blank and section.settings.btn_1_txt_clr_hover != 'rgba(0,0,0,0)' %}
+        background-color: {{ section.settings.btn_1_txt_clr_hover }};
+        color: {{ section.settings.btn_1_txt_clr_hover }};
+      {% endif %}
+    {% endif %}
+   }
+  }
+  {%- endif -%}
+  
+  {% if section.settings.btn_1_bg != blank and section.settings.btn_1_bg != 'rgba(0,0,0,0)' and button_style_secondary_1 contains "button--primary" %}                    
+    .button.clr-btn-1-{{ blockId }}:after,
+    .button.clr-btn-1-{{ blockId }}:before{ box-shadow: none !important;}
+  {% endif %}
+
+
+  {%- if section.settings.button_style_secondary_1 == "link" -%}
+    {%- if section.settings.btn_1_txt_clr != blank and section.settings.btn_1_txt_clr != 'rgba(0,0,0,0)' -%}
+    .new-btn.link.clr-btn-1-{{ blockId }}{ background-color: {{ section.settings.btn_1_txt_clr }}; }
+    {%- endif -%}
+  {%- endif -%}
+
+{%- endcapture -%}{% assign _style = _style | strip | strip_newlines %}
+<style>{{ _style }}</style>  
+
+{% schema %}
+{
+  "name": "New Hero",
+  "tag": "section",
+  "class": "section new-hero-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Desktop"
+    },
+    {
+      "type": "select",
+      "id": "desktop_content_position",
+      "options": [
+        {
+          "value": "bottom-left imgTextLayout-1 align-left",
+          "label": "Layout Text 1"
+        },
+        {
+          "value": "middle-center imgTextLayout-2 align-center",
+          "label": "Layout Text 2"
+        },
+        {
+          "value": "bottom-center imgTextLayout-3 align-center",
+          "label": "Layout Text 3"
+        },
+        {
+          "value": "middle-center imgTextLayout-4 align-center",
+          "label": "Layout Text 4"
+        },
+        {
+          "value": "imgTextLayout-5 align-left",
+          "label": "Layout Text 5"
+        },
+        {
+          "value": "imgTextLayout-6 align-left",
+          "label": "Layout Text 6"
+        },
+        {
+          "value": "bottom-left twoImg-TLay-1 align-left",
+          "label": "Layout Text 7, Two images"
+        },
+        {
+          "value": "middle-center twoImg-TLay-2 align-center",
+          "label": "Layout Text 8, Two images"
+        },
+        {
+          "value": "middle-center twoImg-TLay-3 align-center",
+          "label": "Layout Text 9, Two images"
+        },
+        {
+          "value": "twoImg-TLay-4 align-center",
+          "label": "Layout Text 10, Two images"
+        },
+        {
+          "value": "twoImg-TLay-5 align-left",
+          "label": "Layout Text 11, Two images"
+        },
+        {
+          "value": "imgVi-TLay-6 align-left",
+          "label": "Layout Text 12, image/Video"
+        },
+        {
+          "value": "bottom-left videoLayout-1 align-left",
+          "label": "Layout Text 13, Video only"
+        }
+      ],
+      "default": "bottom-left imgTextLayout-1 align-left",
+      "label": "Layout Text Switcher - Desktop"
+    },
+    {
+      "type": "paragraph",
+      "content": "Video"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Autoplay",
+      "info":"Autoplay video except the Youtube videos",
+      "default": true
+    },
+    {
+      "type": "video_url",
+      "id": "video_url_dk",
+      "accept": [
+        "youtube",
+        "vimeo"
+      ],
+      "label": "Vimeo/YouTube video link",
+      "placeholder": "Vimeo/YouTube Video Link",
+      "info": "YouTube video will not autoplay by default due to policy violation (2000X1328 px recommended for better result)"
+    },
+    {
+      "type": "video",
+      "id": "mp4_video_url_dk",
+      "label": "Shopify Hosted MP4 Video",
+      "info" : "This will work if above external video URL is blank (2000X1328 px recommended for better result)"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Desktop image 1"
+    },
+    {
+      "type": "range",
+      "id": "image_overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Image overlay opacity",
+      "default": 0
+    },
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "Desktop image 2"
+    },
+    {
+      "type": "range",
+      "id": "image_overlay_opacity_2",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Second image overlay opacity",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "image_height",
+      "options": [
+        {
+          "value": "small",
+          "label": "Small"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        }
+      ],
+      "default": "medium",
+      "label": "Banner height"
+    },
+    {
+      "type": "checkbox",
+      "id": "adapt_height_first_image",
+      "default": false,
+      "label": "Adapt section height to first image size",
+      "info": "Overwrites image banner height setting when checked."
+    },
+    {
+      "type": "checkbox",
+      "id": "adapt_height_window",
+      "default": false,
+      "label": "Adapt section height to the browser window height",
+      "info": "Overwrites image banner height setting and adapt section height setting when checked."
+    },
+    {
+      "type": "paragraph",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Image banner",
+      "label": "Heading 1"
+    },
+    {
+      "type": "text",
+      "id": "heading_titl4",
+      "default": "Image banner",
+      "label": "Heading 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "main_title_style",
+      "label": "Enable heading in UPPERCASE",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "subHeading",      
+      "label": "Sub heading 1"
+    },
+    {
+      "type": "color",
+      "id": "main_title_clr",
+      "label": "Text color"
+    },
+    {
+      "type": "paragraph",
+      "content": "Detail"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "default": "Give customers details about the banner image(s) or content on the template.",
+      "label": "Description 1"
+    },
+    {
+      "type": "text",
+      "id": "text_titl4",
+      "default": "Give customers details about the banner image(s) or content on the template.",
+      "label": "Description 2"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color"
+    },
+    {
+      "type": "paragraph",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_label_1",
+      "default": "Button label",
+      "label": "Button label 1",
+      "info": "Leave the label blank to hide the button."
+    },
+    {
+      "type": "url",
+      "id": "button_link_1",
+      "label": "button link 1"
+    },
+    {
+      "type": "text",
+      "id": "button_label_1_titl4",
+      "default": "Button label",
+      "label": "Button label 2"
+    },
+    {
+      "type": "url",
+      "id": "button_link_1_titl4",
+      "label": "button link 2"
+    },
+    {
+      "type": "paragraph",
+      "content": "Button color scheme"
+    },
+    {
+      "type": "color",
+      "id": "btn_1_bg",
+      "label": "Button 1 background color"
+    },
+    {
+      "type": "color",
+      "id": "btn_1_txt_clr",
+      "label": "Button 1 text color"
+    },
+    {
+      "type": "color",
+      "id": "btn_1_bg_hover",
+      "label": "Button 1 background hover color"
+    },
+    {
+      "type": "color",
+      "id": "btn_1_txt_clr_hover",
+      "label": "Button 1 text hover color"
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "type": "select",
+      "id": "mobile_content_position",
+      "options": [
+        {
+          "value": "middle-center imgTL-1-mobile align-center",
+          "label": "Layout 1"
+        },
+        {
+          "value": "bottom-left imgTL-2-mobile align-left",
+          "label": "Layout 2"
+        },
+        {
+          "value": "bottom-left imgTL-3-mobile true align-left",
+          "label": "Layout 3"
+        },
+        {
+          "value": "bottom-left imgTL-4-mobile align-left",
+          "label": "Layout 4"
+        },
+        {
+          "value": "middle-center imgTL-5-mobile true align-center",
+          "label": "Layout 5"
+        },
+        {
+          "value": "middle-center imgTL-6-mobile align-center",
+          "label": "Layout 6"
+        },
+        {
+          "value": "bottom-center imgTL-7-mobile align-center",
+          "label": "Layout 7"
+        },
+        {
+          "value": "imgTextLayout-5 imgTL-8-mobile align-left",
+          "label": "Layout 8"
+        },
+        {
+          "value": "twoImg-TLay-4 imgTL-1-two-mobile align-center",
+          "label": "Layout 1, two images"
+        },
+        {
+          "value": "imgVi-TLay-6 align-left",
+          "label": "Layout Text 1, image/Video"
+        }
+      ],
+      "default": "middle-center imgTL-1-mobile align-center",
+      "label": "Layout Text Switcher - Mobile"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Mobile image 1"
+    },
+    {
+      "type": "range",
+      "id": "image_overlay_opacity_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Image overlay opacity",
+      "default": 0
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile_1",
+      "label": "Mobile image 2"
+    },
+    {
+      "type": "range",
+      "id": "image_overlay_opacity_m_2",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Second image overlay opacity",
+      "default": 0
+    },
+    {
+      "type": "paragraph",
+      "content": "Heading for mobile"
+    },
+    {
+      "type": "text",
+      "id": "heading_mobile",
+      "default": "Image banner",
+      "label": "Heading 1"
+    },
+    {
+      "type": "text",
+      "id": "heading_mobile_titl4",
+      "default": "Image banner",
+      "label": "Heading 2"
+    },
+    {
+      "type": "paragraph",
+      "content": "Detail for mobile"
+    },
+    {
+      "type": "text",
+      "id": "text_mobile",
+      "default": "Give customers details about the banner image(s) or content on the template.",
+      "label": "Description 1"
+    },
+    {
+      "type": "text",
+      "id": "text_mobile_titl4",
+      "default": "Give customers details about the banner image(s) or content on the template.",
+      "label": "Description 2"
+    },
+    {
+      "type": "paragraph",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_label_1_m",
+      "label": "Button label 1 mobile",
+      "info": "Leave the label blank to hide the button."
+    },
+    {
+      "type": "url",
+      "id": "button_link_1_m",
+      "label": "button link 1 mobile"
+    },
+    {
+      "type": "text",
+      "id": "button_label_1_titl4_m",
+      "label": "Button label 2 mobile"
+    },
+    {
+      "type": "url",
+      "id": "button_link_1_titl4_m",
+      "label": "button link 2 mobile"
+    },
+    {
+      "type": "header",
+      "content": "Section spacing"
+    },
+    {
+      "type": "range",
+      "id": "spacing-top",
+      "min": 0,
+      "max": 150,
+      "step": 10,
+      "default": 0,
+      "unit": "px",
+      "label": "Section margin top"
+    },
+    {
+      "type": "range",
+      "id": "spacing-bottom",
+      "min": 0,
+      "max": 150,
+      "step": 10,
+      "default": 0,
+      "unit": "px",
+      "label": "Section margin bottom"
+    }
+  ],
+  "presets": [
+    {
+      "name": "New Hero",
+      "category":"Image"
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

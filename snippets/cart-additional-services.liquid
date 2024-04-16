@@ -1,0 +1,119 @@
+{%- comment -%}
+  Renders a cart-additional-services
+  Accepts:
+  - show_assembly_service {Boolean} - required
+  - show_other_services {Boolean} - required
+  - line_item: {Object} cart item liquid object - required
+  Usage:
+  {% render "cart-additional-services", line_item: item, show_assembly_service: true, show_other_services: true %}
+{%- endcomment -%}
+
+
+{%- if show_assembly_service or show_other_services -%}
+
+  {%- comment -%}** TOOLTIP/POPUP CONTENT FROM CUSTOMIZER **{%- endcomment -%}
+  {%- assign assemblyServiceContent = section.settings.assembly_service_tooltip_en -%}
+  {%- assign otherServicesContent = section.settings.rmovl_service_tooltip_en -%}
+  {%- if request.locale.iso_code == 'fr' -%}
+    {%- assign assemblyServiceContent = section.settings.assembly_service_tooltip_fr -%}
+    {%- assign otherServicesContent = section.settings.rmovl_service_tooltip_fr -%}
+  {%- endif -%}
+  
+  {%- assign otherServicesPopupTitle = section.settings.rmovl_srvc_title -%}
+  {%- assign otherServicesPopupTopContent = section.settings.rmovl_srvc_desc_top -%}
+  {%- assign otherServicesPopupBottomContent = section.settings.rmovl_srvc_desc_bottom -%}
+  {%- comment -%}** END **{%- endcomment -%}
+  
+  
+  <div class="cart-service-appliance">
+    <div class="appliance-col">
+      <h4 class="icon-dot">{% render 'icon-services' %}Services supplémentaires :</h4>
+      <div class="cart-appliance-list">
+        
+        {%- if show_assembly_service -%}
+          <services-box class="cart-appliance-box">
+            <div class="service-label" data-set-props="_assemblyService">
+              <input
+                type="checkbox"
+                id="assembly_service_bbq_{{ line_item.key }}"
+                name="assembly_service_{{line_item.key}}"
+                {% if line_item.properties._assemblyService == 'Yes' %}
+                  checked
+                {% endif %}
+              >
+              <div class="label-text">
+                <div class="service-title-wrap">
+                  <label for="assembly_service_bbq_{{ line_item.key }}">Service d'assemblage de barbecues</label>
+                  {%- if assemblyServiceContent != blank -%}
+                    <div class="tooltip service-tooltip">
+                      <div class="tooltip-icon">{%- render 'icon-tooltip' -%}</div>
+                      <div class="tooltip-content">{{ assemblyServiceContent }}</div>
+                    </div>
+                  {%- endif -%}
+                </div>
+                <span class="label-price">Gratuit</span>
+              </div>
+            </div>
+          </services-box>
+        {%- endif -%}
+        
+        {%- if show_other_services -%}
+          <services-box class="cart-appliance-box{% if line_item.properties.Ramassage == blank %} other-services-box{% endif %}">
+            <div class="service-label" data-set-props="Ramassage">
+              <input
+                type="checkbox"
+                id="assembly_service_other_{{ line_item.key }}"
+                name="other_service_{{line_item.key}}"
+                {% if line_item.properties.Ramassage == 'Yes' %}
+                  checked
+                {% endif %}
+              >
+              <div class="label-text">
+                <div class="service-title-wrap">
+                  <label for="assembly_service_other_{{ line_item.key }}">Service de ramassage</label>
+                  {%- if otherServicesContent != blank -%}
+                    <div class="tooltip service-tooltip">
+                      <div class="tooltip-icon">{%- render 'icon-tooltip' -%}</div>
+                      <div class="tooltip-content">{{ otherServicesContent }}</div>
+                    </div>
+                  {%- endif -%}
+                </div>
+                <span class="label-price">Gratuit</span>
+              </div>
+            </div>
+            {%- comment -%}*FINAL CONFIRMATION POPUP FOR FREE REMOVAL SERVICE*{%- endcomment -%}
+            {%- if otherServicesPopupTitle != blank or otherServicesPopupTopContent != blank -%}
+              <div class="removal-service-container" data-other-service-popup>
+                <div class="removal-service--content">
+                  <div class="zoom-anim-dialog cart-service-popup-wrapper">
+                    <div class="popup-body">
+                        <h5>
+                          {% render 'new-gear' %}
+                          {{- otherServicesPopupTitle -}}
+                        </h5>
+                        {%- if otherServicesPopupTopContent != blank -%}
+                          <div class="popup-header">{{ otherServicesPopupTopContent }}</div>
+                        {%- endif -%}
+                        <label class="service-label" for="removalService-{{ line_item.key }}" class="accept-checkbox">
+                          <input type="checkbox" id="removalService-{{ line_item.key }}" class="removal-service-accept" name="removal-service-accept">
+                          <span>Je comprends</span>
+                        </label>
+                    </div>
+                    
+                    {%- if otherServicesPopupBottomContent != blank -%}
+                      <div class="popup-footer">{{ otherServicesPopupBottomContent }}</div>
+                    {%- endif -%}
+              
+                    <button title="Close (Esc)" type="button" class="service-close" data-service-popup-close>{% render 'icon-close' %}</button>
+                  </div>
+                </div>
+              </div>
+            {%- endif -%}
+          </services-box>
+        {%- endif -%}
+        
+      </div>
+    </div>
+  </div>
+
+{%- endif -%}

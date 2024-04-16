@@ -1,0 +1,34 @@
+{% comment %}** START --> CHECK PRODUCT TAGS FOR LABEL LOGIC **{% endcomment %}
+{%- for tag in item.product.tags -%}
+  {%- if tag contains 'In Stock_' -%}
+    {%- assign inStockTag = tag | split: '_' | last | downcase -%}
+    {%- if inStockTag == 'yes' -%}
+      {%- assign inStock = true -%}
+    {%- endif -%}
+  {%- endif -%}
+{%- endfor -%}
+{% comment %}** END --> CHECK PRODUCT TAGS FOR LABEL LOGIC **{% endcomment %}
+
+
+
+{% comment %}** START --> CHECK IF PROTECTION IS ADDED **{% endcomment %}
+{%- assign currentTimeStamp = item.properties._timestamp -%}
+{%- if currentTimeStamp != blank -%}
+  {%- for item1 in cart.items -%}
+    {%- unless item1.properties._Garantie_ajoutee != blank -%}
+      {%- if item1.properties._timestamp == currentTimeStamp and item1.properties.Warranty_product != blank -%}
+        {%- assign isProtectionPlanSelected = true -%}
+        {%- assign protectionPlanItem = item1 -%}
+        {% if item1.properties['Type'] == 'applince_product' %}
+          {% assign protection_guide_link = section.settings.protection_guide_link %}
+        {% else %}
+          {% assign protection_guide_link = section.settings.furniture_protection_guide_link %}
+        {% endif %}
+        {%- break -%}
+      {%- endif -%}
+    {%- endunless -%}
+  {%- endfor -%}
+{%- endif -%}
+{% comment %}** END --> CHECK IF PROTECTION IS ADDED **{% endcomment %}
+
+

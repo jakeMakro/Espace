@@ -1,0 +1,51 @@
+.store-main-banner { border-bottom: 1px solid #F1F1F1; }
+  .store-main-banner .banner-img { margin-bottom: -1px; }
+.banner-section { display: flex; justify-content: space-between; }
+
+.banner-section .content-sect, 
+.banner-section .banner-img { width: 50%; }
+
+.banner-section .content-sect { display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-end; padding-bottom: 40px; padding-right: 5.71428rem; }
+.banner-section .content-sect.only-content { padding-bottom: 80px; }
+  .banner-section .content-sect .breadcrumbs { margin-bottom: 30px; }
+  .banner-section .content-sect .section-title { margin: 0; font-feature-settings: 'ss02' on; font-size: 60px; font-weight: 700; line-height: 100%; letter-spacing: -0.02em; max-width: 620px; }
+  .banner-section .content-sect .content { margin-top: 30px; max-width: 600px; letter-spacing: 0; }
+
+.banner-section .banner-img { flex: 1 1 auto; background-color: transparent; }
+  .banner-img>*:not(.zoom):not(.deferred-media__poster-button) { position: static; width: 100%; height: 100%; box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.5); }
+
+
+
+
+@media screen and (min-width: 750px) {
+  .full-page-width .banner-section .banner-img { margin-right: -5.71428rem; }
+
+  .template-all-stain .breadcrumbs .breadcrumbs-item, 
+  .template-all-stain .breadcrumbs .breadcrumbs-item a { font-size:16px; }
+
+  .template-all-stain .breadcrumbs li+li:before, 
+  .template-all-stain .breadcrumbs li+li:last-child:after { top: 3px; position: relative; }
+  
+}
+
+@media screen and (max-width: 989px) {
+  .full-page-width .banner-section .banner-img { margin-right: -5.71428rem; }  
+}
+
+
+@media screen and (max-width: 1199px) {
+  .banner-section .content-sect { padding-bottom: 5.71428rem; padding-right: 2.85714rem; }
+    .banner-section .content-sect .breadcrumbs { margin-bottom: 24px; }
+    .banner-section .content-sect .section-title { font-size: 40px; }
+}
+@media screen and (max-width: 749px) {
+  .banner-section { flex-direction: column-reverse; }
+  
+  .banner-section .content-sect, 
+  .banner-section .banner-img { flex: 1 1 auto; width: 100%; }
+  
+  .banner-section .content-sect { padding-right: 0; padding-bottom: 40px; }
+  .banner-section .content-sect.only-content { padding-bottom: 40px; }
+  .banner-section .banner-img { margin-bottom: 0; margin: 0 -1.5rem; width: auto; }
+    .banner-img>*:not(.zoom):not(.deferred-media__poster-button) { box-shadow: none; }
+}

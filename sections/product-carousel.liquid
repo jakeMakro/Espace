@@ -1,0 +1,306 @@
+<link rel="stylesheet" href="{{ 'component-card.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'component-price.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'component-slider.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'template-collection.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'product-carousel.css' | asset_url }}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="{{ 'component-card.css' | asset_url }}"></noscript>
+<noscript><link rel="stylesheet" href="{{ 'component-price.css' | asset_url }}"></noscript>
+<noscript><link rel="stylesheet" href="{{ 'component-slider.css' | asset_url }}"></noscript>
+<noscript><link rel="stylesheet" href="{{ 'template-collection.css' | asset_url }}"></noscript>
+<noscript><link rel="stylesheet" href="{{ 'product-carousel.css' | asset_url }}"></noscript>
+
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{%- liquid
+  if section.settings.collection.all_products_count > section.settings.products_to_show
+    assign more_in_collection = true
+  endif
+-%}
+
+<div class="color-{{ section.settings.color_scheme }} isolate gradient">
+  <div class="collection section-{{ section.id }}-padding">
+    
+    <div class="page-width full-page-width">
+      <div class="section-head section-head-index">
+        
+        <div class="left-col">
+          {%- if section.settings.title != blank -%}
+            <h2 class="{{ section.settings.heading_size }}">
+              {{ section.settings.title }}
+            </h2>
+          {%- endif -%}
+          {%- if section.settings.description != blank or section.settings.show_description and section.settings.collection.description != empty -%}
+            <div class="section-head-text">
+              {%- if section.settings.show_description -%}
+                {{ section.settings.collection.description }}
+              {%- else -%}
+                {{ section.settings.description -}}
+              {%- endif %}
+            </div>
+          {%- endif -%}
+        </div>
+
+        <div class="right-col small-hide">
+          {%- if section.settings.show_view_all and more_in_collection and section.settings.link_label != blank -%}
+            <a class="link link-btn-arrow" href="{{ collection.url }}">{{ section.settings.link_label }}
+              <svg xmlns="http://www.w3.org/2000/svg" width="21" height="12" viewBox="0 0 21 12" fill="none">
+                <path d="M14.3518 1L20 6M20 6L14.3518 11M20 6H0" stroke="black" stroke-width="2"/>
+              </svg>
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+
+    <div class="product-carousel-slider-main">
+      <div class="page-width full-page-width product-carousel-width">
+        <div class="product-carousel-slider-wrap">
+          <div class="slider-mobile-gutter swiper" data-product-carousel>
+            <ul
+              id="Slider-{{ section.id }}"
+              class="grid1 product-grid contains-card contains-card--product swiper-wrapper{% if settings.card_style == 'standard' %} contains-card--standard{% endif %} grid--{{ section.settings.columns_desktop }}-col-desktop grid--2-col-tablet-down slider slider--tablet grid--peek"
+              role="list"
+              aria-label="{{ 'general.slider.name' | t }}"
+            >
+              {%- for product in section.settings.collection.products limit: section.settings.products_to_show -%}
+                <li
+                  id="Slide-{{ section.id }}-{{ forloop.index }}"
+                  class="grid__item swiper-slide slider__slide"
+                >
+                  {% render 'card-product',
+                    card_product: product,
+                    media_aspect_ratio: section.settings.image_ratio,
+                    image_shape: 'default',
+                    show_secondary_image: section.settings.show_secondary_image,
+                    show_vendor: section.settings.show_vendor,
+                    show_rating: section.settings.show_rating,
+                    show_quick_add: false,
+                    section_id: section.id
+                  %}
+                </li>
+              {%- else -%}
+                {%- for i in (1..4) -%}
+                  <li class="grid__item">
+                    {%- assign placeholder_image = 'product-apparel-' | append: forloop.rindex -%}
+                    {% render 'card-product',
+                      show_vendor: section.settings.show_vendor,
+                      placeholder_image: placeholder_image
+                    %}
+                  </li>
+                {%- endfor -%}
+              {%- endfor -%}
+            </ul>
+          </div>
+          
+          <div class="slider-nav product-carousel--nav{% if collection.all_products_count <= 4 %} hidden{% endif %} medium-hide small-hide">
+            <div class="slider-btn slider-prev">{% render 'icon-slider-prev' %}</div>
+            <div class="slider-btn slider-next">{% render 'icon-slider-next' %}</div>
+          </div>
+        </div>  
+      </div>
+    </div>
+    
+
+    {%- if section.settings.show_view_all and more_in_collection and section.settings.link_label != blank -%}
+    <div class="page-width full-page-width">
+      <div class="bottom-link medium-hide large-up-hide">
+          <a class="link link-btn-arrow" href="{{ collection.url }}">{{ section.settings.link_label }}
+            <svg xmlns="http://www.w3.org/2000/svg" width="21" height="12" viewBox="0 0 21 12" fill="none">
+              <path d="M14.3518 1L20 6M20 6L14.3518 11M20 6H0" stroke="black" stroke-width="2"/>
+            </svg>
+          </a>
+      </div>
+    </div>
+    {%- endif -%}
+    
+  </div>
+</div>
+
+
+{% schema %}
+{
+  "name": "Product carousel",
+  "tag": "section",
+  "class": "section product--carousel",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "title",
+      "default": "Featured collection",
+      "label": "t:sections.featured-collection.settings.title.label"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h6",
+          "label": "h6"
+        },
+        {
+          "value": "h5",
+          "label": "h5"
+        },
+        {
+          "value": "h4",
+          "label": "h4"
+        },
+        {
+          "value": "h3",
+          "label": "h3"
+        },
+        {
+          "value": "h2",
+          "label": "h2"
+        },
+        {
+          "value": "h1",
+          "label": "h1"
+        }
+      ],
+      "default": "h3",
+      "label": "t:sections.all.heading_size.label"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "t:sections.featured-collection.settings.description.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "t:sections.featured-collection.settings.show_description.label",
+      "default": false
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "t:sections.featured-collection.settings.collection.label"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 25,
+      "step": 1,
+      "default": 4,
+      "label": "t:sections.featured-collection.settings.products_to_show.label"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "default": 4,
+      "label": "t:sections.featured-collection.settings.columns_desktop.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "default": true,
+      "label": "t:sections.featured-collection.settings.show_view_all.label"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "View all link label"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "info": "t:sections.all.colors.has_cards_info",
+      "default": "background-1"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.featured-collection.settings.header.content"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:sections.featured-collection.settings.image_ratio.options__1.label"
+        },
+        {
+          "value": "portrait",
+          "label": "t:sections.featured-collection.settings.image_ratio.options__2.label"
+        },
+        {
+          "value": "square",
+          "label": "t:sections.featured-collection.settings.image_ratio.options__3.label"
+        }
+      ],
+      "default": "adapt",
+      "label": "t:sections.featured-collection.settings.image_ratio.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_secondary_image",
+      "default": false,
+      "label": "t:sections.featured-collection.settings.show_secondary_image.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "default": false,
+      "label": "t:sections.featured-collection.settings.show_vendor.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "default": false,
+      "label": "t:sections.featured-collection.settings.show_rating.label",
+      "info": "t:sections.featured-collection.settings.show_rating.info"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product carousel"
+    }
+  ]
+}
+{% endschema %}

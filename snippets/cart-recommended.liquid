@@ -1,0 +1,41 @@
+<div class="cart-recommended">
+  
+  <div class="section-head">
+    <h2>frequently bought together</h2>
+    <div class="section-head-arrow small-hide">
+      <div class="cart-swiper-prev cart-swiper-arrow">{% render 'icon-right-swiper' %}</div>
+      <div class="cart-swiper-next cart-swiper-arrow">{% render 'icon-right-swiper' %}</div>
+    </div>
+  </div>
+  
+  <div class="swiper cart-recommended-slider">
+    <div class="pro-list swiper-wrapper">
+      {%- for product in collections["salon"].products -%}
+      {% assign lazy_load = false %}
+          {%- if forloop.index > 2 -%}
+            {%- assign lazy_load = true -%}
+          {%- endif -%}
+          <div
+            class="swiper-slide "
+            {% if settings.animations_reveal_on_scroll %}
+              data-cascade
+              style="--animation-order: {{ forloop.index }};"
+            {% endif %}
+          >
+            {% render 'cart-recommended-product-card',
+              card_product: product,
+              media_aspect_ratio: section.settings.image_ratio,
+              image_shape: section.settings.image_shape,
+              show_secondary_image: section.settings.show_secondary_image,
+              show_vendor: section.settings.show_vendor,
+              show_rating: section.settings.show_rating,
+              lazy_load: lazy_load,
+              show_quick_add: section.settings.enable_quick_add,
+              section_id: section.id
+            %}
+          </div>
+      {% endfor %}
+    </div> 
+  </div> 
+
+</div>

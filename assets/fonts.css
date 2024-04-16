@@ -1,0 +1,293 @@
+@font-face {
+    font-family: 'Sharp Sans';
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Black.eot');
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Black.eot?#iefix') format('embedded-opentype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Black.woff2') format('woff2'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Black.woff') format('woff'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Black.ttf') format('truetype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Black.svg#SharpSansDispNo1-Black') format('svg');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Sharp Sans';
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Bold.eot');
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Bold.eot?#iefix') format('embedded-opentype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Bold.woff2') format('woff2'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Bold.woff') format('woff'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Bold.ttf') format('truetype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Bold.svg#SharpSansDispNo1-Bold') format('svg');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Sharp Sans';
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-SemiBold.eot');
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-SemiBold.eot?#iefix') format('embedded-opentype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-SemiBold.woff2') format('woff2'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-SemiBold.woff') format('woff'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-SemiBold.ttf') format('truetype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-SemiBold.svg#SharpSansDispNo1-SemiBold') format('svg');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Sharp Sans';
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Medium.eot');
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Medium.eot?#iefix') format('embedded-opentype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Medium.woff2') format('woff2'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Medium.woff') format('woff'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Medium.ttf') format('truetype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Medium.svg#SharpSansDispNo1-Medium') format('svg');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Sharp Sans';
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Book.eot');
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Book.eot?#iefix') format('embedded-opentype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Book.woff2') format('woff2'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Book.woff') format('woff'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Book.ttf') format('truetype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Book.svg#SharpSansDispNo1-Book') format('svg');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Sharp Sans';
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Light.eot');
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Light.eot?#iefix') format('embedded-opentype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Light.woff2') format('woff2'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Light.woff') format('woff'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Light.ttf') format('truetype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Light.svg#SharpSansDispNo1-Light') format('svg');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Sharp Sans';
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Thin.eot');
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Thin.eot?#iefix') format('embedded-opentype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Thin.woff2') format('woff2'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Thin.woff') format('woff'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Thin.ttf') format('truetype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Thin.svg#SharpSansDispNo1-Thin') format('svg');
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Sharp Sans';
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansNo1-Bold.eot');
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansNo1-Bold.eot?#iefix') format('embedded-opentype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansNo1-Bold.woff2') format('woff2'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansNo1-Bold.woff') format('woff'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansNo1-Bold.ttf') format('truetype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansNo1-Bold.svg#SharpSansNo1-Bold') format('svg');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+
+/* @font-face {
+    font-family: 'Sharp Sans Disp No2 UltThin';
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-UltThin.eot');
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-UltThin.eot?#iefix') format('embedded-opentype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-UltThin.woff2') format('woff2'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-UltThin.woff') format('woff'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-UltThin.ttf') format('truetype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-UltThin.svg#SharpSansDispNo2-UltThin') format('svg');
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+
+@font-face {
+    font-family: 'Sharp Sans Disp No2';
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Bold.eot');
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Bold.eot?#iefix') format('embedded-opentype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Bold.woff2') format('woff2'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Bold.woff') format('woff'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Bold.ttf') format('truetype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Bold.svg#SharpSansDispNo2-Bold') format('svg');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Sharp Sans Disp No2';
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Thin.eot');
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Thin.eot?#iefix') format('embedded-opentype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Thin.woff2') format('woff2'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Thin.woff') format('woff'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Thin.ttf') format('truetype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Thin.svg#SharpSansDispNo2-Thin') format('svg');
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+
+
+
+@font-face {
+    font-family: 'Sharp Sans Disp No2';
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-SemiBold.eot');
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-SemiBold.eot?#iefix') format('embedded-opentype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-SemiBold.woff2') format('woff2'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-SemiBold.woff') format('woff'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-SemiBold.ttf') format('truetype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-SemiBold.svg#SharpSansDispNo2-SemiBold') format('svg');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Sharp Sans Display No1 Ultrathin';
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDisplayNo1-Ultrathin.eot');
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDisplayNo1-Ultrathin.eot?#iefix') format('embedded-opentype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDisplayNo1-Ultrathin.woff2') format('woff2'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDisplayNo1-Ultrathin.woff') format('woff'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDisplayNo1-Ultrathin.ttf') format('truetype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDisplayNo1-Ultrathin.svg#SharpSansDisplayNo1-Ultrathin') format('svg');
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Sharp Sans Disp No1 Hairline';
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Hairline.eot');
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Hairline.eot?#iefix') format('embedded-opentype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Hairline.woff2') format('woff2'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Hairline.woff') format('woff'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Hairline.ttf') format('truetype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-Hairline.svg#SharpSansDispNo1-Hairline') format('svg');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Sharp Sans Disp No2';
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Book.eot');
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Book.eot?#iefix') format('embedded-opentype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Book.woff2') format('woff2'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Book.woff') format('woff'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Book.ttf') format('truetype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Book.svg#SharpSansDispNo2-Book') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+
+@font-face {
+    font-family: 'Sharp Sans Disp No2';
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Medium.eot');
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Medium.eot?#iefix') format('embedded-opentype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Medium.woff2') format('woff2'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Medium.woff') format('woff'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Medium.ttf') format('truetype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Medium.svg#SharpSansDispNo2-Medium') format('svg');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Sharp Sans Disp No1 ExtBold';
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-ExtBold.eot');
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-ExtBold.eot?#iefix') format('embedded-opentype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-ExtBold.woff2') format('woff2'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-ExtBold.woff') format('woff'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-ExtBold.ttf') format('truetype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo1-ExtBold.svg#SharpSansDispNo1-ExtBold') format('svg');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Sharp Sans Disp No2 ExtBold';
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-ExtBold.eot');
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-ExtBold.eot?#iefix') format('embedded-opentype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-ExtBold.woff2') format('woff2'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-ExtBold.woff') format('woff'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-ExtBold.ttf') format('truetype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-ExtBold.svg#SharpSansDispNo2-ExtBold') format('svg');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Sharp Sans Display No1';
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDisplayNo1-ThinItalic.eot');
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDisplayNo1-ThinItalic.eot?#iefix') format('embedded-opentype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDisplayNo1-ThinItalic.woff2') format('woff2'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDisplayNo1-ThinItalic.woff') format('woff'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDisplayNo1-ThinItalic.ttf') format('truetype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDisplayNo1-ThinItalic.svg#SharpSansDisplayNo1-ThinItalic') format('svg');
+    font-weight: 100;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Sharp Sans Disp No2';
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Light.eot');
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Light.eot?#iefix') format('embedded-opentype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Light.woff2') format('woff2'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Light.woff') format('woff'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Light.ttf') format('truetype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Light.svg#SharpSansDispNo2-Light') format('svg');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+
+@font-face {
+    font-family: 'Sharp Sans Disp No2';
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Black.eot');
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Black.eot?#iefix') format('embedded-opentype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Black.woff2') format('woff2'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Black.woff') format('woff'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Black.ttf') format('truetype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Black.svg#SharpSansDispNo2-Black') format('svg');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+
+@font-face {
+    font-family: 'Sharp Sans Disp No2 Hairline';
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Hairline.eot');
+    src: url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Hairline.eot?#iefix') format('embedded-opentype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Hairline.woff2') format('woff2'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Hairline.woff') format('woff'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Hairline.ttf') format('truetype'),
+        url('https://cdn.shopify.com/s/files/1/0641/3995/2353/files/SharpSansDispNo2-Hairline.svg#SharpSansDispNo2-Hairline') format('svg');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+} */
