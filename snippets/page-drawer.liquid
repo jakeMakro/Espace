@@ -1,0 +1,61 @@
+{% assign applince_product = false %}
+{% assign antitache_product = false %}
+
+{% if product.tags contains 'category:laundry_espace' or product.tags contains 'category:kitchen_espace' or product.tags contains 'category:dishwasher_espace' %}
+  {% assign applince_product = true %}
+{% elsif product.tags contains 'category:living_room' or product.tags contains 'category:furniture_espace' %}
+  {% assign antitache_product = true %}
+{% endif %}
+
+
+<div id="overlay" class=""></div>
+
+<div class="inline-page" id="slidingmain">
+  <div class="crossdiv">
+    <img src="https://www.freeiconspng.com/thumbs/close-icon/black-close-icon-3.png" loading="lazy">
+  </div>
+  {% if request.locale.iso_code == 'fr' %}
+    {% assign warrenty_guide = section.settings.warrenty_guide-fr %}
+    {% assign protection_guide = section.settings.protection_guide-fr %}
+  {% elsif request.locale.iso_code == 'en' %}
+    {% assign warrenty_guide = section.settings.warrenty_guide-en %}
+    {% assign protection_guide = section.settings.protection_guide-en %}
+  {% endif %}
+  <div class="pages-content-custom"></div>
+
+  <script>
+  {% if applince_product == true %}window.producttype = 'applince_product';
+  {% elsif antitache_product == true %}window.producttype = 'antitache_product';{% endif %}
+  
+  function getHTMLData(){
+    var page_handle = $(".page-custom-handlize").text();
+    if(page_handle && page_handle != ''){
+      $.ajax({
+        type: 'GET',
+        url: page_handle,
+        dataType: 'html',
+        success: function(data) {
+          var dataGet= $(data).filter('#MainContent').html();
+          $('.pages-content-custom').html(dataGet);
+        }
+      });
+    }
+  }
+  if (Shopify.designMode) {
+     document.addEventListener("DOMContentLoaded", function() {
+      document.addEventListener('shopify:section:load', function(){
+        getHTMLData();
+      });
+    });
+  }
+    
+  {% if applince_product == true %}    
+    getHTMLData();
+  {% elsif antitache_product == true %}    
+    getHTMLData();    
+  {% endif %}
+  </script>
+</div>
+
+
+

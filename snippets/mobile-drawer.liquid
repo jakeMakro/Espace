@@ -1,0 +1,359 @@
+
+ <div class="mobile-accordian accordion-main">
+   {% if product.metafields.pimData.dimensions != blank %}
+  <div class="accordion-item hidden">
+    <div class="accordion-body"  data-title="product-overview">
+      <div class="body-container dimensions-wrapper">
+        <h3 class="sec-title">Product Dimensions</h3>
+        <figure class="hidden"><img src="https://cdn.shopify.com/s/files/1/0641/3995/2353/files/dimensions.png?v=1691647878" /></figure>
+        <ul class="features-lists"></ul>
+        <script>
+            var remove_quotes = `{{product.metafields.pimData.dimensions}}`;
+            if(remove_quotes != ''){
+              if(remove_quotes.charAt(0) == '"'){
+                remove_quotes = remove_quotes.replace('"{','{').replace('}"','}')
+              }
+              var store_data = JSON.parse(remove_quotes);
+              if(window.location.href.includes("/en/")){
+                for(var i=0;i<Object.keys(store_data).length;i++){
+                  if(Object.keys(store_data)[i].toLowerCase().indexOf('inch') > -1 || store_data[Object.keys(store_data)[i]]['value'].amount.indexOf('"') > -1){
+                    var li_html = `<li><span>${store_data[Object.keys(store_data)[i]]['label']}</span><strong>${Math.ceil(Number(store_data[Object.keys(store_data)[i]]['value'].amount))}"</strong></li>`;
+                  }else{
+                    var li_html = `<li><span>${store_data[Object.keys(store_data)[i]]['label']}</span><strong>${Math.ceil(Number(store_data[Object.keys(store_data)[i]]['value'].amount))} ${store_data[Object.keys(store_data)[i]]['value'].unit.toLowerCase()}</strong></li>`;
+                  }
+                  if(i==0){
+                      document.querySelector('[data-title="product-overview"] .features-lists').innerHTML = li_html;
+                  }else{
+                      document.querySelector('[data-title="product-overview"] .features-lists').innerHTML += li_html;    
+                  }
+                }
+              }else{
+                for(var i=0;i<Object.keys(store_data).length;i++){
+                  if(Object.keys(store_data)[i].toLowerCase().indexOf('inch') > -1 || store_data[Object.keys(store_data)[i]]['value'].amount.indexOf('"') > -1){
+                    var li_html = `<li><span>${store_data[Object.keys(store_data)[i]]['label']}</span><strong>${Math.ceil(Number(store_data[Object.keys(store_data)[i]]['value'].amount))} pouces</strong></li>`;
+                  }else if(Object.keys(store_data)[i].toLowerCase().indexOf('pound') > -1){
+                    var li_html = `<li><span>${store_data[Object.keys(store_data)[i]]['label']}</span><strong>${Math.ceil(Number(store_data[Object.keys(store_data)[i]]['value'].amount))} livre</strong></li>`;
+                  }else{
+                    var li_html = `<li><span>${store_data[Object.keys(store_data)[i]]['label']}</span><strong>${Math.ceil(Number(store_data[Object.keys(store_data)[i]]['value'].amount))} ${store_data[Object.keys(store_data)[i]]['value'].unit.toLowerCase()}</strong></li>`;
+                  }
+                  if(i==0){
+                      document.querySelector('[data-title="product-overview"] .features-lists').innerHTML = li_html;
+                  }else{
+                      document.querySelector('[data-title="product-overview"] .features-lists').innerHTML += li_html;    
+                  }
+                }
+               }
+              document.querySelector('[data-title="product-overview"] .features-lists').classList.remove('hidden');
+            }
+          </script>
+      </div>
+    </div>
+  </div>
+   {% endif %}
+
+   {% if product.metafields.pimData.specifications != blank %}
+  <div class="accordion-item hidden">
+    <div class="accordion-body" data-title="dimensions-specifications">
+      <div class="body-container features-specifications-wrapper">
+        <h3 class="sec-title">Caractéristiques et spécifications</h3>
+        <ul class="features-lists"></ul>
+        <script>
+            var specification_data = `{{product.metafields.pimData.specifications}}`;
+            var specification_data2 = `{{product.metafields.pimData.marketingInformation}}`;
+            if(specification_data.charAt(0) == '"'){
+              specification_data = specification_data.replace('"{','{').replace('}"','}')
+            }
+            if(specification_data2.charAt(0) == '"'){
+              specification_data2 = specification_data2.replace('"{','{').replace('}"','}')
+            }
+            var store_data = JSON.parse(specification_data);
+            var store_data2 = JSON.parse(specification_data2);
+            // console.log('store_data',store_data);
+            /*if(window.location.href.includes("/en/")){
+              for(var i=0;i<Object.keys(store_data).length;i++){
+                if(store_data[Object.keys(store_data)[i]].value != undefined && store_data[Object.keys(store_data)[i]].value != 'NA'){
+                  var li_html = `<li><span>${store_data[Object.keys(store_data)[i]].label}</span><strong>${store_data[Object.keys(store_data)[i]].value}</strong></li>`;
+                  if(i==0){
+                      document.querySelector('[data-title="dimensions-specifications"] .features-lists').innerHTML = li_html;
+                  }else{
+                      document.querySelector('[data-title="dimensions-specifications"] .features-lists').innerHTML += li_html;    
+                  }
+                }
+              }
+            }else{
+              for(var i=0;i<Object.keys(store_data).length;i++){
+                var chk_inner_val = true;
+                if(typeof(store_data[Object.keys(store_data)[i]].value) == 'object' && Object.keys(store_data[Object.keys(store_data)[i]].value).length < 2){
+                  chk_inner_val = false;
+                }
+                if(store_data[Object.keys(store_data)[i]].value != undefined && store_data[Object.keys(store_data)[i]].value != 'NA' && chk_inner_val == true){
+                  if(typeof(store_data[Object.keys(store_data)[i]].value) == 'object'){
+                    var store_val = store_data[Object.keys(store_data)[i]].value.amount;
+                    if(!isNaN(store_val)){
+                      store_val = Number(store_val).toFixed(2);
+                    }
+                    var li_html = `<li>
+                    <span>${store_data[Object.keys(store_data)[i]].label}</span>
+                    <strong>${store_val}</strong>
+                    </li>`;
+                  }else{
+                    var store_val = store_data[Object.keys(store_data)[i]].value;
+                    if(!isNaN(store_val)){
+                      store_val = Number(store_val).toFixed(2);
+                    }
+                    var li_html = `<li>
+                    <span>${store_data[Object.keys(store_data)[i]].label}</span>
+                    <strong>${store_val}</strong>
+                    </li>`;
+                  }
+                  if(i==0){
+                      document.querySelector('[data-title="dimensions-specifications"] .features-lists').innerHTML = li_html;
+                  }else{
+                      document.querySelector('[data-title="dimensions-specifications"] .features-lists').innerHTML += li_html;    
+                  }
+                }
+              }
+            }*/
+
+            for(var i=0;i<Object.keys(store_data).length;i++){
+                var chk_inner_val = true;
+                if(typeof(store_data[Object.keys(store_data)[i]].value) == 'object' && Object.keys(store_data[Object.keys(store_data)[i]].value).length < 2){
+                  chk_inner_val = false;
+                }
+                if(store_data[Object.keys(store_data)[i]].value != undefined && store_data[Object.keys(store_data)[i]].value != 'NA' && chk_inner_val == true){
+                  if(typeof(store_data[Object.keys(store_data)[i]].value) == 'object'){
+                    var store_val = store_data[Object.keys(store_data)[i]].value.amount;
+                    if(!isNaN(store_val)){
+                      store_val = Number(store_val).toFixed(2);
+                    }
+                    var li_html = `<li>
+                    <span>${store_data[Object.keys(store_data)[i]].label}</span>
+                    <strong>${store_val}</strong>
+                    </li>`;
+                  }else{
+                    var store_val = store_data[Object.keys(store_data)[i]].value;
+                    if(!isNaN(store_val)){
+                      store_val = Number(store_val).toFixed(2);
+                    }
+                    var li_html = `<li>
+                    <span>${store_data[Object.keys(store_data)[i]].label}</span>
+                    <strong>${store_val}</strong>
+                    </li>`;
+                  }
+                  if(i==0){
+                      document.querySelector('[data-title="dimensions-specifications"] .features-lists').innerHTML = li_html;
+                  }else{
+                      document.querySelector('[data-title="dimensions-specifications"] .features-lists').innerHTML += li_html;    
+                  }
+                }
+              }
+
+            for(var i=0;i<Object.keys(store_data2).length;i++){
+                var chk_inner_val = true;
+                if(typeof(store_data2[Object.keys(store_data2)[i]].value) == 'object' && Object.keys(store_data2[Object.keys(store_data2)[i]].value).length < 2){
+                  chk_inner_val = false;
+                }
+                if(store_data2[Object.keys(store_data2)[i]].value != undefined && store_data2[Object.keys(store_data2)[i]].value != 'NA' && chk_inner_val == true){
+                  if(typeof(store_data2[Object.keys(store_data2)[i]].value) == 'object'){
+                    var store_val = store_data2[Object.keys(store_data2)[i]].value.amount;
+                    if(!isNaN(store_val)){
+                      store_val = Number(store_val).toFixed(2);
+                    }
+                    var li_html = `<li>
+                    <span>${store_data2[Object.keys(store_data2)[i]].label}</span>
+                    <strong>${store_val}</strong>
+                    </li>`;
+                  }else{
+                    var store_val = store_data2[Object.keys(store_data2)[i]].value;
+                    if(!isNaN(store_val)){
+                      store_val = Number(store_val).toFixed(2);
+                    }
+                    var li_html = `<li>
+                    <span>${store_data2[Object.keys(store_data2)[i]].label}</span>
+                    <strong>${store_val}</strong>
+                    </li>`;
+                  }
+                  document.querySelector('[data-title="dimensions-specifications"] .features-lists').innerHTML += li_html;
+                }
+              }
+          </script>
+      </div>
+    </div>
+  </div>
+   {% endif %}
+  
+  <div class="accordion-item hidden">
+    <div class="accordion-body" data-title="usermanual-downloads">
+      <div class="body-container user-manual-downloads-wrapper">
+        <h3 class="sec-title">User Manual & Downloads</h3>
+        <ul class="manual-downloads-lists">
+           <li>
+             <a href="#">
+               {% render 'icon-pdf' %}
+               User Manual
+               <i class="icon">{% render 'icon-download' %}</i>                  
+             </a>
+           </li>
+  
+           <li>
+             <a href="#">
+               {% render 'icon-pdf' %}
+               Installation Guide
+               <i class="icon">{% render 'icon-download' %}</i>                  
+             </a>
+           </li>
+  
+           <li>
+             <a href="#">
+               {% render 'icon-pdf' %}
+               E67 Warranty
+               <i class="icon">{% render 'icon-download' %}</i>                  
+             </a>
+           </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+  <div class="accordion-item hidden">
+    <div class="accordion-body" data-title="customers-reviews">
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+      consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+      cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+      proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      
+    </div>
+
+    
+    
+  </div>
+
+   {% if product.metafields.erpData.storeInventory != blank %}
+    <div class="accordion-item hidden">
+      <div class="accordion-body" data-title="in-stock-locations">
+       
+        <div class="body-container">
+          <h3 class="sec-title">Localisation en magasin</h3>  
+          
+          <div class="stock-locations-wrapper">
+            {% comment %}
+             <div class="sl-items">
+                <h4 class="title-box">Joliette <div class="pro-card-stock">En Stock</div></h4>
+                <address>1075 Boulevard Firestone local <br>1780, Joliette, QC, Canada</address>
+                <a href="tel:450-752-2595" class="phone-num">450-752-2595</a>
+        
+                <div class="times-box">
+                  <span class="timeing">Open today: 9h00 - 20h00 {% render 'icon-plus' %}</span>
+                  <a href="#" class="directions">{% render 'icon-map-1' %} Directions</a>
+                </div>
+             </div>
+    
+             <div class="sl-items">
+                <h4 class="title-box">St-Roch-de-l’Achigan (Siège Social) <div class="pro-card-stock">En Stock</div></h4>
+                <address>1075 Boulevard Firestone local <br>1780, Joliette, QC, Canada</address>
+                <a href="tel:450-752-2595" class="phone-num">450-752-2595</a>
+        
+                <div class="times-box">
+                  <span class="timeing">Open today: 9h00 - 20h00 {% render 'icon-plus' %}</span>
+                  <a href="#" class="directions">{% render 'icon-map-1' %} Directions</a>
+                </div>
+             </div>
+    
+            <div class="sl-items">
+                <h4 class="title-box">Joliette <div class="pro-card-stock">En Stock</div></h4>
+                <address>1075 Boulevard Firestone local <br>1780, Joliette, QC, Canada</address>
+                <a href="tel:450-752-2595" class="phone-num">450-752-2595</a>
+        
+                <div class="times-box">
+                  <span class="timeing">Open today: 9h00 - 20h00 {% render 'icon-plus' %}</span>
+                  <a href="#" class="directions">{% render 'icon-map-1' %} Directions</a>
+                </div>
+             </div>
+    
+            <div class="sl-items">
+                <h4 class="title-box">St-Roch-de-l’Achigan (Siège Social) <div class="pro-card-stock out-of-stock">Out of stock</div></h4>
+                <address>1075 Boulevard Firestone local <br>1780, Joliette, QC, Canada</address>
+                <a href="tel:450-752-2595" class="phone-num">450-752-2595</a>
+        
+                <div class="times-box">
+                  <span class="timeing">Open today: 9h00 - 20h00 {% render 'icon-plus' %}</span>
+                  <a href="#" class="directions">{% render 'icon-map-1' %} Directions</a>
+                </div>
+             </div>
+             {% endcomment %}
+             
+          </div>
+        </div>
+        
+      </div>
+      <script>
+        var data_val_js = `{{product.metafields.erpData.storeInventory}}`;
+        if(data_val_js.charAt(0) == '"'){
+          data_val_js = data_val_js.replace('"{','{').replace('}"','}')
+        }
+        
+        var data_val_js = JSON.parse(data_val_js);
+        var count_location = 0;
+        for(var i=0;i<data_val_js.length;i++){
+            var inner_html = '';
+           for(var j=0;j<location_json.length;j++){
+             if(location_json[j].title == data_val_js[i].name){
+               var count_location = count_location + 1;
+               if(location_json[j].address != ''){
+                 inner_html = inner_html + `<address>${location_json[j].address}</address>`;
+               }
+               if(location_json[j].mobile != ''){
+                 inner_html = inner_html + `<a href="tel:${location_json[j].mobile}" class="phone-num">${location_json[j].mobile}</a>`;
+               }
+               inner_html = inner_html + `<div class="times-box">`;
+               if(location_json[j].hours != ''){
+                 inner_html = inner_html + `<span class="timeing">${location_json[j].hours}<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" class="icon icon-plus" viewBox="0 0 8 9" fill="none"><path d="M4 0.500122V8.50012M8 4.50012H0" stroke="currentColor" stroke-width="1.5"></path></svg></span>`;
+               }
+               if(location_json[j].direction != ''){
+                 inner_html = inner_html + `<a href="${location_json[j].direction}" class="directions"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_956_10439)"><path d="M5.9999 0C3.9599 0 2.3999 1.58861 2.3999 3.6675C2.3999 5.74639 3.9599 7.80169 5.89115 10.7362C5.9234 10.7764 5.9502 10.8 5.9999 10.8C6.04961 10.8 6.07455 10.7754 6.10865 10.7362C8.0399 7.80169 9.5999 5.74639 9.5999 3.6675C9.5999 1.58861 8.0399 0 5.9999 0ZM5.9999 1.8C6.99402 1.8 7.7999 2.60589 7.7999 3.6C7.7999 4.59411 6.99402 5.4 5.9999 5.4C5.00579 5.4 4.1999 4.59411 4.1999 3.6C4.1999 2.60589 5.00579 1.8 5.9999 1.8Z" fill="black"></path></g><defs><clipPath id="clip0_956_10439"><rect width="12" height="12" fill="white"></rect></clipPath></defs></svg>Directions</a>`;
+               }
+               inner_html = inner_html + `</div>`;
+             }
+           }
+          if(data_val_js[i].demoUnit > 0){
+           var html_code = `<div class="sl-items"><h4 class="title-box">${data_val_js[i].name}<div class="pro-card-stock">En Stock</div></h4>${inner_html}</div>` 
+          }else{
+            var html_code = `<div class="sl-items"><h4 class="title-box">${data_val_js[i].name}<div class="pro-card-stock out-of-stock">En rupture du stock</div></h4>${inner_html}</div>`
+          }
+          if(i==0){
+            document.querySelector('.stock-locations-wrapper').innerHTML = html_code;
+          }else{
+            document.querySelector('.stock-locations-wrapper').innerHTML = document.querySelector('.stock-locations-wrapper').innerHTML + html_code;  
+          }
+        }
+        if(count_location > 0){
+          document.querySelector('.location-block').classList.remove('hidden');
+        }
+      </script>
+    </div> 
+   {% endif %}
+   
+  <div class="close-btn">
+    <svg width="70" height="70" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g filter="url(#filter0_d_708_2814)">
+      <rect x="10" y="10" width="50" height="50" rx="25" fill="white" shape-rendering="crispEdges"/>
+      <path d="M42.5 27.5L35 35M35 35L27.5 42.5M35 35L42.5 42.5M35 35L27.5 27.5" stroke="black" stroke-width="2" stroke-linejoin="round"/>
+      <rect x="10.5" y="10.5" width="49" height="49" rx="24.5" stroke="#F9F9F9" shape-rendering="crispEdges"/>
+      </g>
+      <defs>
+      <filter id="filter0_d_708_2814" x="0" y="0" width="70" height="70" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feOffset/>
+      <feGaussianBlur stdDeviation="5"/>
+      <feComposite in2="hardAlpha" operator="out"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0"/>
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_708_2814"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_708_2814" result="shape"/>
+      </filter>
+      </defs>
+    </svg>
+  </div>
+</div>

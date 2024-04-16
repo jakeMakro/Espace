@@ -1,0 +1,74 @@
+{%- capture promotionData -%}
+  {%- for block in section.blocks -%}
+    {%- if block.settings.text != blank -%}
+      <div class="promotion-item swiper-slide">
+      <a {% if block.settings.url == blank %}role="link" aria-disabled="true"{% else %}href="{{ block.settings.url }}"{% endif %}>
+        {{- block.settings.text -}}
+        {% render 'icon-right-arrow-2' %}
+      </a>
+      </div>
+    {%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+
+
+{%- if promotionData != blank -%}
+  
+  {{- 'promotion-section.css' | asset_url | stylesheet_tag: preload: true -}}
+  
+  <div class="promotion-wrap">
+    <div class="page-width full-page-width swiper" data-promotion-bar>
+      <div class="promotion-grid swiper-wrapper">
+        {{ promotionData }}      
+      </div>
+    </div>
+    
+    <div class="slider-button--next large-up-hide">
+        <svg width="18" height="10" viewBox="0 0 18 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M11.9815 1L16.5 5M16.5 5L11.9815 9M16.5 5H0.5" stroke="white" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="slider-button--prev large-up-hide">
+        <svg width="18" height="10" viewBox="0 0 18 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6.01854 1L1.5 5M1.5 5L6.01854 9M1.5 5H17.5" stroke="white" stroke-width="1.5"/>
+        </svg>
+      </div>
+            
+  </div>
+  
+{%- endif -%}
+
+
+
+{% schema %}
+  {
+    "name": "Promotion section",
+    "class":"promotion-section",
+    "tag":"section",
+    "blocks": [
+      {
+        "type": "text",
+        "name": "Promotion text",
+        "limit": 3,
+        "settings": [
+          {
+            "type": "text",
+            "id": "text",
+            "default": "Promotion text",
+            "label": "Text"
+          },
+          {
+            "type": "url",
+            "id": "url",
+            "label": "Url to navigate"
+          }
+        ]
+      }
+    ],
+    "presets":[
+      {
+        "name":"Promotion section"
+      }
+    ]
+  }
+{% endschema %}

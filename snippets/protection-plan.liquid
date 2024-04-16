@@ -1,0 +1,522 @@
+{% assign price_threshold = shop.metafields.JCP.priceminimum | times:100 %}
+
+{% assign found_assembly_service = false %}
+{% assign tags_prop = line_obj.properties._tags %}
+{% if tags_prop contains ',' %}
+  {% assign tags_prop = tags_prop | split:',' %}
+{% endif %}
+
+{% assign assembly_tags = shop.metafields.JCP.AssemblyService %}
+{% if assembly_tags contains ',' %}
+  {% assign assembly_tags = shop.metafields.JCP.AssemblyService | split:',' %}
+{% endif %}
+
+
+{% if line_obj.properties._tags contains ',' %}
+  
+  {% for item_tag in tags_prop %}
+    
+    {% if shop.metafields.JCP.AssemblyService contains ',' %}
+      
+      {% for assembly_tag in assembly_tags %}
+        {% if item_tag == assembly_tag %}
+          {% if price_threshold <= line_obj.price %}
+            {% assign show_assembly_service = true %}
+          {% endif %}
+        {% endif %}
+      {% endfor %}  
+      
+    {% else %}
+      
+      {% if item_tag == assembly_tags %}
+        {% assign show_assembly_service = true %}
+      {% else %}
+        {% if line_obj.properties._tags contains ',' %}
+          {% for assembly_tag in assembly_tags %}
+            {% if item_tag == assembly_tag %}
+              {% if price_threshold <= line_obj.price %}
+                {% assign show_assembly_service = true %}
+              {% endif %}
+            {% endif %}
+          {% endfor %} 
+        {% else %}
+          {% assign down_text = line_obj.properties._tags | downcase %}
+          {% if down_text == shop.metafields.JCP.AssemblyService %}
+            {% if price_threshold <= line_obj.price %}
+              {% assign show_assembly_service = true %}
+            {% endif %}
+          {% endif %}
+        {% endif %}
+      {% endif %}
+    {% endif %}
+    
+  {% endfor %}
+  
+{% else %}
+  
+  {% if shop.metafields.JCP.AssemblyService contains ',' %}
+    {% for assembly_tag in assembly_tags %}
+      {% if line_obj.properties._tags == assembly_tag %}
+        {% if price_threshold <= line_obj.price %}
+          {% assign show_assembly_service = true %}
+        {% endif %}
+      {% endif %}
+    {% endfor %} 
+  {% else %}
+    {% assign down_text = line_obj.properties._tags | downcase %}
+    {% if down_text == shop.metafields.JCP.AssemblyService %}
+      {% if price_threshold <= line_obj.price %}
+        {% assign show_assembly_service = true %}
+      {% endif %}
+    {% endif %}
+  {% endif %}
+  
+{% endif %}
+
+
+  {% assign state_check = false %}
+  {% if shop.metafields.JCP.service_collections != blank %}
+    {% for collections_drop in line_obj.product.collections %}
+        {% if shop.metafields.JCP.service_collections contains '|' %}
+          {% assign coll_break = shop.metafields.JCP.service_collections | split:'|' %}
+          {% for colll_drop in coll_break %}
+            {% assign col_obj = collections[colll_drop] %}
+            {% if col_obj.handle == collections_drop.handle %}
+              {% assign state_check = true %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+        {% else %}
+          {% assign coll_obj = collections[shop.metafields.JCP.service_collections] %}
+          {% if coll_obj.handle == collections_drop.handle %}
+            {% assign state_check = true %}
+          {% endif %}
+        {% endif %}
+    {% endfor %}
+  {% endif %}
+
+
+{% if display_section %}
+    
+    {% assign applince_tags = shop.metafields.tags.appliance_plan %}
+    {% if applince_tags contains '|' %}
+      {% assign applince_tags = shop.metafields.tags.appliance_plan | split:'|' %}
+    {% endif %}
+
+    {% assign antitache_tags = shop.metafields.tags.antitache_plan %}
+    {% if antitache_tags contains '|' %}
+      {% assign antitache_tags = shop.metafields.tags.antitache_plan | split:'|' %}
+    {% endif %}
+
+
+    {% assign applince_product = false %}
+    {% assign antitache_product = false %}
+
+    {% if line_obj.properties._tags contains ',' %}
+      {% for tag_loop_applince in tags_prop %}
+        {% if shop.metafields.tags.appliance_plan contains '|' %}
+          {% for applince_loop in applince_tags %}
+            {% if tag_loop_applince == applince_loop %}
+              {% assign applince_product = true %}
+            {% endif %}
+          {% endfor %}
+        {% else %}
+                {% if tag_loop_applince == applince_tags %}
+                  {% assign applince_product = true %}
+                {% endif %}
+        {% endif %}
+      {% endfor %}
+
+      {% for tag_loop_antitache in tags_prop %}
+        {% if shop.metafields.tags.antitache_plan contains '|' %}
+          {% for antitache_loop in antitache_tags %}
+            {% if tag_loop_antitache == antitache_loop %}
+              {% assign antitache_product = true %}
+            {% endif %}
+          {% endfor %}
+        {% else %}
+                {% if tag_loop_antitache == antitache_tags %}
+                  {% assign antitache_product = true %}
+                {% endif %}
+        {% endif %}
+      {% endfor %}
+    {% else %}
+      
+        {% if shop.metafields.tags.appliance_plan contains '|' %}
+          {% for applince_loop in applince_tags %}
+            {% if tags_prop == applince_loop %}
+              {% assign applince_product = true %}
+            {% endif %}
+          {% endfor %}
+        {% else %}
+                {% if tags_prop == applince_tags %}
+                  {% assign applince_product = true %}
+                {% endif %}
+        {% endif %}
+      
+        {% if shop.metafields.tags.antitache_plan contains '|' %}
+          {% for antitache_loop in antitache_tags %}
+            {% if tags_prop == antitache_loop %}
+              {% assign antitache_product = true %}
+            {% endif %}
+          {% endfor %}
+        {% else %}
+                {% if tags_prop == antitache_tags %}
+                  {% assign antitache_product = true %}
+                {% endif %}
+        {% endif %}
+      
+    {% endif %}
+
+    
+  
+    <span class="hide" data="{{applince_tags}}"></span>
+
+    
+
+    {% if applince_product == true or antitache_product == true %}
+    <div class="select-protection-plan-wrapper">
+
+
+      <div class="cart-protection-grp main_plan_wrap">
+        <div class="info">
+          <i class="shild-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17">
+              <g><g><path d="M6.723.084a.5.5 0 0 1 .554 0 15.05 15.05 0 0 0 6.294 2.42A.5.5 0 0 1 14 3v4.6a5.462 5.462 0 0 0-1-.393v-3.78a15.969 15.969 0 0 1-5.6-2.081l-.4-.25-.4.25A15.969 15.969 0 0 1 1 3.428V7.5c0 3.242 1.798 5.643 5.478 7.246.195.435.444.84.74 1.206l-.038.015a.5.5 0 0 1-.36 0C2.308 14.23 0 11.39 0 7.5V3a.5.5 0 0 1 .43-.495A15.05 15.05 0 0 0 6.723.084zM16 12.5a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0zm-2.146-1.854a.5.5 0 0 0-.708 0L10.5 13.293l-.646-.647a.501.501 0 0 0-.708.708l1 1a.5.5 0 0 0 .708 0l3-3a.499.499 0 0 0 0-.708z"></path></g></g>
+            </svg>
+          </i> 
+
+          
+          {% if applince_product == true %}
+            <div class="plan-name">{% if request.locale.iso_code == 'fr' %}Plan de Protection{% else %}Protection Plan{% endif %}</div>
+          {% elsif antitache_product == true %}
+            <div class="plan-name">{% if request.locale.iso_code == 'fr' %}Plan de Protection{% else %}Protection plan{% endif %} - Antitâche</div>
+          {% else %}
+            <div class="plan-name">Plan de protection</div>
+          {% endif %}
+          
+
+          <div class="tooltip {% if applince_product == true %}custom-cart-tool-app{% elsif antitache_product == true%}custom-cart-tool-anti{% endif %}">
+            
+            {% if request.locale.iso_code == 'fr' %}
+              {% assign warrenty_guide = section.settings.warrenty_guide-fr %}
+              {% assign protection_guide = section.settings.protection_guide-fr %}
+            {% elsif request.locale.iso_code == 'en' %}
+              {% assign warrenty_guide = section.settings.warrenty_guide-en %}
+              {% assign protection_guide = section.settings.protection_guide-en %}
+            {% endif %}
+            
+            
+            
+            <a href="{% if applince_product == true %}{{protection_guide}}{% elsif antitache_product == true%}{{warrenty_guide}}{% endif %}" target="_blank">
+            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 11 11">
+              <g><g><path fill="#747474" d="M1.61 9.39a5.5 5.5 0 1 1 7.78-7.78 5.5 5.5 0 0 1-7.78 7.78zm4.53-4.86zm0 0l-1.574.197-.057.261.31.056c.202.049.242.122.198.323l-.508 2.385c-.133.616.072.906.556.906.374 0 .81-.173 1.007-.41l.06-.287a.76.76 0 0 1-.471.17c-.19 0-.257-.133-.21-.367zm-.154-.95a.688.688 0 1 0-.972-.972.688.688 0 0 0 .972.972z"></path></g></g>
+            </svg>
+            </a>
+          </div>
+        </div>
+
+        {% assign prod_obj_2year = all_products['plan-de-protection-2-ans'] %}
+        {% assign prod_obj_4year = all_products['plan-de-protection-4-ans'] %}
+        {% assign prod_obj_furniture = all_products['plan-de-protection-antitache'] %}
+        
+        {% comment %}{% assign variant_prce = line_obj.final_line_price %}{% endcomment %}
+        {% assign variant_prce = line_obj.final_price  %}
+        
+        <!-- 2year product -->
+        
+        {% for va_val in prod_obj_2year.variants %}
+        {% assign prce = va_val.title | split:'-' | first %}
+        {% assign basePrice = prce | times:100 %}
+        {% if basePrice > variant_prce %}
+        {% break %}
+        {% else %}
+        {% assign selectedPrice = va_val.price %}
+        {% assign selectedvariant = va_val.id %}
+        {% assign selectedsku = va_val.sku %}
+        {% endif %}
+        {% endfor %}
+        
+        <!-- 4year product -->
+        
+        {% for va_val2 in prod_obj_4year.variants %}
+        {% assign prce1 = va_val2.title | split:'-' | first %}
+        {% assign basePrice1 = prce1 | times:100 %}
+        {% if basePrice1 > variant_prce %}
+        {% break %}
+        {% else %}
+        {% assign selectedPrice2 = va_val2.price %}
+        {% assign selectedvariant2 = va_val2.id %}
+        {% assign selectedsku2 = va_val2.sku %}
+        {% endif %}
+        {% endfor %}
+        
+        <!-- Furniture product -->
+        
+        {% for va_val3 in prod_obj_furniture.variants %}
+          {% assign prce3 = va_val3.title | split:'-' | first %}
+          {% assign basePrice3 = prce3 | times:100 %}
+          {% if basePrice3 > variant_prce %}
+            {% break %}
+          {% else %}
+            {% assign selectedPrice3 = va_val3.price %}
+            {% assign selectedvariant3 = va_val3.id %}
+            {% assign selectedsku3 = va_val3.sku %}
+          {% endif %}
+        {% endfor %}
+        
+        
+
+        {% assign variant_prce_new = line_obj.final_line_price | divided_by:100 %}
+        {% assign lastvariant = prod_obj_2year.variants.size | minus:1 %}
+        {% assign lastvariant1 = prod_obj_4year.variants.size | minus:1 %}
+        {% assign lastvariant2 = prod_obj_furniture.variants.size | minus:1 %}
+        
+        <div class="option-list">
+          
+          <!-- Appliance product -->
+          
+          {% if applince_product == true %}
+          <!-- 2year product -->
+          {% assign time1 = false %}
+          {% assign time2 = false %}
+          
+          {%- for item1 in cart.items -%}
+            {% if item1.product.handle == prod_obj_2year.handle %}
+              {% if item1.properties.timestamp == line_obj.properties.timestamp %}
+                {% assign vid_remove = item1.key %}
+                {% assign time1 = true %}
+                {% break %}
+              {% endif %}
+            {% endif %}
+          
+          {%- endfor -%}
+          <div class="form-group">
+            <div class="drop-down-plan" data-val="">{% unless line_obj.properties.Garantie_ajoutee != blank %}Decline protection plan{% else %}{% if line_obj.properties._no_plan == 'true' %}Decline protection plan{% endif %}{% endunless %}{% if time1 == true %}{% if line_obj.properties.Garantie_ajoutee == 'true' %}<span>Plan de protection 2 ans <strong class="prices">{{selectedPrice| times: line_obj.quantity |money}}</strong></span>{% endif %}{% endif %}{% if time2 == true %}{% if line_obj.properties.Garantie_ajoutee == 'true' %}<span>Plan de protection 4 ans <strong class="prices">{{selectedPrice2| times: line_obj.quantity |money}}</strong></span>{% endif %}{% endif %}{% unless line_obj.properties.Garantie_ajoutee != blank %}No{% else %}{% if line_obj.properties._no_plan == 'true' %}No{% endif %}{% endunless %}</div>
+            <ul class="drop-down-list" id="drop-down-list">
+              <li data-number="number-1" class="drop-down-list-item {% if time1 == true %}{% if line_obj.properties.Garantie_ajoutee == 'true' %}active-protection{% endif %}{% endif %}"><span>Plan de protection 2 ans <strong class="prices">{{selectedPrice| times: line_obj.quantity |money}}</strong></span></li>  
+              <li data-number="number-2" class="drop-down-list-item {% if time2 == true %}{% if line_obj.properties.Garantie_ajoutee == 'true' %}active-protection{% endif %}{% endif %}"><span>Plan de protection 4 ans <strong class="prices">{{selectedPrice2| times: line_obj.quantity |money}}</strong></span></li>  
+              <li data-number="number-3" class="drop-down-list-item {% unless line_obj.properties.Garantie_ajoutee != blank %}active-protection{% else %}{% if line_obj.properties._no_plan == 'true' %}active-protection{% endif %}{% endunless %}">Decline protection plan</li>
+            </ul>
+          </div>            
+          <label data-number="number-1" {% if variant_prce_new > 75000 %}v_ptr="{{ prod_obj_2year.variants[lastvariant].sku }}" v_id="{% if time1 == true %}{{ vid_remove }}{% else %}{{ prod_obj_2year.variants[lastvariant].id }}{% endif %}" class="pro-plan {% if time1 == true %}{% if line_obj.properties.Garantie_ajoutee %}remove-plan{% else %}add-plan{% endif %}{% else %}add-plan{% endif %}"{% else %}v_ptr="{{selectedsku}}" v_id="{% if time1 == true %}{{ vid_remove }}{% else %}{{ selectedvariant }}{% endif %}" class="pro-plan {% if time1 == true %}{% if line_obj.properties.Garantie_ajoutee %}remove-plan{% else %}add-plan{% endif %}{% else %}add-plan{% endif %}"{% endif %}>
+             <input type="radio"  data-check="{{ prod_obj_2year.first_available_variant.sku }}" name="protection-plan_{{line_obj.id}}" {% if time1 == true %}{% if line_obj.properties.Garantie_ajoutee == 'true' %}checked{% endif %}{% endif %}>
+             {% comment %}<span {% if time1 == true %}{% if line_obj.properties.Garantie_ajoutee == 'true' %}style="background: url({{ 'radio-1-active.svg' | asset_url }}) no-repeat 0 2px;"{% endif %}{% endif %}>Plan de protection 2 ans <strong class="prices">{{selectedPrice| times: line_obj.quantity |money}}</strong></span>{% endcomment %}
+              <span>Plan de protection 2 ans <strong class="prices">{{selectedPrice| times: line_obj.quantity |money}}</strong></span>
+          </label>
+          
+          <!-- 4year product -->
+          
+          {%- for item2 in cart.items -%}
+            {% if item2.product.handle == prod_obj_4year.handle %}
+              {% if item2.properties.timestamp == line_obj.properties.timestamp %}
+                {% assign vid_remove2 = item2.key %}
+                {% assign time2 = true %}
+                {% break %}
+              {% endif %}
+            {% endif %}
+          {%- endfor -%}
+          <label data-number="number-2" {% if variant_prce_new > 75000 %}v_ptr="{{ prod_obj_4year.variants[lastvariant1].sku }}" v_id="{% if time2 == true %}{{ vid_remove2 }}{% else %}{{ prod_obj_4year.variants[lastvariant1].id }}{% endif %}" class="pro-plan {% if time2 == true %}{% if line_obj.properties.Garantie_ajoutee %}remove-plan{% else %}add-plan{% endif %}{% else %}add-plan{% endif %}"{% else %}v_ptr="{{selectedsku2}}" v_id="{% if time2 == true %}{{ vid_remove2 }}{% else %}{{ selectedvariant2 }}{% endif %}" class="pro-plan {% if time2 == true %}{% if line_obj.properties.Garantie_ajoutee %}remove-plan{% else %}add-plan{% endif %}{% else %}add-plan{% endif %}"{% endif %}>
+             <input type="radio" data-check="{{ prod_obj_4year.first_available_variant.sku }}" name="protection-plan_{{line_obj.id}}" {% if time2 == true %}{% if line_obj.properties.Garantie_ajoutee == 'true' %}checked{% endif %}{% endif %}>
+              <span >Plan de protection 4 ans <strong class="prices">{{selectedPrice2| times: line_obj.quantity |money}}</strong></span>
+          </label>
+          {% endif %}
+          
+          
+          
+          
+          <!-- Furniture product -->
+          
+          {% if antitache_product == true %}
+          
+          {%- for item in cart.items -%}
+            {% if item.product.handle == prod_obj_furniture.handle %}
+              {% if item.properties.timestamp == line_obj.properties.timestamp %}
+                {% assign time3 = true %}
+                {% break %}
+              {% endif %}
+            {% endif %}
+          {%- endfor -%}
+          
+          <label data-number="number-1" {% if variant_prce_new > 75000 %}v_ptr="{{ prod_obj_furniture.variants[lastvariant2].sku }}" v_id="{{ prod_obj_furniture.variants[lastvariant2].id }}" data-verify1="{{ time3 }}" data-verify2="{{ line_obj.properties.PTR }}" class="pro-plan {% if time3 == true %}{% if line_obj.properties.Garantie_ajoutee %}remove-plan{% else %}add-plan{% endif %}{% else %}add-plan{% endif %}"{% else %} data-verify4="{{ time3 }}" data-verify5="{{ line_obj.properties.PTR }}"  v_ptr="{{selectedsku3}}" v_id="{{selectedvariant3}}" class="{% if time3 == true %}{% if line_obj.properties.Garantie_ajoutee %}remove-plan{% else %}add-plan{% endif %}{% else %}add-plan{% endif %} pro-plan"{% endif %}>
+             <input type="radio" data-check="{{ prod_obj_furniture.first_available_variant.sku }}" name="protection-plan_{{line_obj.id}}" {% if time3 == true %}{% if line_obj.properties.Garantie_ajoutee == 'true' %}checked{% endif %}{% endif %}>
+             {% comment %}<span {% if time3 == true %}{% if line_obj.properties.Garantie_ajoutee %}style="background: url({{ 'radio-1-active.svg' | asset_url }}) no-repeat 0 2px;"{% endif %}{% endif %} >Plan de protection antitâche <strong class="prices">{{selectedPrice3| times: line_obj.quantity |money}}</strong></span>{% endcomment %}
+              <span>Plan de protection Antitache <strong class="prices">{{selectedPrice3| times: line_obj.quantity |money}}</strong></span>
+          </label>
+          {% endif %}
+          
+          
+          <label class="no-plan" data-number="number-3">
+             <input type="radio" data-check="{{ line_obj.properties.Garantie_ajoutee }}" name="protection-plan_{{line_obj.id}}" {% unless line_obj.properties.Garantie_ajoutee != blank %}checked{% else %}{% if line_obj.properties._no_plan == 'true' %}checked{% endif %}{% endunless %}> 
+              <span>
+                {% if applince_product == true %}
+                Decline protection plan
+                {% else %}
+               No
+                {% endif %}
+              </span>
+          </label>  
+          {% if antitache_product == true %}      
+          <div class="form-group">
+            <div class="drop-down-plan" data-val="">{% if time3 == true %}{% if line_obj.properties.Garantie_ajoutee == 'true' %}<span>Plan de protection Antitache <strong class="prices">{{selectedPrice3| times: line_obj.quantity |money}}</strong></span>{% endif %}{% endif %}{% unless line_obj.properties.Garantie_ajoutee != blank %}No{% else %}{% if line_obj.properties._no_plan == 'true' %}No{% endif %}{% endunless %}</div>
+            <ul class="drop-down-list" id="drop-down-list">
+              <li class="drop-down-list-item {% if time3 == true %}{% if line_obj.properties.Garantie_ajoutee == 'true' %}active-protection{% endif %}{% endif %}"><span>Plan de protection Antitache <strong class="prices">{{selectedPrice3| times: line_obj.quantity |money}}</strong></span></li>  
+              <li class="drop-down-list-item {% unless line_obj.properties.Garantie_ajoutee != blank %}active-protection{% else %}{% if line_obj.properties._no_plan == 'true' %}active-protection{% endif %}{% endunless %}">No</li>
+            </ul>
+          </div>
+          {% endif %}
+        </div>    
+      </div> 
+
+    {% if show_assembly_service %}
+      <div class="cart-protection-grp">
+        {% if section.settings.assembly-service-title != blank %}
+            <div class="info">
+              <i class="shild-icon">{% render 'service-icon' %}</i> 
+              <div class="plan-name">{{ section.settings.assembly-service-title }}
+          
+                <div class="tooltip-wrap">
+                  {% if section.settings.assembly-service-tooltip != blank %}            
+                    {% render 'info-icon' %}
+                    <div class="tooltip-info">
+                      {{ section.settings.assembly-service-tooltip }}
+                    </div>
+                  {% endif %}
+                </div>
+          
+              </div>
+            </div>
+        {% endif %}
+        
+        <div class="option-list">
+          <label class="assembly_service {% if line_obj.properties._assemblyService == 'oui' %}remove_assembly_service{% else %}add_assembly_service{% endif %}">
+             <input type="radio" name="assembly-service_{{line_obj.id}}" {% if line_obj.properties._assemblyService == 'oui' %}checked{% endif %}>
+             <span data-ly-mutation-count="1">{{ section.settings.assembly-service-content }}</span>
+          </label>
+        </div>  
+      </div>  
+   {% endif %}
+
+
+      {% if state_check == true %}
+    <div class="cart-protection-grp">
+      <div class="info">
+        <i class="shild-icon">{% render 'service-settings-icon' %}</i> 
+        <div class="plan-name">{{ section.settings.service-title }}
+          <div class="tooltip-wrap">
+            
+            {% if section.settings.service-tooltip != blank %}  
+              {% render 'info-icon' %}
+                <div class="tooltip-info">
+                  {{ section.settings.service-tooltip }}
+                </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      {% if section.settings.service-content != blank %}
+      <div class="option-list">
+        <label class="accept-service">
+           <input type="checkbox" name="service_{{line_obj.id}}" {% if line_obj.properties.Ramassage %}checked{% endif %}>      
+           <span>{{ section.settings.service-content }}</span>
+        </label>
+
+      </div>
+      {% endif %}
+       
+    </div>  
+  
+
+     {% assign serviTitle = section.settings.pcup_ser_link_txt %}
+     {% render 'service-popup' %}
+        
+    {% endif %}
+      
+    </div>  
+
+    {% endif %}
+{% else %}
+  {% if show_assembly_service %}
+  <div class="select-protection-plan-wrapper">
+    <div class="cart-protection-grp">
+      {% if section.settings.assembly-service-title != blank %}
+        <div class="info">
+            <i class="shild-icon">{% render 'service-icon' %}</i> 
+            <div class="plan-name">{{ section.settings.assembly-service-title }}
+              <div class="tooltip-wrap">
+                
+                {% if section.settings.assembly-service-tooltip != blank %}  
+                {% render 'info-icon' %}
+                    <div class="tooltip-info">
+                      {{ section.settings.assembly-service-tooltip }}
+                    </div>
+                {% endif %}
+              </div>
+            </div>
+        </div>
+      {% endif %}
+      <div class="option-list">
+        <label class="assembly_service {% if line_obj.properties._assemblyService == 'oui' %}remove_assembly_service{% else %}add_assembly_service{% endif %}">
+               <input type="radio" name="assembly-service_{{line_obj.id}}" {% if line_obj.properties._assemblyService == 'oui' %}checked{% endif %}>
+               <span data-ly-mutation-count="1">{{ section.settings.assembly-service-content }}</span>
+        </label>
+      </div>  
+    </div>
+  </div>  
+  {% endif %}
+{% endif %}
+
+{% if line_obj.product.metafields.JCP.AssociatedProducts != blank %}
+
+  {% assign pro_obj = all_products[line_obj.product.metafields.JCP.AssociatedProducts] %}
+
+  {% if pro_obj.available %}
+    
+      {% assign available_variant = pro_obj.selected_or_first_available_variant %}
+       {% assign display_it = true %} 
+       {% assign added = false %}
+       {% for item in cart.items %}
+           {% if item.id == available_variant.id %}
+             {% assign added = true %}
+            {% assign display_it = true %} 
+              {% break %}
+           {% endif %}
+       {% endfor %}  
+    
+        {% unless added %}
+          <div class="accessory-main-wrapper">
+            <div class="info">
+               <div class="plan-name">Acheter le Produit Complémentaire</div>
+            </div>
+            <div data-verify1="{{ display_it }}"  data-verify2="{{ available_variant.id }}" class="cart-accessory {{ line_obj.product.metafields.JCP.AssociatedProducts }}">
+              <div class="cart-accessory-box">
+                <div class="img-box">
+                  <img src="{{ pro_obj.featured_image | img_url:"master" }}" alt="{{ pro_obj.title }}">
+                </div>
+                <div class="cart-accessory-right">
+                  <div class="info-contain">
+                    <label>{{ pro_obj.vendor }}</label>
+                    <h5>{{ pro_obj.title }}</h5>
+                  </div>
+                  {% unless available_variant.title == "Default Title" %}
+                    <div class="cart-accessory-info">
+                    {{ available_variant.title }}
+                    </div>
+                  {% endunless %}
+                    <span class="price">
+                      <span class="visually-hidden">Sale price</span>{{ available_variant.price | money }}
+                    </span>
+                </div>
+                <a class="add-check{% if added %} checked-added{% endif %}" href="#" data-tags="{{ pro_obj.tags | join:"," }}" data-id="{{ available_variant.id }}">{% render 'plus' %}</a>
+              </div>
+            </div> 
+          </div>
+        {% endunless %}
+          
+  {% endif %}
+  
+{% endif %}
+
+
+

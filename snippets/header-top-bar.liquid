@@ -1,0 +1,27 @@
+{% if section.settings.help_text != blank %}
+<div class="top-bar-left">
+  <div class="help-drop-down-wrap">
+    <div class="help-center-selected">      
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none" class="info-icon">
+        <path d="M7.381 7.3C7.59259 6.6985 8.01024 6.1913 8.55996 5.86822C9.10968 5.54514 9.75601 5.42704 10.3845 5.53484C11.0129 5.64264 11.5829 5.96937 11.9936 6.45718C12.4042 6.94498 12.6289 7.56237 12.628 8.2C12.628 10 9.928 10.9 9.928 10.9M10 14.5H10.009M19 10C19 14.9706 14.9706 19 10 19C5.02944 19 1 14.9706 1 10C1 5.02944 5.02944 1 10 1C14.9706 1 19 5.02944 19 10Z" stroke="#212121" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+        {{ section.settings.help_text }}
+      <svg class="cart-icon" xmlns="http://www.w3.org/2000/svg" width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M9 1L5 5L1 1" stroke="currentColor"/></svg>
+      </div>
+  </div>
+</div>
+{% endif %}
+{% if section.settings.store_text != blank %}
+<div class="top-bar-right">
+  <div class="top-right-item custom-store">
+    <a href="{{ section.settings.store_link }}">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <path d="M7 1L1 4V19L7 16M7 1L13 4M7 1V16M13 4L19 1V16L13 19M13 4V19M13 19L7 16" stroke="#212121" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      {{ section.settings.store_text }}</a>
+  </div>
+  <div class="top-right-item custom-langify">
+    <span class="ly-custom-1000"></span>
+  </div>  
+</div>
+{% endif %}  

@@ -1,0 +1,239 @@
+<script>
+  var algolia_customs = {
+      "collection": {%- if template contains 'collection' -%}true{%- else -%}false{%- endif -%},
+      {%- if template contains 'collection' -%}
+      "handle": "{{collection.handle}}",
+      "french_handle": "/collections/{{collection.handle}}",
+      "collection_id": {{ collection.id }},
+      "title": "{{ collection.title }}",
+      {%- endif -%}
+      "rebates_only": {%- if template.suffix == 'template_rebate' -%}true{%- else -%}false{%- endif -%},
+      "initial_query": "{% if search.terms %}{{ search.terms }}{% else %} {% endif %}"
+    }
+</script>
+
+{% comment %}
+<link rel="style_sheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7.4.5/themes/reset-min.css" integrity="sha256-QlHlZdbSVxaYkUHxhMFhAj/L3pJiW1LuomSCONXBWms=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/algolia-min.css"/>
+{{ 'algolia_styles.css' | asset_url | stylesheet_tag }}
+{{ 'algolia_overwrites.css' | asset_url | stylesheet_tag }}
+{{ 'template-collection.css' | asset_url | stylesheet_tag }}
+{{ 'component-loading-overlay.css' | asset_url | stylesheet_tag }}
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'main-collection-product-grid.css' | asset_url | stylesheet_tag }}
+{% endcomment %}
+{{ 'component-facets.css' | asset_url | stylesheet_tag }}
+{{ 'component-pagination.css' | asset_url | stylesheet_tag }}
+
+<div class="section-padding-large pt-0">
+  <div class="full-page-width {% if template.suffix == 'template_rebate' %}rebate-container{% endif %}" id="search_container">
+    <div class="facets facets-vertical-sort page-width full-page-width no-js-hidden">
+      <div class="filters-top">
+        <div class="filters-top-left" id="searchbox"></div>
+        
+        <div class="filters-top-right">
+          <div class="switch-grp" id="in-stock">
+            <label class="switch">
+              <input type="checkbox">
+              <span class="switch-slider"></span>
+            </label>
+            <span class="switch-text">En stock</span>
+          </div>
+    
+          <div class="switch-grp" id="on-sale">
+            <label class="switch">
+              <input type="checkbox">
+              <span class="switch-slider"></span>
+            </label>
+            <span class="switch-text">En vente</span>
+          </div>
+    
+          <div class="custom-select-grp medium-hide small-hide">
+            <div class="facet-filters_label">Trier par:</div>
+            <div class="custom-select" id="sort-by"><div class="selected-sort">Most Popular</div></div>
+          </div>
+        </div>
+    
+        <div class="large-up-hide filters-short-bar">
+          <div class="custom-select-grp">
+            <div class="facet-filters_label">Trier par:</div>
+            <div class="custom-select">
+              <div class="selected-sort">Most Popular</div>
+              <div class="ais-RefinementList sort-options" id="sort-by2"></div>
+            </div>            
+          </div>
+          
+          <a href="#" title="" class="filters-drawer-btn" onclick="openPanel(this);">
+            Filters
+            <svg xmlns="http://www.w3.org/2000/svg" width="8" height="14" viewBox="0 0 8 14" fill="none">
+              <path d="M1.5 12L6.5 7L1.5 2" stroke="currentcolor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="round"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="facets-vertical page-width full-page-width">
+      <aside class="facets-wrapper">
+          <div class="facets--container scroll-trigger animate--fade-in">
+              <div class="facets-left-filters">
+                <div class="facets-accordion-box">
+                  <div class="filters-head large-up-hide">
+                    <h2 class="filters-title">Filter</h2>
+                    <span class="mobile-filters-close large-up-hide" onclick="openPanel(this);">{% render 'filter-close-icon' %}</span>
+                  </div>
+                </div>
+              </div>
+          </div>
+      </aside>
+      <div class="product-grid-container scroll-trigger animate--slide-in">
+          <div class="selected-filter-list" id="hits-header">
+            <div class="selected-wrap"><span id="current-refinements"></span><span id="clear-refinements"></span></div>
+          </div>
+          <div class="collection" id="hits"></div>
+          <div id="pagination" class="pagination-wrapper"></div>
+      </div>
+      <div id="stats" class="" style="display: none;padding-bottom: 10px;border-bottom: 1px solid lightgrey;margin-bottom: 15px;"></div>
+      <div class="left-panel facets-wrapper hidden">
+        <span class="exit-panel">
+          <svg focusable="false" class="icon icon--close" viewBox="0 0 19 19" role="presentation">
+            <path d="M9.1923882 8.39339828l7.7781745-7.7781746 1.4142136 1.41421357-7.7781746 7.77817459 7.7781746 7.77817456L16.9705627 19l-7.7781745-7.7781746L1.41421356 19 0 17.5857864l7.7781746-7.77817456L0 2.02943725 1.41421356.61522369 9.1923882 8.39339828z" fill="currentColor" fill-rule="evenodd"></path>
+          </svg>
+        </span>
+        <h2 style="position: relative;padding-bottom:10px;margin-bottom: 10px;border-bottom: 1px solid lightgrey;display: none;">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2.27303 0H0.941176V1.56271H0V5.39845H0.941176V16H2.27303V5.39845H3.19645V1.56271H2.27303V0Z" fill="black"/></path>
+            <path d="M8.66593 0H7.33407V10.4772H6.3929V14.313H7.33407V16H8.66593V14.313H9.6071V10.4772H8.66593V0Z" fill="black"/></path>
+            <path d="M16 4.81243H15.0588V0H13.727V4.81243H12.8036V8.64817H13.727V16H15.0588V8.64817H16V4.81243Z" fill="black"/></path>
+          </svg>
+          <span class="mobile-sort-label">{% if routes.root_url contains 'en' %}Filters{% else %}Filtres{% endif %} </span>
+          <span class="desktop-sort-label">{% if routes.root_url contains 'en' %}Filters{% else %}Filtres{% endif %} </span>
+          <div id="clear-refinements" style="position: absolute;top: 0;right: 0;"></div>
+        </h2>
+        <div id="algolia_facets">
+          <div class="algolia_facet mobile-sort">
+            <div class="algolia_facet_title open">{% if routes.root_url contains 'en' %}Sort by:{% else %}Trier Par:{% endif %} <span class="curr-val">RELEVANCE</span></div>
+            <div style="display: none;">
+              <div class="ais-RefinementList" id="sort-by2">
+              </div>
+          </div>
+        </div>
+        </div>
+        <div class="clr-button">
+          <span data-clear>{% if routes.root_url contains 'en' %}Clear All{% else %}Supprimer{% endif %}</span>
+          <span data-apply>{% if routes.root_url contains 'en' %}Apply{% else %}Appliquer{% endif %}</span>
+        </div>
+        <div class="panel-overlay"></div>
+      </div>
+      <div class="right-panel product-grid-container hidden">
+        <div id="hits-headers">
+          <div id="current-refinementsd"></div>
+          <div class="filter-bar-mobile-wrapper">
+            <div class="filter-btn-item">
+              <button>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M2.27303 0H0.941176V1.56271H0V5.39845H0.941176V16H2.27303V5.39845H3.19645V1.56271H2.27303V0Z" fill="black"></path>
+                  <path d="M8.66593 0H7.33407V10.4772H6.3929V14.313H7.33407V16H8.66593V14.313H9.6071V10.4772H8.66593V0Z" fill="black"></path>
+                  <path d="M16 4.81243H15.0588V0H13.727V4.81243H12.8036V8.64817H13.727V16H15.0588V8.64817H16V4.81243Z" fill="black"></path>
+                </svg>
+                <span>FILTERS </span>
+              </button>
+            </div>
+          </div>
+          <div id="hits-sorter">
+            <div class="container-option" data-widget="sort-by"></div>
+          </div>
+        </div>
+        <div id="hitss"></div>
+        <div id="hits-instant-search-price-desc"></div>
+        <div id="paginatiosn" class="pagination-wrapper"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{%- assign readmoreText = 'En savoir plus' -%}
+{%- assign readlessText = 'Lire moins' -%}
+{%- if request.locale.iso_code == 'en' -%}
+  {%- assign readmoreText = 'Read more' -%}  
+  {%- assign readlessText = 'Read less' -%}
+{%- endif -%}
+
+{% if collection.metafields.Jcperrault.SEOCollection != blank %}
+  <div class="collection-text-sectoin">
+    <div class="page-width full-page-width">
+      <div class="collection-text-row">
+        {% unless collection.metafields.Jcperrault.hide_seo_title %}
+          {% if collection.metafields.Jcperrault.override_seo_title != blank %}
+            <h3>{{ collection.metafields.Jcperrault.override_seo_title }}</h3>
+          {% else %}
+            <h3>Voir La Collection {{ collection.title }}</h3>
+          {% endif %}
+        {% endunless %}
+        {%- if collection.metafields.Jcperrault.SEOCollection contains '<!--split-->' -%}
+          <div class="text read-more-text">
+            {{ collection.metafields.Jcperrault.SEOCollection | split: '<!--split-->' | first }}
+          </div>
+          <div class="text read-less-text hidden">
+            {{ collection.metafields.Jcperrault.SEOCollection }}
+          </div>
+        {%- else -%}
+          <div class="text">
+            {{ collection.metafields.Jcperrault.SEOCollection }}
+          </div>
+        {%- endif -%}
+      </div>
+      {%- if collection.metafields.Jcperrault.SEOCollection contains '<!--split-->' -%}
+        <a href="#" class="link read-more-desc-link" data-read-more>{{ readmoreText }}</a>
+        <a href="#" class="link read-more-desc-link hidden" data-read-less>{{ readlessText }}</a>
+      {%- endif -%}
+    </div>
+  </div>
+{% endif %}
+
+<style>
+  #sort-by select{width: 200px;
+    text-align: right;
+    position: relative;
+    z-index: 1;}
+</style>
+
+<script>
+  var algolia_settings = {
+    "facet_omits":["{{ section.settings.facet_ignores | replace: ',','","' }}"],
+    "brand_omits":["{{ section.settings.brand_ignores | replace: ',','","' }}"]
+  }
+  var hideBrand = [{{settings.hideBrand | downcase | strip | prepend:'"' | append:'"' | replace:',','","' }}];
+</script>
+
+<script src="{{ 'algolia_custom.js' | asset_url }}" defer></script>
+
+
+{% schema %}
+{
+  "name": "Search page",
+  "class": "main-collection-grid",
+  "settings": [
+    {
+      "type": "text",
+      "id": "facet_ignores",
+      "label": "Facet Ignore List",
+      "info": "needs to be a comma separated list no spaces after comma",
+      "default": "Model,MPN,PTR,Variant,RebateID,Miele Canada,ProductLabel,RebateEndDate,DOE (By Class),IEC (By Class),RebateStartDate,ReducedPriceEndDate,ReducedPriceStartDate,CEI (par gamme),DOE (par gamme),Modèle"
+    },
+    {
+      "type": "text",
+      "id": "brand_ignores",
+      "label": "Brands to Ignore",
+      "info": "needs to be a comma separated list no spaces after comma",
+      "default": "JCP,Monogram"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Algolia"
+    }
+  ]
+}
+{% endschema %}

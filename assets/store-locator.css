@@ -1,0 +1,157 @@
+.section-store-locator { --spacing-sections-desktop: 60px; --spacing-sections-mobile: 45px; }
+
+.section-store-locator #storemapper {  margin-bottom: 60px; }
+  .section-store-locator #storemapper .storemapper-powered-by { display: none !important; }
+
+.section-store-locator #storemapper #storemapper-form { background: transparent; box-shadow: none; margin-bottom: 60px; padding: 0;  }
+
+.section-store-locator #storemapper.search_on_top #storemapper-form .storemapper-form-inner { width: 100%; display: flex; gap: 40px; }
+.section-store-locator #storemapper.search_on_top #storemapper-form .storemapper-form-inner #storemapper-zip {flex: 1 0 0; width: 74.029%; border-width: 0 0 1px; border-color: currentColor; padding: 15px 0; font-size: 16px;  height: 50px; padding-left: 26px; padding-right: 26px !important; background-image: url(search_icon.svg); background-repeat: no-repeat; background-position-y: center; background-size: 16px; box-shadow: none; margin-right: 0; }
+  .section-store-locator #storemapper #storemapper-form #storemapper-zip::-webkit-input-placeholder { color: #B8B8B8; }
+                                                                                                               
+.section-store-locator #storemapper #storemapper-form .storemapper-dropdown-btn { font-size: 16px; font-style: normal; font-weight: 400; line-height: 100%; color: #000; display: block; height: auto; }
+  .section-store-locator #storemapper #storemapper-form .storemapper-dropdown-btn .caret { background-image: url(dropdown-arrow.svg); width: 13px; height: 7px; border-width: 0; background-repeat: no-repeat; transform: none; background-size: cover; margin-left: 15px; vertical-align: middle; margin-top: -1px; }
+
+.section-store-locator #storemapper.search_on_top #storemapper-form .storemapper-form-inner .storemapper-dropdown { margin-right: 0; position: relative; display: flex; align-items: center; }
+  .section-store-locator #storemapper.search_on_top #storemapper-form .storemapper-form-inner .storemapper-dropdown:after { content: ''; width: calc(100% + 40px); display: block; border-top: 1px solid #F1F1F1; margin-left: -40px; position: absolute; bottom: 0; }
+  .section-store-locator #storemapper #storemapper-form .storemapper-dropdown-menu { margin-top: 15px; transform: translateX(-50%); left: 50%; }
+  #storemapper #storemapper-form .category-container .storemapper-dropdown-menu { min-width: 170px; }
+
+.section-store-locator #storemapper #storemapper-form #storemapper-go { margin: 0; border-radius: 5px; font-size: 16px; font-weight: 500; line-height: 1; position: relative; overflow: hidden; }
+  .section-store-locator #storemapper #storemapper-form #storemapper-go:after {
+    content: ''; display: block; width: 30px; height: 30px; background: #EBFF00;
+    border-radius: 50%; right: 0; bottom: 0; top: auto; left: auto; border: none;
+    box-shadow: none!important; transform: translate(100%,50%); transition: all .3s ease 0s; position: absolute; }
+    .section-store-locator #storemapper #storemapper-form #storemapper-go:hover:after,
+    .section-store-locator #storemapper #storemapper-form #storemapper-go:focus:after,
+    .section-store-locator #storemapper #storemapper-form #storemapper-go:active:after { transform: translate(50%,50%); }      
+
+@media screen and (max-width: 989px) {
+  .section-store-locator #storemapper.search_on_top #storemapper-form .storemapper-form-inner { gap: 20px; }
+    .section-store-locator #storemapper.search_on_top #storemapper-form .storemapper-form-inner .storemapper-dropdown:after { width: calc(100% + 20px); margin-left: -20px; }
+}
+@media screen and (max-width: 749px) {
+  .section-store-locator #storemapper.search_on_top #storemapper-form .storemapper-form-inner { flex-wrap: wrap; gap: 15px 20px; }
+  
+  .section-store-locator #storemapper.search_on_top #storemapper-form .storemapper-form-inner #storemapper-zip { width: 100%; margin-bottom: 0; }
+  
+  .section-store-locator #storemapper.search_on_top #storemapper-form .storemapper-form-inner .storemapper-dropdown { width: 100%; padding: 15px 0; }
+    .section-store-locator #storemapper.search_on_top #storemapper-form .storemapper-form-inner .storemapper-dropdown:after { width: 100%; margin-left: 0; border-color: #B8B8B8; }
+  
+  .section-store-locator #storemapper #storemapper-form #storemapper-go { height: 50px; margin-top: 15px; width: auto; }
+  
+  .section-store-locator #storemapper.search_on_top #storemapper-form .storemapper-form-inner .storemapper-dropdown .button-group, 
+  .section-store-locator #storemapper .category-container { display: block; width: 100%; }
+  
+  .section-store-locator #storemapper #storemapper-form .storemapper-dropdown-btn { width: 100%; text-align: left; display: flex; align-items: center; justify-content: space-between; }
+
+  .section-store-locator #storemapper #storemapper-form .storemapper-dropdown-menu { top: 100%; margin-top: 13px; width: 100%; transform: none; left: 0; }
+  .section-store-locator #storemapper #storemapper-form .storemapper-distance .storemapper-dropdown-menu { margin-top: -2px; }
+}
+
+
+.section-store-locator #storemapper #storemapper-left { width: calc(34.553% - 71px); margin-right: 71px; }
+.section-store-locator #storemapper #storemapper-left::-webkit-scrollbar { width: 5px; border-radius: 12px; }
+.section-store-locator #storemapper #storemapper-left::-webkit-scrollbar-track {  }
+.section-store-locator #storemapper #storemapper-left::-webkit-scrollbar-thumb { background: #B8B8B8; }
+.section-store-locator #storemapper #storemapper-left::-webkit-scrollbar-thumb:hover { background: #1B2232;  }
+
+.section-store-locator #storemapper #storemapper-list { background-color: transparent; padding: 0; padding-right: 40px; width: 100%; }
+
+  .section-store-locator #storemapper #storemapper-list li { box-shadow: none; padding: 20px 20px 31px; margin-bottom: 10px; border-bottom: 1px solid; }    
+
+    .section-store-locator #storemapper #storemapper-list li h4 { font-feature-settings: 'ss02' on; font-size: 20px; font-weight: 700; line-height: normal; /* text-transform: capitalize; */
+      background-image: url(https://cdn.shopify.com/s/files/1/0641/3995/2353/files/store-locator-icon.svg?v=1691586064);
+      background-repeat: no-repeat; background-position-x: right; background-position-y: top; background-size: 20px; margin-bottom: 20px; }
+    
+    .section-store-locator #storemapper #storemapper-list li.storemapper-selected { background-color: #F9F9F9; color: currentColor; padding-bottom: 20px; margin-bottom: 10px; border-bottom-width: 0; }
+      .section-store-locator #storemapper #storemapper-list li.storemapper-selected:after { content: ''; position: absolute; bottom: -10px; left: 0; width: 100%; height: 1px; background: #000; }
+    .section-store-locator #storemapper #storemapper-list li.storemapper-selected a:not(#id) { color: currentColor; }
+    .section-store-locator #storemapper #storemapper-list li.storemapper-selected .storemapper_view a { border-color: currentColor; }
+    
+    .section-store-locator #storemapper #storemapper-list li p,
+    .section-store-locator #storemapper #storemapper-list li.storemapper-selected p,
+    .section-store-locator #storemapper #storemapper-list li .storemapper-phone a {padding-left: 0;color: #757575;font-size: 14px;font-weight: 400;line-height: 1.6; }
+    .section-store-locator #storemapper #storemapper-list li p {  margin-bottom: 12px; }
+      .section-store-locator #storemapper #storemapper-list li p svg { display: none; }
+    .section-store-locator #storemapper #storemapper-list li .storemapper-distance, 
+    .section-store-locator #storemapper #storemapper-list li.storemapper-selected .storemapper-distance { font-weight: 500; color: #757575; }
+    .section-store-locator #storemapper.show_distance #storemapper-list li h4 { padding-right: 85px; }    
+    .section-store-locator #storemapper #storemapper-list li .storemapper-distance { right: 50px; top: 23px; margin: 0; }
+    
+    .section-store-locator #storemapper #storemapper-list li>div:not([class]) { display: block; width: 100%; }
+      .section-store-locator #storemapper #storemapper-list li>div:not([class]) p { display: block; }
+        .section-store-locator #storemapper #storemapper-list li>div:not([class]):after { content: ''; display: block; clear: both; }
+    
+    .section-store-locator #storemapper #storemapper-list li .storemapper-phone a { text-decoration: underline; }
+    
+    #storemapper .current-day-time { position: relative; display: block; padding-right: 10px; font-size: 14px; font-weight: 400; line-height: 1.286; cursor: pointer; display: block !important; }
+      #storemapper .shop-tine-info { display: block; }
+        #storemapper .current-day-time .acc-icon { position: absolute; right: 0; top: 50%; transform: translateY(-50%); }
+        #storemapper .current-day-time .minus { opacity: 0; }
+        #storemapper .active .current-day-time .minus { opacity: 1; }
+        #storemapper .active .current-day-time .plus { opacity: 0; }
+          #storemapper .current-day-time .acc-icon svg { display: block; position: static; }
+    
+      #storemapper .days-info .content { line-height: 1.286; padding-top: 12px; }
+      #storemapper .days-info table { font-size: 14px; box-shadow: none; width: 100%; margin-top: 12px; }
+        #storemapper .days-info table tb { border-width: 0; }
+        #storemapper .days-info table td { border-width: 0; line-height: 1.286; padding: 5px 0; }
+        
+    .section-store-locator #storemapper #storemapper-list li>.storemapper_btn-wrap { margin-bottom: -12px; margin-left: -5px; margin-top: 13px; }
+      .section-store-locator #storemapper #storemapper-list li>.storemapper_btn-wrap p { margin-left: 5px; }
+        .section-store-locator #storemapper #storemapper-list li>.storemapper_btn-wrap a:not(#id) { font-size: 14px; font-weight: 500; line-height: 1.6; border-radius: 0; border-width: 0; padding: 0; text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 6px; padding-bottom: 3px; outline: none; }
+        .section-store-locator #storemapper #storemapper-list li>.storemapper_btn-wrap a:not(#id):hover,
+        .section-store-locator #storemapper #storemapper-list li .storemapper-phone a:hover,
+        #storemapper #storemapper-right .storemapper-popup .storemapper-popup-phone a:hover,
+        #storemapper #storemapper-right .storemapper-popup>p .storemapper-map-directions:hover { opacity: 0.5; }
+
+.section-store-locator #storemapper #storemapper-right { width: 65.447%; }
+  .section-store-locator #storemapper .storemapper-iw-container { max-width: 220px !important; padding: 20px !important; border-radius: 0; box-shadow: none; }
+  
+  #storemapper .storemapper-popup .storemapper-popup-name { font-feature-settings: 'ss02' on; font-size: 14px; font-weight: 700; /* text-transform: capitalize; */ line-height: 1.5; margin-bottom: 6px; }
+  #storemapper #storemapper-right .storemapper-popup>p { padding-left: 0; color: #757575; font-size: 12px; font-weight: 400; line-height: 1.6;  margin-bottom: 5px; }
+  #storemapper #storemapper-right .storemapper-popup>p:last-child { margin-bottom: 0; }
+    #storemapper #storemapper-right .storemapper-popup>p>svg,
+    #storemapper #storemapper-right .storemapper-popup>p> a svg { display: none; }
+    #storemapper #storemapper-right .storemapper-popup .storemapper-popup-phone a { text-decoration: underline; color: currentColor; display: inline-block; text-underline-offset: 4px; }
+    #storemapper #storemapper-right .storemapper-popup>p .storemapper-map-directions { background: transparent; color: #000 !important; padding: 0; text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 4px; font-weight: 500; line-height: 1.6; margin-top: 5px; }
+  
+  #storemapper #storemapper-right .storemapper-popup>p:empty,
+  #storemapper #storemapper-right .storemapper-popup .shop-tine-info { display: none; }
+
+@media screen and (min-width: 750px) and (max-width: 989px){
+  .header.page-width, .top-bar .page-width, .page-width {
+    padding-left: 2.85714rem;
+    padding-right: 2.85714rem;
+  }  
+  .section-store-locator #storemapper #storemapper-list li h4 { font-size: 15px; min-height: 25px; display: flex; align-items: center; }
+}
+@media screen and (min-width: 670px){
+  .section-store-locator #storemapper #storemapper-left, 
+  .section-store-locator #storemapper #storemapper-right { height: 600px; }
+
+  .section-store-locator #storemapper #storemapper-left { overflow: unset; overflow-x: auto; }    
+}
+
+@media screen and (max-width: 1199px){
+  .section-store-locator #storemapper #storemapper-left { margin-right: 20px; width: calc(34.553% - 20px); }
+    .section-store-locator #storemapper #storemapper-list { padding-right: 20px; }
+}
+@media screen and (max-width: 989px){
+  .section-store-locator #storemapper #storemapper-left { width: calc(40% - 20px); }
+  .section-store-locator #storemapper #storemapper-right { width: 60%; }
+}
+@media screen and (max-width: 749px){
+  .section-store-locator #storemapper #storemapper-left { margin-right: 0; }
+  .section-store-locator #storemapper #storemapper-list { padding-right: 0; }
+    .section-store-locator #storemapper #storemapper-list li:first-child { padding-top: 30px; border-top: 1px solid; }
+      .section-store-locator #storemapper #storemapper-list li:not(.storemapper-selected):first-child .storemapper-distance { top: 33px; }
+    .section-store-locator #storemapper #storemapper-list li.storemapper-selected:first-child { border-top-width: 0; padding-top: 20px; }
+    .section-store-locator #storemapper #storemapper-list li.storemapper-selected:first-child:before { content: ''; position: absolute; top: -10px; left: 0; width: 100%; height: 1px; background: #000; }
+  .section-store-locator #storemapper #storemapper-form { margin-bottom: 40px; }
+
+  .section-store-locator #storemapper #storemapper-right { height: calc(100vw - 3rem); min-height: 350px; margin-bottom: 40px; }
+
+  .section-store-locator #storemapper .storemapper-iw-container { max-width: 210px!important; padding: 15px!important; }
+}

@@ -1,0 +1,186 @@
+<link rel="stylesheet" href="{{ 'faq.css' | asset_url }}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="{{ 'faq.css' | asset_url }}"></noscript>
+
+{%- assign spacing-top = section.settings.spacing-top | times: 1 -%}
+{%- assign spacing-bottom = section.settings.spacing-bottom | times: 1 -%}
+{%- if spacing-top > 0 or spacing-bottom > 0 -%}
+  {%- if spacing-top == 0 %}{% assign spacing-top = '' %}{% endif -%}
+  {%- if spacing-top == 0 %}{% assign spacing-bottom = '' %}{% endif -%}
+  {%- style -%}
+    {%- if spacing-top >= 60 -%}
+      #shopify-section-{{ section.id }} {
+        padding-top: {{ spacing-top | times: 0.7 | round | at_least: 20 }}px;
+        padding-bottom: {{ spacing-bottom | times: 0.7 | round | at_least: 20 }}px;
+      }
+      @media screen and (min-width: 750px){
+        #shopify-section-{{ section.id }} { padding-top: {{ spacing-top }}px; padding-bottom: {{ spacing-bottom }}px; }
+      }
+    {%- else -%}
+      #shopify-section-{{ section.id }} { padding-top: {{ spacing-top }}px; padding-bottom: {{ spacing-bottom }}px; }
+    {%- endif -%}
+  {%- endstyle -%}  
+{%- endif -%}
+
+<div class="faq-main section-faq-box{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
+  <div class="page-width full-page-width">
+    <div class="faq-grid">
+      <div class="faq--grid-item left-item">
+        <div class="section-head">
+          {% if section.settings.head != blank %}<h2>{{ section.settings.head }}</h2>{% endif %}
+          {% if section.settings.text != blank %}<div class="section-head-text">{{ section.settings.text }}</div>{% endif %}
+        </div>
+        {% if section.settings.btn != blank or section.settings.link != blank %}
+          <div class="faq-btn-wrap medium-hide small-hide">
+            {%- if section.settings.btn != blank -%}
+              <button class="faq-chat button button--primary">{% render 'icon-chat' %}{{ section.settings.btn }}</button>
+            {%- endif -%}
+            {%- if section.settings.btn != blank and section.settings.link != blank -%}
+              <span class="faq-or">or</span>
+            {%- endif -%}
+            {%- if section.settings.link != blank -%}
+              <a href="{{ section.settings.url | default:"#" }}" class="link link-btn-arrow">{{ section.settings.link }}
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="12" viewBox="0 0 22 12" fill="none">
+                  <path d="M14.3518 1L20 6M20 6L14.3518 11M20 6H0" stroke="Currentcolor" stroke-width="2"/>
+                </svg>
+              </a>
+            {%- endif -%}
+          </div>
+          {% endif %}
+      </div>
+
+      {%- capture faqItem -%}
+      {% for block in section.blocks %}
+        {% if block.settings.que != blank and block.settings.ans != blank %}
+          <div class="faq-que-item{% if block.settings.open %} active{% endif %}" data-faq-item>
+            <button class="faq-que h4" data-faq-que>{{ block.settings.que }}{% render 'icon-chevron-down' %}</button>
+            <div class="faq-ans" data-faq-ans {% if block.settings.open %} style="display:block;" {% endif %}>{{ block.settings.ans }}</div>
+          </div>
+        {% endif %}
+      {% endfor %}
+      {% endcapture %}
+      {% if faqItem != blank %}
+      <div class="faq--grid-item faq-questions" data-faq-wrapper>
+        {{ faqItem }}
+      </div>
+      {% endif %}
+    </div>
+
+    {% if section.settings.btn != blank or section.settings.link != blank %}
+      <div class="faq-btn-wrap large-up-hide">
+        {%- if section.settings.btn != blank -%}
+          <button class="faq-chat button button--primary">{% render 'icon-chat' %}{{ section.settings.btn }}</button>
+        {%- endif -%}
+        {%- if section.settings.btn != blank and section.settings.link != blank -%}
+          <span class="faq-or">or</span>
+        {%- endif -%}
+        {%- if section.settings.link != blank -%}
+          <a href="{{ section.settings.url | default:"#" }}" class="link link-btn-arrow">
+            {{- section.settings.link -}}
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="12" viewBox="0 0 22 12" fill="none">
+              <path d="M14.3518 1L20 6M20 6L14.3518 11M20 6H0" stroke="Currentcolor" stroke-width="2"/>
+            </svg>
+          </a>
+        {%- endif -%}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+                
+
+{% schema %}
+  {
+    "name": "Faq",
+    "class": "section-faq",
+    "tag":"section",
+    "settings": [
+      {
+        "type": "inline_richtext",
+        "id": "head",
+        "label": "Heading",
+        "default": "Have Any Questions?"
+      },
+      {
+        "type": "richtext",
+        "id": "text",
+        "label": "Text",
+        "default": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis.</p>"
+      },
+      {
+        "type": "text",
+        "id": "btn",
+        "label": "Button Label",
+        "default": "Chat with Expert"
+      },
+      {
+        "type": "text",
+        "id": "link",
+        "label": "Link Label",
+        "default": "Contact Us"
+      },
+      {
+        "type": "url",
+        "id": "url",
+        "label": "Link URL"
+      },
+    {
+      "type": "header",
+      "content": "Section spacing"
+    },
+    {
+      "type": "range",
+      "id": "spacing-top",
+      "min": 0,
+      "max": 150,
+      "step": 10,
+      "default": 150,
+      "unit": "px",
+      "label": "Section margin top"
+    },
+    {
+      "type": "range",
+      "id": "spacing-bottom",
+      "min": 0,
+      "max": 150,
+      "step": 10,
+      "default": 0,
+      "unit": "px",
+      "label": "Section margin bottom"
+    }
+    ],
+    "blocks": [
+      {
+        "type": "text",
+        "name": "Question",
+        "settings": [
+          {
+            "type": "text",
+            "id": "que",
+            "label": "Question"
+          },
+          {
+            "type": "richtext",
+            "id": "ans",
+            "label": "Answer"
+          },
+          {
+            "type": "checkbox",
+            "id": "open",
+            "label": "Default open?"
+          }
+        ]
+      }
+    ],
+    "presets":[
+      {
+        "name":"Faq"
+      }
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

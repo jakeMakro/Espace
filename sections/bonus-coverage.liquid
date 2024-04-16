@@ -1,0 +1,283 @@
+{{ 'bonus-coverage.css' | asset_url | stylesheet_tag }} 
+
+<div class="bonus-coverage-wrapper">
+  <div class="page-width">
+
+    {% if section.settings.title != blank or section.settings.subtitle != blank %}
+    <div class="sec-header section-head center">
+      {% if section.settings.title != blank %}
+      <h2 class="sec-title">{{ section.settings.title }}</h2>
+      {% endif %}
+      {% if section.settings.subtitle != blank %}
+      <h3 class="sub-title">{{ section.settings.subtitle }}</h3>
+      {% endif %}
+    </div>
+    
+    {% endif %}
+
+    <div class="bonus-list-wrapper">
+      {% for block in section.blocks %}
+        {% if block.settings.img != blank or block.settings.title != blank or block.settings.subtitle != blank or block.settings.desc != blank %}
+      <div class="bonus-item">
+        <span class="circle-shape"></span>
+        {% if block.settings.img != blank %}
+        <figure>
+          {%- liquid
+            assign height = block.settings.img.width | divided_by: block.settings.img.aspect_ratio | round        
+            assign sizes = '50vw'
+            assign widths = '375, 550, 750, 1100, 1500, 1780, 2000, 3000, 3840'
+            assign _class = ''            
+          -%}
+          {{
+            block.settings.img
+            | image_url: width: 400
+            | image_tag: loading: 'lazy', height: height, sizes: sizes, widths: widths, class: _class
+          }}
+        </figure>        
+        {% endif %}
+          {% if block.settings.title != blank or block.settings.subtitle != blank or block.settings.desc != blank %}
+            <div class="cont">
+              {% if block.settings.title != blank %}
+                <div class="item-title h2">
+                  {{ block.settings.title }}
+                  {% if block.settings.maintitle-tooltip != blank %}
+                  <div style="display: inline-block;">
+                     <div class="com-site-tooltip">
+                        <div class="tooltip-wrap info-tooltip">
+                           {% render 'info-icon' %}
+                           <div class="tooltip-info">{{ block.settings.maintitle-tooltip }}</div>
+                        </div>
+                     </div>
+                  </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings.subtitle != blank %}
+                <span class="info">
+                  {{ block.settings.subtitle }}
+                  {% if block.settings.subtitle-tooltip != blank %}
+                  <div style="display: inline-block;">
+                     <div class="com-site-tooltip">
+                        <div class="tooltip-wrap info-tooltip">
+                           {% render 'info-icon' %}
+                           <div class="tooltip-info">{{ block.settings.subtitle-tooltip }}</div>
+                        </div>
+                     </div>
+                  </div>
+                  {% endif %}
+                </span>
+              {% endif %}
+    
+              {% if block.settings.line1 != blank or block.settings.line2 != blank or block.settings.line3 != blank or block.settings.line4 != blank or block.settings.line5 != blank %}
+                <ul class="points">
+<!-- 1 -->
+                  {% if block.settings.line1 != blank %}
+                  <li>
+                    {{ block.settings.line1 }}
+                    <!-- for tooltip -->
+                    {% if block.settings.tooltip1 != blank %}
+                    <div>
+                       <div class="com-site-tooltip">
+                          <div class="tooltip-wrap info-tooltip">
+                             {% render 'info-icon' %}
+                             <div class="tooltip-info">{{ block.settings.tooltip1 }}</div>
+                          </div>
+                       </div>
+                    </div>
+                    {% endif %}
+                  </li>
+                  {% endif %}
+<!-- 2 -->
+                  {% if block.settings.line2 != blank %}
+                  <li>
+                    {{ block.settings.line2 }}
+                    <!-- for tooltip -->
+                    {% if block.settings.tooltip2 != blank %}
+                    <div>
+                       <div class="com-site-tooltip">
+                          <div class="tooltip-wrap info-tooltip">
+                             {% render 'info-icon' %}
+                             <div class="tooltip-info">{{ block.settings.tooltip2 }}</div>
+                          </div>
+                       </div>
+                    </div>
+                    {% endif %}
+                  </li>
+                  {% endif %}
+<!-- 3 -->
+                  {% if block.settings.line3 != blank %}
+                  <li>
+                    {{ block.settings.line3 }}
+                    <!-- for tooltip -->
+                    {% if block.settings.tooltip3 != blank %}
+                    <div>
+                       <div class="com-site-tooltip">
+                          <div class="tooltip-wrap info-tooltip">
+                             {% render 'info-icon' %}
+                             <div class="tooltip-info">{{ block.settings.tooltip3 }}</div>
+                          </div>
+                       </div>
+                    </div>
+                    {% endif %}
+                  </li>
+                  {% endif %}
+<!-- 4 -->
+                  {% if block.settings.line4 != blank %}
+                  <li>
+                    {{ block.settings.line4 }}
+                    <!-- for tooltip -->
+                    {% if block.settings.tooltip4 != blank %}
+                    <div>
+                       <div class="com-site-tooltip">
+                          <div class="tooltip-wrap info-tooltip">
+                             {% render 'info-icon' %}
+                             <div class="tooltip-info">{{ block.settings.tooltip4 }}</div>
+                          </div>
+                       </div>
+                    </div>
+                    {% endif %}
+                  </li>
+                  {% endif %}
+<!-- 5 -->
+                  {% if block.settings.line5 != blank %}
+                  <li>
+                    {{ block.settings.line5 }}
+                    <!-- for tooltip -->
+                    {% if block.settings.tooltip5 != blank %}
+                    <div>
+                       <div class="com-site-tooltip">
+                          <div class="tooltip-wrap info-tooltip">
+                             {% render 'info-icon' %}
+                             <div class="tooltip-info">{{ block.settings.tooltip5 }}</div>
+                          </div>
+                       </div>
+                    </div>
+                    {% endif %}
+                  </li>
+                  {% endif %}
+                </ul>
+              {% endif %}
+            </div>        
+        {% endif %}
+      </div>
+      {% endif %}
+      {% endfor %}
+    </div>
+    <div>    
+  </div>
+</div>
+</div>
+
+{% schema %}
+  {
+    "name": "Bonus Coverage",
+    "tag": "section",
+    "class":"section section-bonus-coverage section-padding-large",
+    "settings": [
+      {
+        "type":"text",
+        "id":"title",
+        "label":"Title"
+      },
+      {
+        "type":"text",
+        "id":"subtitle",
+        "label":"SubTitle"
+      }
+    ],
+    "blocks":[
+      {
+        "type":"product",
+        "name":"Product",
+        "limit":3,
+        "settings":[
+              {
+                "type":"image_picker",
+                "id":"img",
+                "label":"Image"
+              },
+              {
+                "type":"text",
+                "id":"title",
+                "label":"Title"
+              },
+              {
+                "type":"text",
+                "id":"maintitle-tooltip",
+                "label":"Tooltip Content"
+              },
+              {
+                "type":"text",
+                "id":"subtitle",
+                "label":"SubTitle"
+              },
+              {
+                "type":"text",
+                "id":"subtitle-tooltip",
+                "label":"Tooltip Content"
+              },
+              {
+                "type":"header",
+                "content":"Description with Tooltip"
+              },
+              {
+                "type":"text",
+                "id":"line1",
+                "label":"Desc line 1"
+              },
+              {
+                "type":"text",
+                "id":"tooltip1",
+                "label":"Tooltip Content"
+              },
+              {
+                "type":"text",
+                "id":"line2",
+                "label":"Desc line 2"
+              },
+              {
+                "type":"text",
+                "id":"tooltip2",
+                "label":"Tooltip Content"
+              },
+              {
+                "type":"text",
+                "id":"line3",
+                "label":"Desc line 3"
+              },
+              {
+                "type":"text",
+                "id":"tooltip3",
+                "label":"Tooltip Content"
+              },
+              {
+                "type":"text",
+                "id":"line4",
+                "label":"Desc line 4"
+              },
+              {
+                "type":"text",
+                "id":"tooltip4",
+                "label":"Tooltip Content"
+              },
+              {
+                "type":"text",
+                "id":"line5",
+                "label":"Desc line 5"
+              },
+              {
+                "type":"text",
+                "id":"tooltip5",
+                "label":"Tooltip Content"
+              }
+        ]
+      }
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

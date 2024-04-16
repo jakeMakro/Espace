@@ -1,0 +1,166 @@
+<link rel="stylesheet" href="{{ 'component-image-with-text.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'image-with-text-slider.css' | asset_url }}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="{{ 'component-image-with-text.css' | asset_url }}"></noscript>
+<noscript><link rel="stylesheet" href="{{ 'image-with-text-slider.css' | asset_url }}"></noscript>
+
+{%- assign spacing-top = section.settings.spacing-top | times: 1 -%}
+{%- assign spacing-bottom = section.settings.spacing-bottom | times: 1 -%}
+{%- if spacing-top > 0 or spacing-bottom > 0 -%}
+  {%- if spacing-top == 0 %}{% assign spacing-top = '' %}{% endif -%}
+  {%- if spacing-top == 0 %}{% assign spacing-bottom = '' %}{% endif -%}
+  {%- style -%}
+    {%- if spacing-top >= 60 -%}
+      #shopify-section-{{ section.id }} {
+        padding-top: {{ spacing-top | times: 0.7 | round | at_least: 20 }}px;
+        padding-bottom: {{ spacing-bottom | times: 0.7 | round | at_least: 20 }}px;
+      }
+      @media screen and (min-width: 750px){
+        #shopify-section-{{ section.id }} { padding-top: {{ spacing-top }}px; padding-bottom: {{ spacing-bottom }}px; }
+      }
+    {%- else -%}
+      #shopify-section-{{ section.id }} { padding-top: {{ spacing-top }}px; padding-bottom: {{ spacing-bottom }}px; }
+    {%- endif -%}
+  {%- endstyle -%}  
+{%- endif -%}
+
+<div class="swiper{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}" data-image-text-slider>
+  <div class="swiper-wrapper image-with-text image-with-text--overlap page--width isolate">
+    {% for block in section.blocks %}
+    <div class="swiper-slide image-with-text__grid grid grid--gapless grid--1-col image-with-text__grid--reverse">
+        <div class="image-with-text__media-item image-with-text__media-item--medium image-with-text__media-item--middle grid__item">
+          <div
+            class="image-with-text__media image-with-text__media--adapt global-media-settings {% if block.settings.image != blank %}media{% else %}image-with-text__media--placeholder placeholder{% endif %}"
+            {% if block.settings.image != blank %}
+              style="padding-bottom: {{ 1 | divided_by: block.settings.image.aspect_ratio | times: 100 }}%;"
+            {% endif %}
+          >
+            {%- if block.settings.image != blank -%}
+                {%- assign widths = '165, 360, 535, 750, 1070, 1500' -%}
+                {%- capture sizes -%}
+                  (min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 100 | divided_by: 2 }}px,
+                  (min-width: 750px) calc((100vw - 130px) / 2), calc((100vw - 50px) / 2)
+                {%- endcapture -%}
+              {{
+                block.settings.image
+                | image_url: width: 1500
+                | image_tag: loading: 'lazy', sizes: sizes, widths: widths
+              }}
+            {%- else -%}
+              {{ 'detailed-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+            {%- endif -%}
+          </div>
+        </div>
+        <div class="image-with-text__text-item grid__item">
+          {%- capture blockData -%}
+            {% if block.settings.pretitle != blank %}<h6 class="image-with-text__preheading inline-richtext">{{ block.settings.pretitle }}</h6>{% endif %}
+            {% if block.settings.title != blank or block.settings.text != blank %}
+            <div class="section-head">
+              {% if block.settings.title != blank %}<h2>{{ block.settings.title }}</h2>{% endif %}
+              {% if block.settings.text != blank %}<div class="section-head-text">{{ block.settings.text }}</div>{% endif %}
+            </div>
+            {% endif %}
+            {% if block.settings.link_label != blank %}<a href="{{ block.settings.link_url | default:"#" }}" class="link link-btn">{{ block.settings.link_label }}</a>{% endif %}
+          {%- endcapture -%}
+          {% if blockData != blank %}
+            <div class="image-with-text__content image-with-text__content--center image-with-text__content--desktop-left image-with-text__content--mobile-left image-with-text__content--adapt content-container">
+              {{ blockData }}
+            </div>
+          {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+  </div>
+  <div class="slider-nav image-text-slider-nav{% if section.blocks.size <= 1 %} hidden{% endif %}">
+    <div class="slider-btn slider-prev">{% render 'icon-slider-prev' %}</div>
+    <div class="slider-pagination hero-pagination medium-hide large-up-hide{% if section.blocks.size == 1 %} hidden{% endif %}">
+      <span class="swiper-pagination-current" data-hero-current>1</span>
+      <svg class="separator" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none">
+        <line x1="15.6016" y1="1.45904" x2="1.45948" y2="15.6012" stroke="black" stroke-width="1.5"/>
+      </svg>
+      <span class="swiper-pagination-total" data-hero-total>{{ section.blocks.size }}</span>
+    </div>
+    <div class="slider-btn slider-next">{% render 'icon-slider-next' %}</div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Image Text Slider",
+  "tag": "section",
+  "class": "section image-text-slider",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings":[    
+    {
+      "type": "header",
+      "content": "Section spacing"
+    },
+    {
+      "type": "range",
+      "id": "spacing-top",
+      "min": 0,
+      "max": 150,
+      "step": 10,
+      "default": 0,
+      "unit": "px",
+      "label": "Section margin top"
+    },
+    {
+      "type": "range",
+      "id": "spacing-bottom",
+      "min": 0,
+      "max": 150,
+      "step": 10,
+      "default": 0,
+      "unit": "px",
+      "label": "Section margin bottom"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Image - Text",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:sections.image-with-text.settings.image.label"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "pretitle",
+          "default": "/ E67 Kitchen",
+          "label": "Pre-Title"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "title",
+          "default": "Image with text",
+          "label": "Title"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text"
+        },
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "Link label"
+        },
+        {
+          "type": "url",
+          "id": "link_url",
+          "label": "Url to navigate"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image Text Slider"
+    }
+  ]
+}
+{% endschema %}

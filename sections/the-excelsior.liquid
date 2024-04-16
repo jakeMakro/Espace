@@ -1,0 +1,118 @@
+{{ 'the-excelsior.css' | asset_url | stylesheet_tag }}
+
+{% if section.settings.title != blank or section.settings.sml-title != blank or section.settings.des != blank or section.blocks.size > 0 %}
+<div class="the-excelsior-wrapper">
+  
+  <div class="page-width">    
+    <!--  Excelsior Contents -->
+    <div class="cont-wrapper">
+      {% if section.settings.sml-title != blank or section.settings.title != blank %}
+        <div class="title-part">
+          {% if section.settings.sml-title != blank %}<h3 class="sub-title">{{ section.settings.sml-title }}</h3>{% endif %}
+          {% if section.settings.title != blank %}
+            <h2 class="sec-title">{{ section.settings.title }}</h2>
+          {% endif %}
+        </div>
+      {% endif %}
+              
+      {% if section.settings.des != blank %}
+        <div class="cont-part">
+         <div class="content rte">
+           <p>{{ section.settings.des }}</p>
+         </div>
+        </div>
+      {% endif %}
+    </div>
+
+    <!--  Experience Points -->
+    {% if section.blocks.size > 0 %}
+    <div class="experience-list-wrapper">
+      <ul class="list-box">
+        {% for block in section.blocks %}
+        <li>
+          <span class="card-svg">{{ forloop.index }}</span>
+          {% if block.settings.sml-title != blank %}<h3 class="point-sub-title">{{ block.settings.sml-title }}</h3>{% endif %}
+          {% if block.settings.title != blank %}<h2 class="point-title">{{ block.settings.title }}</h2>{% endif %}
+          {% if block.settings.sml-txt != blank %}<span class="sub-info">{{ block.settings.sml-txt }}</span>{% endif %}
+          {% if block.settings.pnt != blank %}
+            {{ block.settings.pnt }}
+          {% endif %}
+          {% if block.settings.last-txt != blank %}
+          <div class="note">{{ block.settings.last-txt }}</div>
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    
+    
+  </div>
+</div>
+{% endif %}
+
+
+{% schema %}
+  {
+    "name": "Step Section",
+    "tag": "section",
+    "class":"section the-excelsior section-padding-large pb-0",
+    "settings": [
+      {
+        "type":"text",
+        "id":"title",
+        "label":"Title"
+      },
+      {
+        "type":"text",
+        "id":"sml-title",
+        "label":"Small Title"
+      },
+      {
+        "type":"textarea",
+        "id":"des",
+        "label":"Description"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "step-block",
+        "name": "step-block",
+        "settings": [
+    		{
+              "type": "text",
+              "id": "title",
+              "label": "Title"
+            },
+            {
+              "type": "text",
+              "id": "sml-title",
+              "label": "Small Title"
+            },
+            {
+              "type": "text",
+              "id": "sml-txt",
+              "label": "Small Text"
+            },
+            {
+              "type": "html",
+              "id": "pnt",
+              "label": "Description"
+            },
+            {
+              "type": "text",
+              "id": "last-txt",
+              "label": "Last text"
+            }
+        ]
+      }
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

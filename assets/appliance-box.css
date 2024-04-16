@@ -1,0 +1,101 @@
+.com-site-tooltip .tooltip-wrap{ position: relative; }
+.com-site-tooltip .tooltip-info { position: absolute; background: #000; border-radius: 5px; width: 200px; color: #fff; padding: 10px; font-size: 12px; bottom: 100%; left: 50%; line-height: 1.4; margin-bottom: 5px;
+  -webkit-transition: all 0.3s ease 0s; -moz-transition: all 0.3s ease 0s; -ms-transition: all 0.3s ease 0s; -o-transition: all 0.3s ease 0s; transition: all 0.3s ease 0s;
+  -webkit-transform: translate(-50%, 0); -moz-transform: translate(-50%, 0); -ms-transform: translate(-50%, 0); -o-transform: translate(-50%, 0); transform: translate(-50%, 0); }
+.com-site-tooltip .tooltip-wrap svg:not(:hover) + .tooltip-info { opacity: 0; visibility: hidden; }
+
+.appliance-box-wrapper .section-head { width:100%; display:flex; flex-flow:column; }
+/*.appliance-box-wrapper .section-head .sec-title { font-style: normal; font-weight: 300; font-size: 32px; line-height: 38px; color: #000000; margin:0; }*/
+
+.section-head.center .section-head-text { margin-left: auto; margin-right: auto; }
+.appliance-box-wrapper .section-head .section-head-text { display: flex; }
+.appliance-box-wrapper .section-head .section-head-text,
+.appliance-box-wrapper .section-head .section-head-text p { font-size: 14px; line-height: 1.6; color: rgba(var(--color-foreground), 1); }
+.appliance-box-wrapper .section-head .section-head-text p { margin:0; }
+
+.appliance-box-wrapper .section-head .com-site-tooltip { display: flex; }
+.appliance-box-wrapper .section-head .section-head-text .info-tooltip { display:flex; margin-left:8px; }
+.appliance-box-wrapper .section-head .section-head-text .info-tooltip svg { width:15px; height:auto; }
+
+.appliance-box-wrapper .appli-boxs { display:flex; width:auto; margin-right:-40px; margin-bottom: -40px; margin-top:40px; flex-wrap: wrap; }
+
+.appliance-box-wrapper .appli-boxs .boxs-item { display: flex; width: calc(50% - 40px); margin-right: 40px; margin-bottom: 40px; gap: 5px }
+
+.appliance-box-wrapper .appli-boxs .boxs-item figure { margin: 0; position: relative; display: flex; width: 46.9230%; padding: 10.76923% 11.15384%; align-items: center; overflow: hidden; }
+  .appliance-box-wrapper .appli-boxs .boxs-item figure:after { content: ""; width: 50px; height: 50px; position: absolute; background-color: #EBFF00; top: -25px; left: -25px; border-radius: 50%; }
+  .appliance-box-wrapper .appli-boxs .boxs-item.odd figure:after { top: auto; bottom: -25px; }
+  .appliance-box-wrapper .appli-boxs .boxs-item figure img { height:auto; width:100%; }
+.appliance-box-wrapper .appli-boxs .boxs-item>*{ background-color: #F9F9F9; }
+
+.appliance-box-wrapper .appli-boxs .boxs-item .content { width: 53.077%;  padding: 45px 40px 40px; }
+.appliance-box-wrapper .appli-boxs .boxs-item .content .box-title { font-weight: 700; line-height: 1; margin:0 0 20px 0; letter-spacing: -0.02em; }
+
+.appliance-box-wrapper .appli-boxs .boxs-item .content .cont,
+.appliance-box-wrapper .appli-boxs .boxs-item .content .cont p { font-weight: 400; font-size: 14px; line-height: 1.6; color: rgba(var(--color-foreground), 1); letter-spacing: normal; }
+
+.appliance-box-wrapper .appli-boxs .boxs-item .points { padding-left: 0; margin: 20px 0 0; }
+.appliance-box-wrapper .appli-boxs .boxs-item .points li { list-style: none; font-size: 14px; line-height: 1.6; position: relative; padding-left: 14px; }
+.appliance-box-wrapper .appli-boxs .boxs-item .points li:before { content:""; width: 5px; height: 5px; background: #000; position: absolute; left: 0; top: 9px; border-radius: 50%; }
+.appliance-box-wrapper .appli-boxs .boxs-item .points li:not(:last-child) { margin-bottom:10px; }
+
+.appliance-box-wrapper .appli-boxs .boxs-item .monthly-plans { margin-top:20px; }
+.appliance-box-wrapper .appli-boxs .boxs-item .monthly-plans .item-wrapper { display: flex; align-items: center; flex-wrap: wrap; margin-left: -10px; letter-spacing: normal; margin-bottom: -10px; }
+.appliance-box-wrapper .appli-boxs .boxs-item .monthly-plans .item-wrapper:not(:last-child) { margin-bottom:10px; }
+.appliance-box-wrapper .appli-boxs .boxs-item .monthly-plans .item-wrapper .pl-item {    line-height: 1.6; font-size: 12px;  position: relative; /*display: flex; align-items: center;*/ margin-left: 10px; margin-bottom: 10px; }
+.appliance-box-wrapper .appli-boxs .boxs-item .monthly-plans .item-wrapper .pl-item strong { font-weight: 700; margin-left:4px; }
+.appliance-box-wrapper .appli-boxs .boxs-item .monthly-plans .item-wrapper .pl-item .info-tooltip { display:flex; margin-left:4px; }
+.appliance-box-wrapper .appli-boxs .boxs-item .monthly-plans .item-wrapper .pl-item .info-tooltip svg { width:10px; height:auto; }
+.the-excelsior-wrapper .stain-item .com-site-tooltip svg{width:15px; height:auto; }
+.bonus-coverage-wrapper .bonus-list-wrapper .bonus-item .com-site-tooltip svg{width:15px; height:auto; }
+.appliance-box-wrapper .appli-boxs .boxs-item .monthly-plans .item-wrapper .pl-item:after { content: ''; background: url(forwardSlash.svg); background-position: center; background-repeat: no-repeat; width: 15px; height: 15px; background-size: cover; margin-left: 10px; }
+  .appliance-box-wrapper .appli-boxs .boxs-item .monthly-plans .item-wrapper .pl-item:last-child:after { display: none; }
+
+.appliance-box-wrapper.light-view { background:#fff; }
+
+
+@media (min-width: 750px) {
+  .appliance-box-wrapper .section-head { margin-bottom: 50px; }
+}
+
+@media (max-width: 1199px) {  
+  
+}
+
+@media (min-width: 992px) {
+  .appliance-box-wrapper .appli-boxs { margin-right: -20px; margin-bottom: -20px; }
+  
+  .appliance-box-wrapper .appli-boxs .boxs-item { width: calc(50% - 20px); margin-right: 20px; margin-bottom: 20px; }
+  .appliance-box-wrapper .appli-boxs .boxs-item .content { padding: 25px 20px 20px; width: 60%; }
+    .appliance-box-wrapper .appli-boxs .boxs-item .content .box-title { font-size: 20px; }
+  
+  .appliance-box-wrapper .appli-boxs .boxs-item figure { width: 40%; padding: 7%; }  
+}
+
+
+@media (max-width: 991px) {
+  .appliance-box-wrapper .appli-boxs { margin-right: 0; }
+    .appliance-box-wrapper .appli-boxs .boxs-item { width: 100%; margin-right: 0; }  
+  @media (min-width: 750px) {
+    .appliance-box-wrapper .appli-boxs .boxs-item.odd figure:after { top: -25px; bottom: auto; }
+  }
+}
+
+@media (max-width: 749px) {  
+  .section-appliance-box-wrapper.section-padding-large { padding-top: 100px; }
+  
+  .appliance-box-wrapper .appli-boxs { margin-right: 0; margin-top: 32px; margin-bottom: 0; }
+  .appliance-box-wrapper .appli-boxs .boxs-item { width: 100%; flex-flow: column; margin:0; }
+  .appliance-box-wrapper .appli-boxs .boxs-item:not(:last-child) { margin-bottom:20px; }
+  .appliance-box-wrapper .appli-boxs .boxs-item figure { width: 100%; margin: 0 auto; justify-content: center; padding: 40px; }
+    .appliance-box-wrapper .appli-boxs .boxs-item figure img { width: 100%; max-width: 160px; }
+  .appliance-box-wrapper .appli-boxs .boxs-item figure:after { bottom: auto; top: -25px; }
+  .appliance-box-wrapper .appli-boxs .boxs-item:nth-child(even) figure:after { left: auto; right: -25px; }
+
+  .appliance-box-wrapper .appli-boxs .boxs-item .content { padding: 40px 20px; width: 100%; }
+  .appliance-box-wrapper .appli-boxs .boxs-item .content .box-title { margin-bottom: 15px; font-size: 20px; }
+  .appliance-box-wrapper .appli-boxs .boxs-item .points,
+  .appliance-box-wrapper .appli-boxs .boxs-item .monthly-plans { margin-top:15px; }
+  
+  .appliance-box-wrapper .appli-boxs .boxs-item .points li:not(:last-child) { margin-bottom: 6px; }
+  
+}

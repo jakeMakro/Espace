@@ -1,0 +1,145 @@
+{%- if section.blocks.size > 0 -%}
+  
+  <link rel="stylesheet" href="{{ 'service-boxes.css' | asset_url }}" media="print" onload="this.media='all'"> 
+  <noscript><link rel="stylesheet" href="{{ 'service-boxes.css' | asset_url }}"></noscript>
+
+{%- assign spacing-top = section.settings.spacing-top | times: 1 -%}
+{%- assign spacing-bottom = section.settings.spacing-bottom | times: 1 -%}
+{%- if spacing-top > 0 or spacing-bottom > 0 -%}
+  {%- if spacing-top == 0 %}{% assign spacing-top = '' %}{% endif -%}
+  {%- if spacing-top == 0 %}{% assign spacing-bottom = '' %}{% endif -%}
+  {%- style -%}
+    {%- if spacing-top >= 60 -%}
+      #shopify-section-{{ section.id }} {
+        padding-top: {{ spacing-top | times: 0.7 | round | at_least: 20 }}px;
+        padding-bottom: {{ spacing-bottom | times: 0.7 | round | at_least: 20 }}px;
+      }
+      @media screen and (min-width: 750px){
+        #shopify-section-{{ section.id }} { padding-top: {{ spacing-top }}px; padding-bottom: {{ spacing-bottom }}px; }
+      }
+    {%- else -%}
+      #shopify-section-{{ section.id }} { padding-top: {{ spacing-top }}px; padding-bottom: {{ spacing-bottom }}px; }
+    {%- endif -%}
+  {%- endstyle -%}  
+{%- endif -%}
+
+  <div class="page-width">
+    <div class="service-boxes-list">
+
+      {%- for block in section.blocks -%}
+        <div class="sb-item">
+          {%- if block.settings.svg_img != blank -%}
+            <i class="icon">{{ block.settings.svg_img }}</i>
+          {%- endif -%}
+         {%- if block.settings.title != blank or block.settings.sub_title != blank -%}
+           <div class="sb-content">
+             {%- if block.settings.title != blank -%}
+               <h4 class="box-title">{{ block.settings.title }}</h4>  
+            {%- endif -%}
+             {%- if block.settings.sub_title != blank -%}
+               <div class="content">{{ block.settings.sub_title }}</div>
+             {%- endif -%}
+             {%- if block.settings.link_label != blank -%}
+               <a {% if block.settings.link == blank %}role="link" aria-disabled="true"{% else %}href="{{ block.settings.link }}"{% endif %}
+                 class="link link-btn small-link-btn box-link underline-link-btn"
+                 >
+               {{- block.settings.link_label -}}
+               </a>
+             {%- endif -%}
+           </div>
+         {%- endif -%}
+        </div>
+      {%- endfor -%}
+      
+    </div>
+  </div>
+
+{%- endif -%}
+ 
+{% schema %}
+{
+  "name": "Service callouts",
+  "tag": "section",
+  "class": "section service-boxes-wrapper section-padding-largepb-0",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings":[    
+    {
+      "type": "header",
+      "content": "Section spacing"
+    },
+    {
+      "type": "range",
+      "id": "spacing-top",
+      "min": 0,
+      "max": 150,
+      "step": 10,
+      "default": 150,
+      "unit": "px",
+      "label": "Section margin top"
+    },
+    {
+      "type": "range",
+      "id": "spacing-bottom",
+      "min": 0,
+      "max": 150,
+      "step": 10,
+      "default": 0,
+      "unit": "px",
+      "label": "Section margin bottom"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "callout",
+      "name": "t:sections.multicolumn.blocks.column.name",
+      "settings": [
+        {
+          "type": "html",
+          "id": "svg_img",
+          "label": "SVG image code"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "New furnishings shipped to your door"
+        },
+        {
+          "type": "text",
+          "id": "sub_title",
+          "label": "Sub title",
+          "default": "Fast Reliable Shipping, starting at $9.99"
+        },
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "Link title"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link url"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Service callouts",
+      "blocks": [
+        {
+          "type": "callout"
+        },
+        {
+          "type": "callout"
+        },
+        {
+          "type": "callout"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

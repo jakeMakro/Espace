@@ -1,0 +1,1929 @@
+{{ 'breadcrumb.css' | asset_url | stylesheet_tag }}
+{{ 'component-cart.css' | asset_url | stylesheet_tag: preload: true }}
+{{ 'component-cart-items.css' | asset_url | stylesheet_tag: preload: true }}
+{{ 'component-totals.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'component-discounts.css' | asset_url | stylesheet_tag }}
+{% comment %}{{ 'component-loading-overlay.css' | asset_url | stylesheet_tag }}{% endcomment %}
+{{ 'main-cart-items.css' | asset_url | stylesheet_tag: preload: true }}
+
+
+{%- unless settings.cart_type == 'drawer' -%}
+  <script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>
+{%- endunless -%}
+
+
+{% comment %}** we remove protection plan product qty from main cart item count. because we didn't show protection plan product **{% endcomment %}
+
+{%- assign warrantyProductCount = 0 -%}
+{%- for item in cart.items -%}
+  {%- if item.properties['Warranty_product'] != blank -%}
+    {%- assign warrantyProductCount = warrantyProductCount | plus: item.quantity -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- assign cartCount = cart.item_count | minus: warrantyProductCount -%}
+
+<cart-items class="page--width{% if cart == empty %} is-empty{% endif %}">
+
+  {% render 'breadcrumb' %}
+
+  <div class="title-wrapper-with-link">
+    <h1 class="title title--primary">{{ 'sections.cart.title' | t }} <span data-cart-count>({{ cartCount }})</span></h1>
+  </div>
+
+  <div class="cart__warnings">
+    <h1 class="cart__empty-text">{{ 'sections.cart.empty' | t }}</h1>
+    <a href="{{ routes.all_products_collection_url }}" class="button primary-btn">
+      {{ 'general.continue_shopping' | t }}
+    </a>
+    {%- if shop.customer_accounts_enabled and customer == null -%}
+      <h2 class="cart__login-title">{{ 'sections.cart.login.title' | t }}</h2>
+      <p class="cart__login-paragraph">
+        {{ 'sections.cart.login.paragraph_html' | t: link: routes.account_login_url }}
+      </p>
+    {%- endif -%}
+  </div>
+  
+  {%- assign brand = settings.hideBrand -%}
+
+  <form action="{{ routes.cart_url }}" class="cart__contents critical-hidden" method="post" id="cart" autocomplete="off">
+    <div class="cart__items" id="main-cart-items" data-id="{{ section.id }}">
+      <div class="js-contents">
+        {%- if cart != empty -%}
+
+          <div class="cart-items-service">
+            {%- for item in cart.items -%}
+
+              {% assign protection_guide_link = blank %}
+              
+              {%- assign inStock = false -%}
+              {%- assign isProtectionPlanSelected = false -%}
+              {%- assign protectionPlanItem = blank -%}
+              {%- include 'cart-product-tags' -%}
+              
+              {%- assign salesMultiple = item.product.metafields.pimData.salesMultiple | default: 1 | times: 1 -%}
+              {% if salesMultiple <= 0 %}
+                {%- assign salesMultiple = 1 -%}
+              {% endif %}
+              {%- assign hasSalesMultiple = false -%}
+              {% if salesMultiple != blank and salesMultiple > 1 %}
+                {%- assign hasSalesMultiple = true -%}
+              {% endif %}
+
+              {%- assign selectedProtectionPlanElement = blank -%}
+              {%- assign protectionPlanElement = blank -%}
+              
+              <div class="cart-service-row{% if isProtectionPlanSelected %} has-protection-plan-added{% endif %}{% if item.properties['Warranty_product'] != blank %} protection-plan-product hidden{% endif%}" 
+                  data-item-key="{{ item.key }}"
+                  data-timestamp="{% if item.properties['_timestamp'] != blank %}{{ item.properties._timestamp }}{% endif%}"
+                  data-props='{{ item.properties | json }}'
+                  data-qty='{{ item.quantity }}'
+              >
+                
+                <div class="cart-item__media">
+                  {%- if inStock -%}
+                    <div class="cart-stock-tag small-hide">
+                      <span>{{ 'sections.cart.in_stock_label' | t }}</span>
+                    </div>
+                  {% endif %}
+              
+                  {% if item.image %}
+                    <a href="{{ item.url }}" class="cart-item__image-container gradient global-media-settings">
+                      <img
+                              src="{{ item.image | image_url: width: 300 }}"
+                              class="cart-item__image"
+                              alt="{{ item.image.alt | escape }}"
+                              loading="{% if forloop.index > 2 %}lazy{% else %}eager{% endif %}"
+                              width="150"
+                              height="{{ 150 | divided_by: item.image.aspect_ratio | ceil }}"
+                            >
+                    </a>
+                  {% endif %}  
+                </div>
+
+                <div class="cart-service-right">
+              
+                  <div class="cart-service-head">
+                    <div class="col-left">
+
+                      {%- if item.variant.compare_at_price > item.variant.price -%}
+                        <div class="cart-service-tag">
+                          <div class="tag-box">En vente</div>
+                        </div>
+                      {%- endif -%}
+              
+                      <a href="{{ item.url }}" class="cart-item__name h4 break">
+                        {%- if item.product.vendor != blank %}
+                        {%- unless brand contains item.product.vendor -%}
+                          <strong>{{ item.product.vendor }}</strong>{%- endunless -%}{%- endif %}{{ item.product.title | escape -}}
+                      </a>
+                      <p class="product-option cart-service-variant hidden">White</p>
+              
+                      {%- if item.product.has_only_default_variant == false
+                        or item.properties.size != 0
+                        or item.selling_plan_allocation != null
+                      -%}
+                        <dl>
+                          {%- if item.product.has_only_default_variant == false -%}
+                            {%- for option in item.options_with_values -%}
+                              <div class="product-option cart-service-variant">
+                                <dt>{{ option.name }}:</dt>
+                                <dd>{{ option.value }}</dd>
+                              </div>
+                            {%- endfor -%}
+                          {%- endif -%}
+  
+                          {%- for property in item.properties -%}
+                            {%- assign property_first_char = property.first | slice: 0 -%}
+                            {%- if property.last != blank and property_first_char != '_' and property.first != 'Sales Multiple' -%}
+                              <div class="product-option cart-service-variant">
+                                <dt>{{ property.first }}:</dt>
+                                <dd>
+                                  {%- if property.last contains '/uploads/' -%}
+                                    <a href="{{ property.last }}" class="link" target="_blank">
+                                      {{ property.last | split: '/' | last }}
+                                    </a>
+                                  {%- else -%}
+                                    {{ property.last }}
+                                  {%- endif -%}
+                                </dd>
+                              </div>
+                            {%- endif -%}
+                          {%- endfor -%}
+                        </dl>
+                        
+                        <p class="product-option fairstone-product-cart-calculator" data-price="{{ line_item.original_line_price }}"></p>
+  
+                        {% if item.selling_plan_allocation.selling_plan.name %}
+                          <p class="product-option">{{ item.selling_plan_allocation.selling_plan.name }}</p>
+                        {% endif %}
+                        
+                      {%- endif -%}
+              
+                      <div class="cart-service-price small-hide">
+                        {%- capture cartPrice -%}
+                        <div class="price price--on-sale">
+                          <div class="price__container">
+                            {%- if item.original_price != item.final_price -%}
+                              <div class="price__regular hidden">
+                                <span class="price-item price-item--regular">
+                                  <span class="money">{{- item.original_price | times: item.quantity | money -}}</span>
+                                </span>
+                              </div>
+                            {% else %}
+                              <div class="price__sale">
+                                {% if item.variant.compare_at_price > item.variant.price %}
+                                  <s class="price-item price-item--regular">
+                                    <span class="money">{{ item.variant.compare_at_price | times: item.quantity | money }}</span>
+                                  </s>
+                                {% endif %}
+                                <span class="price-item price-item--sale price-item--last">
+                                  <span class="money">{{ item.original_price | times: item.quantity | money }}</span>
+                                </span>
+                              </div>
+                            {% endif %}
+                          </div>
+                        </div>
+                        {%- endcapture -%}  
+                        {{- cartPrice -}}
+                      </div>
+              
+                    </div>
+              
+                    <div class="col-right small-hide">
+                      {%- capture quantityWrapper -%}
+                      <div class="cart-item__quantity-wrapper">
+                        <quantity-input class="quantity cart-quantity">
+                          <button class="quantity__button no-js-hidden" name="minus" type="button">
+                            {%- render 'icon-minus' -%}
+                          </button>
+                          {% assign quantity_min = item.variant.quantity_rule.min %}
+                          {% assign quantity_step = item.variant.quantity_rule.increment %}
+                          {% if hasSalesMultiple %}
+                            {% assign quantity_min = salesMultiple %}
+                            {% assign quantity_step = salesMultiple %}
+                          {% endif %}
+                          <input
+                            class="quantity__input"
+                            data-quantity-variant-id="{{ item.variant.id }}"
+                            type="number"
+                            name="updates[]"
+                            value="{{ item.quantity }}"
+                            {% # theme-check-disable %}
+                            data-cart-quantity="{{ cart | item_count_for_variant: item.variant.id }}"
+                            min="{{ quantity_min }}"
+                            {% if item.variant.quantity_rule.max != null %}
+                              max="{{ item.variant.quantity_rule.max }}"
+                            {% endif %}
+                            step="{{ quantity_step }}"
+                            {% # theme-check-enable %}
+                            aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
+                            id="Quantity-{{ item.index | plus: 1 }}"
+                            data-index="{{ item.index | plus: 1 }}"
+                          >
+                          <button class="quantity__button no-js-hidden" name="plus" type="button">
+                            {%- render 'icon-plus' -%}
+                          </button>
+                        </quantity-input>
+              
+                        {%- if isProtectionPlanSelected -%}
+                          {%- capture removeTag -%}multiple-item-remove-button{%- endcapture -%}
+                        {%- else -%}
+                          {%- capture removeTag -%}cart-remove-button{%- endcapture -%}
+                        {%- endif -%}
+              
+                        <{{ removeTag }}
+                          id="Remove-{{ item.index | plus: 1 }}"
+                          data-index="{{ item.index | plus: 1 }}"
+                          data-key="{{ item.key }}"
+                        >
+                          <a
+                            href="{{ item.url_to_remove }}"
+                            class="button button--tertiary"
+                            aria-label="{{ 'sections.cart.remove_title' | t: title: item.title }}"
+                          >
+                            {%- render 'icon-remove' -%}
+                          </a>
+                        </{{ removeTag }}>
+                      </div>
+                      {%- endcapture -%}
+                      {{- quantityWrapper -}}
+                    </div>
+                  </div>
+
+                  <div class="cart-service-info small-hide">
+
+                    {%- if isProtectionPlanSelected -%}
+                      {%- capture selectedProtectionPlan -%}
+                      <div class="cart-anti-plan selected-protection-plan">
+                        <div class="cart-anti-text">
+                          <span class="cart-anti-title">{{- protectionPlanItem.product.title | escape -}}</span>
+                          <span class="cart-anti-price">{{ protectionPlanItem.line_price | money }}</span>
+                          <protection-plan class="tooltip applince-tooltip">
+                            <a href="{{protection_guide_link}}" data-protection-content>
+                              {%- render 'icon-tooltip' -%}
+                            </a>
+                          </protection-plan>
+                        </div>
+                        <protection-plan-remove-button
+                            id="Remove-{{ protectionPlanItem.index | plus: 1 }}"
+                            data-index="{{ protectionPlanItem.index | plus: 1 }}"
+                            data-key="{{ protectionPlanItem.key }}"
+                          >
+                            <a
+                              href="{{ protectionPlanItem.url_to_remove }}"
+                              class="button--tertiary"
+                              aria-label="{{ 'sections.cart.remove_title' | t: title: protectionPlanItem.title }}"
+                            >
+                              {% render 'icon-remove' %}
+                            </a>
+                        </protection-plan-remove-button>
+                      </div>
+                      {%- endcapture -%}
+                      {%- assign selectedProtectionPlanElement = selectedProtectionPlan -%}
+                      {{- selectedProtectionPlanElement -}}
+                    {%- endif -%}
+
+                    {%- capture cartProtectionPlan -%}
+                    {%- render "cart-protection-plan", line_item: item, isProtectionPlanSelected: isProtectionPlanSelected -%}
+                    {%- endcapture -%}
+
+                    {%- assign protectionPlanElement = cartProtectionPlan -%}
+
+                    {{- protectionPlanElement -}}
+  
+                  </div>
+                  
+                  
+                </div>
+
+
+                <div class="cart-service-info medium-hide large-up-hide">
+  
+                  <div class="price-qty-bar">
+                    <div class="cart-service-price">
+                      {{- cartPrice -}}
+                      {%- if inStock -%}
+                        <div class="cart-stock-tag">
+                          <span>{{ 'sections.cart.in_stock_label' | t }}</span>
+                        </div>
+                      {% endif %}
+                    </div>
+                    {{- quantityWrapper -}}
+                  </div>
+
+                  {%- if selectedProtectionPlanElement != blank -%}
+                    <div class="cart-service-appliance">
+                      {{- selectedProtectionPlanElement -}}
+                      {{- protectionPlanElement -}}
+                    </div>
+                  {%- else -%}
+                    {{- selectedProtectionPlanElement -}}
+                    {{- protectionPlanElement -}}
+                  {%- endif -%}
+  
+                </div>
+                          
+                
+              </div>
+            
+            {%- endfor -%}
+          </div>
+        
+        {%- endif -%}
+      </div>
+    </div>
+
+    <p class="visually-hidden" id="cart-live-region-text" aria-live="polite" role="status"></p>
+    <p class="visually-hidden" id="shopping-cart-line-item-status" aria-live="polite" aria-hidden="true" role="status">
+      {{ 'accessibility.loading' | t }}
+    </p>
+    
+  </form>
+  
+</cart-items>
+
+
+
+
+{% comment %}
+<cart-items class="page--width{% if cart == empty %} is-empty{% endif %}">
+
+  {% render 'breadcrumb' %}
+  
+  <div class="title-wrapper-with-link">
+    <h1 class="title title--primary">{{ 'sections.cart.title' | t }} <span>(4)</span></h1>
+    {% comment %}<a href="{{ routes.all_products_collection_url }}" class="underlined-link">{{ 'general.continue_shopping' | t }}</a>{% endcomment %}
+  </div>
+
+  <div class="cart__warnings">
+    <h1 class="cart__empty-text">{{ 'sections.cart.empty' | t }}</h1>
+    <a href="{{ routes.all_products_collection_url }}" class="button">
+      {{ 'general.continue_shopping' | t }}
+    </a>
+
+    {%- if shop.customer_accounts_enabled and customer == null -%}
+      <h2 class="cart__login-title">{{ 'sections.cart.login.title' | t }}</h2>
+      <p class="cart__login-paragraph">
+        {{ 'sections.cart.login.paragraph_html' | t: link: routes.account_login_url }}
+      </p>
+    {%- endif -%}
+  </div>
+
+  <form action="{{ routes.cart_url }}" class="cart__contents critical-hidden" method="post" id="cart">
+    <div class="cart__items" id="main-cart-items" data-id="{{ section.id }}">
+      <div class="js-contents">
+        {%- if cart != empty -%}
+        {% comment %}
+          <table class="cart-items">
+            <caption class="visually-hidden">
+              {{ 'sections.cart.title' | t }}
+            </caption>
+            <thead>
+              <tr>
+                <th class="caption-with-letter-spacing" colspan="2" scope="col">
+                  {{ 'sections.cart.headings.product' | t }}
+                </th>
+                <th class="medium-hide large-up-hide right caption-with-letter-spacing" colspan="1" scope="col">
+                  {{ 'sections.cart.headings.total' | t }}
+                </th>
+                <th class="cart-items__heading--wide small-hide caption-with-letter-spacing" colspan="1" scope="col">
+                  {{ 'sections.cart.headings.quantity' | t }}
+                </th>
+                <th class="small-hide right caption-with-letter-spacing" colspan="1" scope="col">
+                  {{ 'sections.cart.headings.total' | t }}
+                </th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {%- for item in cart.items -%}
+                {% assign display_section = false %}
+                {% assign show_assembly_service = false %}
+                
+                {% assign tags_prop = item.properties._tags %}
+                {% assign warrenty_prop = item.properties.Warranty_product %}
+                {% assign shop_field_tags = shop.metafields.tags.appliance_plan %}
+                {% assign preorder_state = item.properties.precommande %}
+                {% if shop.metafields.tags.antitache_plan != blank %}
+                    {% assign shop_field_tags = shop_field_tags | append:'|' | append:shop.metafields.tags.antitache_plan %}
+                {% endif %}
+               
+                <span class="hide" value="{{shop_field_tags}}"></span>
+                {% if shop_field_tags contains '|' %}
+                    
+                      {% assign shop_field_tags_split = shop_field_tags | split:'|' %}
+                      {% assign tags_prop_split = item.properties._tags | split:',' %}
+                  
+                      {% for tags_name in tags_prop_split %}
+                            {% for tags in shop_field_tags_split %}
+                              
+                {% if tags == tags_name %}
+                            {% assign display_section = true %}
+                          {% endif %}
+                            {% endfor %}
+                      {% endfor %}
+                    {% else %}
+                      {% if tags_prop contains shop_field_tags %}
+                        {% assign display_section = true %}
+                      {% endif %}
+                    {% endif %}
+                    
+                      {% assign tags_prop_line = item.properties._tags %}
+                      {% if tags_prop_line contains ',' %}
+                        {% assign tags_prop_line = tags_prop_line | split:',' %}
+                      {% endif %}
+
+                      {% assign applince_tags_line = shop.metafields.tags.appliance_plan %}
+                      {% if applince_tags_line contains '|' %}
+                        {% assign applince_tags_line = shop.metafields.tags.appliance_plan | split:'|' %}
+                      {% endif %}
+
+                      {% assign antitache_tags_line = shop.metafields.tags.antitache_plan %}
+                      {% if antitache_tags_line contains '|' %}
+                        {% assign antitache_tags_line = shop.metafields.tags.antitache_plan | split:'|' %}
+                      {% endif %}
+
+
+                      {% assign applince_product_line = false %}
+                      {% assign antitache_product_line = false %}
+
+                      {% if item.properties._tags contains ',' %}
+                        {% for tag_loop_applince_line in tags_prop_line %}
+                          {% if shop.metafields.tags.appliance_plan contains '|' %}
+                            {% for applince_loop_line in applince_tags_line %}
+                              {% if tag_loop_applince_line == applince_loop_line %}
+                                {% assign applince_product_line = true %}
+                              {% endif %}
+                            {% endfor %}
+                          {% else %}
+                            {% if tag_loop_applince_line == applince_tags_line %}
+                              {% assign applince_product_line = true %}
+                            {% endif %}
+                          {% endif %}
+                        {% endfor %}
+
+                        {% for tag_loop_antitache_line in tags_prop_line %}
+                          {% if shop.metafields.tags.antitache_plan contains '|' %}
+                            {% for antitache_loop_line in antitache_tags_line %}
+                              {% if tag_loop_antitache_line == antitache_loop_line %}
+                                {% assign antitache_product_line = true %}
+                              {% endif %}
+                            {% endfor %}
+                          {% else %}
+                            {% if tag_loop_antitache_line == antitache_tags_line %}
+                              {% assign antitache_product_line = true %}
+                            {% endif %}
+                          {% endif %}
+                        {% endfor %}
+                      {% else %}
+                          {% if shop.metafields.tags.appliance_plan contains '|' %}
+                            {% for applince_loop_line in applince_tags_line %}
+                              {% if tags_prop_line == applince_loop_line %}
+                                {% assign applince_product_line = true %}
+                              {% endif %}
+                            {% endfor %}
+                          {% else %}
+                            {% if tags_prop_line == applince_tags_line %}
+                              {% assign applince_product_line = true %}
+                            {% endif %}
+                          {% endif %}
+                        
+                          {% if shop.metafields.tags.antitache_plan contains '|' %}
+                            {% for antitache_loop_line in antitache_tags_line %}
+                              {% if tags_prop_line == antitache_loop_line %}
+                                {% assign antitache_product_line = true %}
+                              {% endif %}
+                            {% endfor %}
+                          {% else %}
+                            {% if tags_prop_line == antitache_tags_line %}
+                              {% assign antitache_product_line = true %}
+                            {% endif %}
+                          {% endif %}
+                      {% endif %}
+                 <span class="hide class" data-tag-val="{{applince_product_line}}-{{antitache_product_line}}--{{display_section}} "></span>
+                <tr id="CartItem-{{ item.index | plus: 1 }}" data-ptr="{{ item.properties.PTR }}" data-handle="{{ item.product.handle }}" data-key="{{ item.key }}" class="cart-item {{ item.properties.Warranty_product }}-- line-item line-item--stack {% if warrenty_prop == 'true' %}warrenty-product{% endif %} {% if display_section == true %}{% if applince_product_line == true %}appliance-warrenty{% elsif antitache_product_line == true %}furniture-warrenty{% endif %}{% endif %}" {% if item.properties.Warranty_product %}style="display: none;"{% endif%} data-id="{{item.variant_id}}" data-timestamp="{% if item.properties.timestamp %}{{item.properties.timestamp}}{% endif%}" data-index="{{item.index | plus:1 }}" data-qty="{{ item.quantity }}" data-tag="{{item.properties._tags}}" data-preorder="{% if preorder_state %}true{% else %}false{% endif %}" data-warrenty="{% if item.properties.Garantie_ajoutee %}true{% else %}false{% endif %}" data-pick="{% if item.properties.Ramassage %}true{% else %}false{% endif %}">
+                  <td class="cart-item__media">
+                    <div class="cart-stock-tag">
+                      <span>In Stock</span>
+                    </div>
+                    {% if item.image %}
+                      {% comment %} Leave empty space due to a:empty CSS display: none rule {% endcomment %}
+                      {% comment %}<a href="{{ item.url }}" class="cart-item__link" aria-hidden="true" tabindex="-1"></a>{% endcomment %}
+                      <a href="{{ item.url }}" aria-hidden="true" tabindex="-1" class="cart-item__image-container gradient global-media-settings">
+                        <img
+                          src="{{ item.image | image_url: width: 300 }}"
+                          class="cart-item__image"
+                          alt="{{ item.image.alt | escape }}"
+                          loading="lazy"
+                          width="150"
+                          height="{{ 150 | divided_by: item.image.aspect_ratio | ceil }}"
+                        >
+                      </a>
+                    {% endif %}
+                  </td>
+
+                  <td class="cart-item__details">
+                    {%- if settings.show_vendor -%}
+                      <p class="caption-with-letter-spacing">{{ item.product.vendor }}</p>
+                    {%- endif -%}
+                    {% assign shipping_method = false %} 
+                    {% for tag in item.product.tags %}
+                      {% if tag == "Free" %}
+                      {% assign shipping_method = true %}  
+                      {% endif %}
+                    {% endfor %}
+                    {% if shipping_method == true %}
+                    <span class="freeship-tag">free shipping</span>  
+                    {% endif %}
+                    {% if item.variant.compare_at_price > item.variant.price %}
+                      <span class="if-compare">Clearance</span>
+                    {% endif %}
+                    <a href="{{ item.url }}" class="cart-item__name h4 break">{{ item.product.title | escape }}</a>
+                    {%- if item.original_price != item.final_price -%}
+                      <div class="cart-item__discounted-prices">
+                        <span class="visually-hidden">
+                          {{ 'products.product.price.regular_price' | t }}
+                        </span>
+                        <s class="cart-item__old-price product-option">
+                          {{- item.original_price | money -}}
+                        </s>
+                        <span class="visually-hidden">
+                          {{ 'products.product.price.sale_price' | t }}
+                        </span>
+                        <strong class="cart-item__final-price product-option">
+                         {{ item.final_price | money }}
+                        </strong>
+                      </div>
+                    {%- else -%}
+                      <div class="product-option">
+                       {{ item.original_price | money }}
+                      {% if item.variant.compare_at_price > item.variant.price %}
+                        <s>{{ item.variant.compare_at_price | money }}</s>
+                      {% assign savings = item.variant.compare_at_price | minus: item.final_price %}
+                      <span>% Clearance</span> -{{ savings | money }}                        
+                      {% endif %}
+
+                      </div>
+                    {%- endif -%}
+
+                    {%- if item.product.has_only_default_variant == false
+                      or item.properties.size != 0
+                      or item.selling_plan_allocation != null
+                    -%}
+                      <dl>
+                        {%- if item.product.has_only_default_variant == false -%}
+                          {%- for option in item.options_with_values -%}
+                            <div class="product-option">
+                              <dt>{{ option.name }}:</dt>
+                              <dd>{{ option.value }}</dd>
+                            </div>
+                          {%- endfor -%}
+                        {%- endif -%}
+
+                        {%- for property in item.properties -%}
+                          {%- assign property_first_char = property.first | slice: 0 -%}
+                          {%- if property.last != blank and property_first_char != '_' -%}
+                            <div class="product-option">
+                              <dt>{{ property.first }}:</dt>
+                              <dd>
+                                {%- if property.last contains '/uploads/' -%}
+                                  <a href="{{ property.last }}" class="link" target="_blank">
+                                    {{ property.last | split: '/' | last }}
+                                  </a>
+                                {%- else -%}
+                                  {{ property.last }}
+                                {%- endif -%}
+                              </dd>
+                            </div>
+                          {%- endif -%}
+                        {%- endfor -%}
+                      </dl>
+
+                      <p class="product-option">{{ item.selling_plan_allocation.selling_plan.name }}</p>
+                    {%- endif -%}
+
+                    <ul class="discounts list-unstyled" role="list" aria-label="{{ 'customer.order.discount' | t }}">
+                      {%- for discount in item.discounts -%}
+                        <li class="discounts__discount">
+                          {%- render 'icon-discount' -%}
+                          {{ discount.title }}
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </td>
+
+                  <td class="cart-item__totals right medium-hide large-up-hide">
+                    <div class="loading-overlay hidden">
+                      <div class="loading-overlay__spinner">
+                        <svg
+                          aria-hidden="true"
+                          focusable="false"
+                          class="spinner"
+                          viewBox="0 0 66 66"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+                        </svg>
+                      </div>
+                    </div>
+                    <div class="cart-item__price-wrapper">
+                      {%- if item.original_line_price != item.final_line_price -%}
+                        <dl class="cart-item__discounted-prices">
+                          <dt class="visually-hidden">
+                            {{ 'products.product.price.regular_price' | t }}
+                          </dt>
+                          <dd>
+                            <s class="cart-item__old-price price price--end">
+                              {{ item.original_line_price | money }}
+                            </s>
+                          </dd>
+                          <dt class="visually-hidden">
+                            {{ 'products.product.price.sale_price' | t }}
+                          </dt>
+                          <dd class="price price--end">
+                            {{ item.final_line_price | money }}
+                          </dd>
+                        </dl>
+                      {%- else -%}
+                        <span class="price price--end">
+                          {{ item.original_line_price | money }}
+                        </span>
+                      {%- endif -%}
+
+                      {%- if item.variant.available and item.unit_price_measurement -%}
+                        <div class="unit-price caption">
+                          <span class="visually-hidden">{{ 'products.product.price.unit_price' | t }}</span>
+                          {{ item.variant.unit_price | money }}
+                          <span aria-hidden="true">/</span>
+                          <span class="visually-hidden"
+                            >&nbsp;{{ 'accessibility.unit_price_separator' | t }}&nbsp;</span
+                          >
+                          {%- if item.variant.unit_price_measurement.reference_value != 1 -%}
+                            {{- item.variant.unit_price_measurement.reference_value -}}
+                          {%- endif -%}
+                          {{ item.variant.unit_price_measurement.reference_unit }}
+                        </div>
+                      {%- endif -%}
+                    </div>
+                  </td>
+
+                  <td class="cart-item__quantity">
+                    <div class="cart-item__quantity-wrapper">
+                      <label class="visually-hidden" for="Quantity-{{ item.index | plus: 1 }}">
+                        {{ 'products.product.quantity.label' | t }}
+                      </label>
+                      <quantity-input class="quantity cart-quantity">
+                        <button class="quantity__button no-js-hidden" name="minus" type="button">
+                          <span class="visually-hidden">
+                            {{- 'products.product.quantity.decrease' | t: product: item.product.title | escape -}}
+                          </span>
+                          {% render 'icon-minus' %}
+                        </button>
+                          {% assign quantity_min = item.variant.quantity_rule.min %}
+                          {% assign quantity_step = item.variant.quantity_rule.increment %}
+                          {% if hasSalesMultiple %}
+                            {% assign quantity_min = salesMultiple %}
+                            {% assign quantity_step = salesMultiple %}
+                          {% endif %}
+                        <input
+                          class="quantity__input"
+                          data-quantity-variant-id="{{ item.variant.id }}"
+                          type="number"
+                          name="updates[]"
+                          value="{{ item.quantity }}"
+                          {% # theme-check-disable %}
+                          data-cart-quantity="{{ cart | item_count_for_variant: item.variant.id }}"
+                          min="{{ quantity_min }}"
+                          {% if item.variant.quantity_rule.max != null %}
+                            max="{{ item.variant.quantity_rule.max }}"
+                          {% endif %}
+                          step="{{ quantity_step }}"
+                          {% # theme-check-enable %}
+                          aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
+                          id="Quantity-{{ item.index | plus: 1 }}"
+                          data-index="{{ item.index | plus: 1 }}"
+                        >
+                        <button class="quantity__button no-js-hidden" name="plus" type="button">
+                          <span class="visually-hidden">
+                            {{- 'products.product.quantity.increase' | t: product: item.product.title | escape -}}
+                          </span>
+                          {% render 'icon-plus' %}
+                        </button>
+                      </quantity-input>
+
+                      <cart-remove-button
+                        id="Remove-{{ item.index | plus: 1 }}"
+                        data-index="{{ item.index | plus: 1 }}"
+                      >
+                        <a
+                          href="{{ item.url_to_remove }}"
+                          class="button button--tertiary"
+                          aria-label="{{ 'sections.cart.remove_title' | t: title: item.title }}"
+                        >
+                          {% render 'icon-remove' %}
+                        </a>
+                      </cart-remove-button>
+                    </div>
+                    <div class="cart-item__error" id="Line-item-error-{{ item.index | plus: 1 }}" role="alert">
+                      <small class="cart-item__error-text"></small>
+                      <svg
+                        aria-hidden="true"
+                        focusable="false"
+                        class="icon icon-error"
+                        viewBox="0 0 13 13"
+                      >
+                        <circle cx="6.5" cy="6.50049" r="5.5" stroke="white" stroke-width="2"/>
+                        <circle cx="6.5" cy="6.5" r="5.5" fill="#EB001B" stroke="#EB001B" stroke-width="0.7"/>
+                        <path d="M5.87413 3.52832L5.97439 7.57216H7.02713L7.12739 3.52832H5.87413ZM6.50076 9.66091C6.88091 9.66091 7.18169 9.37267 7.18169 9.00504C7.18169 8.63742 6.88091 8.34917 6.50076 8.34917C6.12061 8.34917 5.81982 8.63742 5.81982 9.00504C5.81982 9.37267 6.12061 9.66091 6.50076 9.66091Z" fill="white"/>
+                        <path d="M5.87413 3.17832H5.51535L5.52424 3.537L5.6245 7.58083L5.63296 7.92216H5.97439H7.02713H7.36856L7.37702 7.58083L7.47728 3.537L7.48617 3.17832H7.12739H5.87413ZM6.50076 10.0109C7.06121 10.0109 7.5317 9.57872 7.5317 9.00504C7.5317 8.43137 7.06121 7.99918 6.50076 7.99918C5.94031 7.99918 5.46982 8.43137 5.46982 9.00504C5.46982 9.57872 5.94031 10.0109 6.50076 10.0109Z" fill="white" stroke="#EB001B" stroke-width="0.7">
+                      </svg>
+                    </div>
+                  </td>
+
+                  <td class="cart-item__totals right small-hide">
+                    <div class="loading-overlay hidden">
+                      <div class="loading-overlay__spinner">
+                        <svg
+                          aria-hidden="true"
+                          focusable="false"
+                          class="spinner"
+                          viewBox="0 0 66 66"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+                        </svg>
+                      </div>
+                    </div>
+
+                    <div class="cart-item__price-wrapper">
+                      {%- if item.original_line_price != item.final_line_price -%}
+                        <dl class="cart-item__discounted-prices">
+                          <dt class="visually-hidden">
+                            {{ 'products.product.price.regular_price' | t }}
+                          </dt>
+                          <dd>
+                            <s class="cart-item__old-price price price--end">
+                              {{ item.original_line_price | money }}
+                            </s>
+                          </dd>
+                          <dt class="visually-hidden">
+                            {{ 'products.product.price.sale_price' | t }}
+                          </dt>
+                          <dd class="price price--end">
+                            {{ item.final_line_price | money }}
+                          </dd>
+                        </dl>
+                      {%- else -%}
+                        <span class="price price--end">
+                          {{ item.original_line_price | money }}
+                        </span>
+                      {%- endif -%}
+
+                      {%- if item.variant.available and item.unit_price_measurement -%}
+                        <div class="unit-price caption">
+                          <span class="visually-hidden">{{ 'products.product.price.unit_price' | t }}</span>
+                          {{ item.variant.unit_price | money }}
+                          <span aria-hidden="true">/</span>
+                          <span class="visually-hidden"
+                            >&nbsp;{{ 'accessibility.unit_price_separator' | t }}&nbsp;</span
+                          >
+                          {%- if item.variant.unit_price_measurement.reference_value != 1 -%}
+                            {{- item.variant.unit_price_measurement.reference_value -}}
+                          {%- endif -%}
+                          {{ item.variant.unit_price_measurement.reference_unit }}
+                        </div>
+                      {%- endif -%}
+                        {% assign tags_prop = item.properties._tags %}
+                        {% if tags_prop != 'no-tag' %}
+                          {% assign shop_field_tags = shop.metafields.tags.appliance_plan %}
+                          {% if display_section == true %}
+                            {% assign prod_obj = all_products[section.settings.service_product] %}
+                          {% endif %}
+                        {% endif %}
+                          <div class="hide protection-plan-section {% if item.properties.Garantie_ajoutee %}plan-active{% endif %}" {% if item.properties.Warranty_product %}style="display: none;"{% endif%} data-timestamp="{% if item.properties.timestamp %}{{item.properties.timestamp}}{% endif%}">
+                            {% render 'protection-plan', line_obj: item , display_section: display_section, show_assembly_service: show_assembly_service, section: section %} 
+                          </div>                
+                    </div>
+                  </td>
+                </tr>
+              {%- endfor -%}
+            </tbody>
+          </table>
+          {% endcomment%}      
+                          
+          <div class="cart-items-service">
+            
+          {%- for item in cart.items -%}
+            
+              {% assign display_section = false %}
+              {% assign show_assembly_service = false %}
+              
+              {% assign tags_prop = item.properties._tags %}
+              {% assign warrenty_prop = item.properties.Warranty_product %}
+              {% assign shop_field_tags = shop.metafields.tags.appliance_plan %}
+              {% assign preorder_state = item.properties.precommande %}
+              {% if shop.metafields.tags.antitache_plan != blank %}
+                  {% assign shop_field_tags = shop_field_tags | append:'|' | append:shop.metafields.tags.antitache_plan %}
+              {% endif %}
+               
+                <span class="hide" value="{{shop_field_tags}}"></span>
+                {% if shop_field_tags contains '|' %}
+                
+                  {% assign shop_field_tags_split = shop_field_tags | split:'|' %}
+                  {% assign tags_prop_split = item.properties._tags | split:',' %}
+              
+                  {% for tags_name in tags_prop_split %}
+                    {% for tags in shop_field_tags_split %}            
+                      {% if tags == tags_name %}
+                        {% assign display_section = true %}
+                      {% endif %}
+                    {% endfor %}
+                  {% endfor %}
+                  
+                {% else %}
+                  {% if tags_prop contains shop_field_tags %}
+                    {% assign display_section = true %}
+                  {% endif %}
+                {% endif %}
+                    
+                {% assign tags_prop_line = item.properties._tags %}
+                {% if tags_prop_line contains ',' %}
+                  {% assign tags_prop_line = tags_prop_line | split:',' %}
+                {% endif %}
+
+                {% assign applince_tags_line = shop.metafields.tags.appliance_plan %}
+                {% if applince_tags_line contains '|' %}
+                  {% assign applince_tags_line = shop.metafields.tags.appliance_plan | split:'|' %}
+                {% endif %}
+
+                {% assign antitache_tags_line = shop.metafields.tags.antitache_plan %}
+                {% if antitache_tags_line contains '|' %}
+                  {% assign antitache_tags_line = shop.metafields.tags.antitache_plan | split:'|' %}
+                {% endif %}
+
+
+                {% assign applince_product_line = false %}
+                {% assign antitache_product_line = false %}
+
+                {% if item.properties._tags contains ',' %}
+                  {% for tag_loop_applince_line in tags_prop_line %}
+                    {% if shop.metafields.tags.appliance_plan contains '|' %}
+                      {% for applince_loop_line in applince_tags_line %}
+                        {% if tag_loop_applince_line == applince_loop_line %}
+                          {% assign applince_product_line = true %}
+                        {% endif %}
+                      {% endfor %}
+                    {% else %}
+                      {% if tag_loop_applince_line == applince_tags_line %}
+                        {% assign applince_product_line = true %}
+                      {% endif %}
+                    {% endif %}
+                  {% endfor %}
+
+                  {% for tag_loop_antitache_line in tags_prop_line %}
+                    {% if shop.metafields.tags.antitache_plan contains '|' %}
+                      {% for antitache_loop_line in antitache_tags_line %}
+                        {% if tag_loop_antitache_line == antitache_loop_line %}
+                          {% assign antitache_product_line = true %}
+                        {% endif %}
+                      {% endfor %}
+                    {% else %}
+                      {% if tag_loop_antitache_line == antitache_tags_line %}
+                        {% assign antitache_product_line = true %}
+                      {% endif %}
+                    {% endif %}
+                  {% endfor %}
+                  {% else %}
+                    {% if shop.metafields.tags.appliance_plan contains '|' %}
+                      {% for applince_loop_line in applince_tags_line %}
+                        {% if tags_prop_line == applince_loop_line %}
+                          {% assign applince_product_line = true %}
+                        {% endif %}
+                      {% endfor %}
+                    {% else %}
+                      {% if tags_prop_line == applince_tags_line %}
+                        {% assign applince_product_line = true %}
+                      {% endif %}
+                    {% endif %}
+                  
+                    {% if shop.metafields.tags.antitache_plan contains '|' %}
+                      {% for antitache_loop_line in antitache_tags_line %}
+                        {% if tags_prop_line == antitache_loop_line %}
+                          {% assign antitache_product_line = true %}
+                        {% endif %}
+                      {% endfor %}
+                    {% else %}
+                      {% if tags_prop_line == antitache_tags_line %}
+                        {% assign antitache_product_line = true %}
+                      {% endif %}
+                    {% endif %}
+                {% endif %}
+           <span class="hide class" data-tag-val="{{applince_product_line}}-{{antitache_product_line}}--{{display_section}} "></span>  
+            <div class="cart-service-row {% if item.properties.Warranty_product %}custom-hidden{% endif%}" data-ptr="{{ item.properties.PTR }}" data-handle="{{ item.product.handle }}" data-key="{{ item.key }}" class="cart-item {{ item.properties.Warranty_product }}-- line-item line-item--stack {% if warrenty_prop == 'true' %}warrenty-product{% endif %} {% if display_section == true %}{% if applince_product_line == true %}appliance-warrenty{% elsif antitache_product_line == true %}furniture-warrenty{% endif %}{% endif %}" {% if item.properties.Warranty_product %}style="display: none;"{% endif%} data-id="{{item.variant_id}}" data-timestamp="{% if item.properties.timestamp %}{{item.properties.timestamp}}{% endif%}" data-index="{{item.index | plus:1 }}" data-qty="{{ item.quantity }}" data-tag="{{item.properties._tags}}" data-preorder="{% if preorder_state %}true{% else %}false{% endif %}" data-warrenty="{% if item.properties.Garantie_ajoutee %}true{% else %}false{% endif %}" data-pick="{% if item.properties.Ramassage %}true{% else %}false{% endif %}">
+              <div class="cart-item__media">
+                <div class="cart-stock-tag small-hide">
+                  <span>In Stock</span>
+                </div>
+                {% if item.image %}
+                {% comment %}<a class="cart-item__link" href="{{ item.url }}" title=""></a>{% endcomment %}
+                <a href="{{ item.url }}" class="cart-item__image-container gradient global-media-settings">
+                  <img
+                          src="{{ item.image | image_url: width: 300 }}"
+                          class="cart-item__image"
+                          alt="{{ item.image.alt | escape }}"
+                          loading="lazy"
+                          width="150"
+                          height="{{ 150 | divided_by: item.image.aspect_ratio | ceil }}"
+                        >
+                </a>
+                {% endif %}  
+              </div>
+              {% assign shipping_method = false %} 
+              {% for tag in item.product.tags %}
+                {% if tag == "Free" %}
+                  {% assign shipping_method = true %}  
+                {% endif %}
+              {% endfor %}        
+            
+              <div class="cart-service-right">
+                <div class="cart-service-head">
+                  <div class="col-left">
+                    {% if shipping_method == true or item.variant.compare_at_price > item.variant.price %}
+                      <div class="cart-service-tag">
+                        {% if shipping_method == true %}
+                          <div class="tag-box">free shipping</div>
+                        {% endif %}
+                        {% if item.variant.compare_at_price > item.variant.price %}
+                          <div class="tag-box">Clearance</div>
+                        {% endif %}  
+                      </div>
+                    {% endif %}
+                    <a href="{{ item.url }}" class="cart-item__name h4 break"><strong>Frigidaire</strong> | {{ item.product.title | escape }}</a>
+                    <p class="product-option cart-service-variant">White</p>
+            
+                    {%- if item.product.has_only_default_variant == false
+                      or item.properties.size != 0
+                      or item.selling_plan_allocation != null
+                    -%}
+                      <dl>
+                        {%- if item.product.has_only_default_variant == false -%}
+                          {%- for option in item.options_with_values -%}
+                            <div class="product-option">
+                              <dt>{{ option.name }}:</dt>
+                              <dd>{{ option.value }}</dd>
+                            </div>
+                          {%- endfor -%}
+                        {%- endif -%}
+
+                        {%- for property in item.properties -%}
+                          {%- assign property_first_char = property.first | slice: 0 -%}
+                          {%- if property.last != blank and property_first_char != '_' -%}
+                            <div class="product-option">
+                              <dt>{{ property.first }}:</dt>
+                              <dd>
+                                {%- if property.last contains '/uploads/' -%}
+                                  <a href="{{ property.last }}" class="link" target="_blank">
+                                    {{ property.last | split: '/' | last }}
+                                  </a>
+                                {%- else -%}
+                                  {{ property.last }}
+                                {%- endif -%}
+                              </dd>
+                            </div>
+                          {%- endif -%}
+                        {%- endfor -%}
+                      </dl>
+
+                      <p class="product-option">{{ item.selling_plan_allocation.selling_plan.name }}</p>
+                    {%- endif -%}
+                    <div class="cart-service-price small-hide">
+                    
+                      <div class="price  price--on-sale ">
+                        <div class="price__container">
+                          {%- if item.original_price != item.final_price -%}
+                          <div class="price__regular hidden">
+                            <span class="price-item price-item--regular">
+                              <span class="money">{{- item.original_price | times: salesMultiple | money -}}</span>
+                            </span>
+                          </div>
+                          {% else %}
+                          <div class="price__sale">
+                            {% if item.variant.compare_at_price > item.variant.price %}
+                              <s class="price-item price-item--regular">
+                                <span class="money">{{ item.variant.compare_at_price | times: salesMultiple | money }}</span>
+                              </s>
+                            {% endif %}
+                            <span class="price-item price-item--sale price-item--last">
+                              <span class="money">{{ item.original_price | times: salesMultiple | money }}</span>
+                            </span>
+                            
+                          </div>
+                          {% endif %}
+                        </div>
+                      </div>
+                      {% if item.variant.compare_at_price > item.variant.price %}
+                      {% assign savings = item.variant.compare_at_price | minus: item.final_price %}
+                      <div class="cart-service-clearance">
+                        <div class="col-left">% Clearance</div>
+                        <div class="col-right">– {{ savings | money }}</div>
+                      </div>
+                      {% endif %}  
+                    </div>
+                  </div>
+                  <div class="col-right small-hide">
+                    <div class="cart-item__quantity-wrapper">
+                      <quantity-input class="quantity cart-quantity small-hide">
+                        <button class="quantity__button no-js-hidden" name="minus" type="button">
+                          {% render 'icon-minus' %}
+                        </button>
+                        {% assign quantity_min = item.variant.quantity_rule.min %}
+                        {% assign quantity_step = item.variant.quantity_rule.increment %}
+                        {% if hasSalesMultiple %}
+                          {% assign quantity_min = salesMultiple %}
+                          {% assign quantity_step = salesMultiple %}
+                        {% endif %}
+                        <input
+                          class="quantity__input"
+                          data-quantity-variant-id="{{ item.variant.id }}"
+                          type="number"
+                          name="updates[]"
+                          value="{{ item.quantity }}"
+                          {% # theme-check-disable %}
+                          data-cart-quantity="{{ cart | item_count_for_variant: item.variant.id }}"
+                          min="{{ quantity_min }}"
+                          {% if item.variant.quantity_rule.max != null %}
+                            max="{{ item.variant.quantity_rule.max }}"
+                          {% endif %}
+                          step="{{ quantity_step }}"
+                          {% # theme-check-enable %}
+                          aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
+                          id="Quantity-{{ item.index | plus: 1 }}"
+                          data-index="{{ item.index | plus: 1 }}"
+                        >
+                        <button class="quantity__button no-js-hidden" name="plus" type="button">
+                          {% render 'icon-plus' %}
+                        </button>
+                      </quantity-input>
+                      <cart-remove-button
+                        id="Remove-{{ item.index | plus: 1 }}"
+                        data-index="{{ item.index | plus: 1 }}"
+                      >
+                        <a
+                          class="button button--tertiary"
+                          aria-label="{{ 'sections.cart.remove_title' | t: title: item.title }}"
+                        >
+                          {% render 'icon-remove' %}
+                        </a>
+                      </cart-remove-button>
+                    </div>
+                  </div>
+                </div>
+                <div class="cart-service-info small-hide">
+
+                  {% render "cart-protection-plan", line_obj: item , display_section: display_section, show_assembly_service: show_assembly_service, section: section  %}
+                  {% render 'cart-complete-pro' %}
+
+                  <div class="cart-anti-plan">
+                    <div class="cart-anti-text">Anti-stain protection plan
+                      <span class="cart-anti-price">$369.99</span>
+                    </div>
+                    <cart-remove-button
+                        id="Remove-{{ item.index | plus: 1 }}"
+                        data-index="{{ item.index | plus: 1 }}"
+                      >
+                        <a
+                          href="{{ item.url_to_remove }}"
+                          class="button button--tertiary"
+                          aria-label="{{ 'sections.cart.remove_title' | t: title: item.title }}"
+                        >
+                          {% render 'icon-remove' %}
+                        </a>
+                      </cart-remove-button>
+                  </div>
+
+                  <div class="cart-service-appliance">
+                    <div class="appliance-col">
+                      <h4 class="icon-dot">{% render 'icon-protect' %}protect your appliance</h4>
+                      <div class="cart-appliance-list">
+                        <div class="cart-appliance-box">
+                          <label for="protection_plan1">
+                            <input type="radio" id="protection_plan1" name="protection_plan">
+                            <span class="label-text">2 Years Protection Plan <span class="label-price">$169.99</span></span>
+                          </label>
+                        </div>
+                        <div class="cart-appliance-box">
+                          <label for="protection_plan2">
+                            <input type="radio" id="protection_plan2" name="protection_plan">
+                            <span class="label-text">4 Years Protection Plan <span class="label-price">$249.99</span></span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="appliance-col">
+                      <h4 class="icon-dot">{% render 'icon-services' %}Additional services:</h4>
+                      <div class="cart-appliance-list">
+                        <div class="cart-appliance-box">
+                          <label for="assembly_service1">
+                            <input type="radio" id="assembly_service1" name="assembly_service">
+                            <span class="label-text">BBQ Assembly Service <span class="label-price">Free</span></span>
+                          </label>
+                        </div>
+                        <div class="cart-appliance-box">
+                          <label for="assembly_service2">
+                            <input type="radio" id="assembly_service2" name="assembly_service">
+                            <span class="label-text">Removal Service <span class="label-price">Free</span></span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            
+              <div class="cart-service-info medium-hide large-up-hide">
+
+                <div class="price-qty-bar">
+                    <div class="cart-service-price">
+                      <div class="price  price--on-sale ">
+                        <div class="price__container">
+                          {%- if item.original_price != item.final_price -%}
+                          <div class="price__regular hidden">
+                            <span class="price-item price-item--regular">
+                              <span class="money">{{- item.original_price | times: salesMultiple | money -}}</span>
+                            </span>
+                          </div>
+                          {% else %}
+                          <div class="price__sale">
+                            <span class="price-item price-item--sale price-item--last">
+                              <span class="money">{{ item.original_price | times: salesMultiple | money }}</span>
+                            </span>
+                            {% if item.variant.compare_at_price > item.variant.price %}
+                              <s class="price-item price-item--regular">
+                                <span class="money">{{ item.variant.compare_at_price | times: salesMultiple | money }}</span>
+                              </s>
+                            {% endif %}
+                          </div>
+                          {% endif %}
+                        </div>
+                      </div>
+
+                      <div class="cart-stock-tag medium-hide large-up-hide">
+                        <span>In Stock</span>
+                      </div>
+
+                      {% if item.variant.compare_at_price > item.variant.price %}
+                      {% assign savings = item.variant.compare_at_price | minus: item.final_price %}
+                      <div class="cart-service-clearance">
+                        <div class="col-left">% Clearance</div>
+                        <div class="col-right">– {{ savings | money }}</div>
+                      </div>
+                      {% endif %}  
+                    </div>
+                    <div class="cart-item__quantity-wrapper">
+                      <quantity-input class="quantity cart-quantity">
+                        <button class="quantity__button no-js-hidden" name="minus" type="button">
+                          {% render 'icon-minus' %}
+                        </button>
+                        <input
+                          class="quantity__input"
+                          data-quantity-variant-id="{{ item.variant.id }}"
+                          type="number"
+                          name="updates[]"
+                          value="1"
+                          {% # theme-check-disable %}
+                          data-cart-quantity="{{ cart | item_count_for_variant: item.variant.id }}"
+                          min="{{ item.variant.quantity_rule.min }}"
+                          {% if item.variant.quantity_rule.max != null %}
+                            max="{{ item.variant.quantity_rule.max }}"
+                          {% endif %}
+                          step="{{ item.variant.quantity_rule.increment }}"
+                          {% # theme-check-enable %}
+                          aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
+                          id="Quantity-{{ item.index | plus: 1 }}"
+                          data-index="{{ item.index | plus: 1 }}"
+                        >
+                        <button class="quantity__button no-js-hidden" name="plus" type="button">
+                          {% render 'icon-plus' %}
+                        </button>
+                      </quantity-input>
+                      <cart-remove-button
+                        id="Remove-{{ item.index | plus: 1 }}"
+                        data-index="{{ item.index | plus: 1 }}"
+                      >
+                        <a
+                          class="button button--tertiary"
+                          aria-label="{{ 'sections.cart.remove_title' | t: title: item.title }}"
+                        >
+                          {% render 'icon-remove' %}
+                        </a>
+                      </cart-remove-button>
+                    </div>
+                </div>
+
+                <div class="cart-service-accordion">
+                  <ul class="accordion-ul">
+                    <li class="accordion-li">
+                      <a href="JavaScript:Void(0);" class="accordion-title">
+                        <span class="title-icon">{% render 'settings-icon' %}</span>
+                        Professional Assembly & Installation
+                        <span class="plus-minus-icon">
+                          {% render 'plus-minus-icon' %}
+                        </span>
+                      </a>
+                      <div class="panel">
+                        <ul class="panel-list">
+                          <li>Professional  services from an experienced pro</li>
+                          <li>You will only be charged once the task is complete</li>
+                        </ul>
+                        <div class="cart-service-add-row cart-service-name-row">
+                          <div class="cart-service-name">× 1 Large Applience Installation – $249.99</div>
+                          <a href="#" class="button">Add Service</a>
+                        </div>
+                      </div>
+                    </li>
+                    {% assign tags_prop = item.properties._tags %}
+                      {% if tags_prop != 'no-tag' %}
+                      {% assign shop_field_tags = shop.metafields.tags.appliance_plan %}
+                      {% if display_section == true %}
+                      {% assign prod_obj = all_products[section.settings.service_product] %}
+                      {% endif %}
+                    {% endif %}
+                     {% render "cart-protection-plan", line_obj: item , display_section: display_section, show_assembly_service: show_assembly_service, section: section  %}
+                  </ul>
+                </div>
+                {% render 'cart-complete-pro' %}
+
+                <div class="cart-anti-plan">
+                    <div class="cart-anti-text">Anti-stain protection plan
+                      <span class="cart-anti-price">$369.99</span>
+                    </div>
+                    <cart-remove-button
+                        id="Remove-{{ item.index | plus: 1 }}"
+                        data-index="{{ item.index | plus: 1 }}"
+                      >
+                        <a
+                          href="{{ item.url_to_remove }}"
+                          class="button button--tertiary"
+                          aria-label="{{ 'sections.cart.remove_title' | t: title: item.title }}"
+                        >
+                          {% render 'icon-remove' %}
+                        </a>
+                      </cart-remove-button>
+                </div>
+
+                <div class="cart-service-appliance">
+                  <div class="appliance-col">
+                    <h4 class="icon-dot">{% render 'icon-protect' %}protect your appliance</h4>
+                    <div class="cart-appliance-list">
+                      <div class="cart-appliance-box">
+                        <label for="protection_plan1">
+                          <input type="radio" id="protection_plan1" name="protection_plan">
+                          <span class="label-text">2 Years Protection Plan <span class="label-price">$169.99</span></span>
+                        </label>
+                      </div>
+                      <div class="cart-appliance-box">
+                        <label for="protection_plan2">
+                          <input type="radio" id="protection_plan2" name="protection_plan">
+                          <span class="label-text">4 Years Protection Plan <span class="label-price">$249.99</span></span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="appliance-col">
+                    <h4 class="icon-dot">{% render 'icon-services' %}Additional services:</h4>
+                    <div class="cart-appliance-list">
+                      <div class="cart-appliance-box">
+                        <label for="assembly_service1">
+                          <input type="radio" id="assembly_service1" name="assembly_service">
+                          <span class="label-text">BBQ Assembly Service <span class="label-price">Free</span></span>
+                        </label>
+                      </div>
+                      <div class="cart-appliance-box">
+                        <label for="assembly_service2">
+                          <input type="radio" id="assembly_service2" name="assembly_service">
+                          <span class="label-text">Removal Service <span class="label-price">Free</span></span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+
+            {% comment %}
+            <div class="cart-service-row">
+              <div class="cart-item__media">
+                <div class="cart-stock-tag">
+                  <span>In Stock</span>
+                </div>
+                <a href="#" class="cart-item__image-container gradient global-media-settings">
+                  <img src="//espace-67.com/cdn/shop/products/96555_1.jpg?v=1652109424&amp;width=300" class="cart-item__image" alt="Whirlpool Hose Laundry Accessory W10044609A IMAGE 1" loading="lazy" width="150" height="150">
+                </a>
+              </div>
+              <div class="cart-service-right">
+                <div class="cart-service-head">
+                  <div class="col-left">
+                    <div class="cart-service-tag">
+                      <div class="tag-box">free shipping</div>
+                      <div class="tag-box">Clearance</div>
+                    </div>
+                    <a href="/products/whirlpool-accessoire-de-lessive-boyaux-w10044609a?variant=43787273011425" class="cart-item__name h4 break"><strong>Frigidaire</strong> | 24-inch Freestanding Electric Range CFEH2411UW</a>
+                    <p class="product-option cart-service-variant">White</p>
+                    <div class="cart-service-price small-hide">
+                      <div class="price  price--on-sale ">
+                        <div class="price__container">
+                          <div class="price__regular hidden">
+                            <span class="price-item price-item--regular">
+                              <span class="money">$1,899.99</span>
+                            </span>
+                          </div>
+                          <div class="price__sale">
+                            <span class="price-item price-item--sale price-item--last">
+                              <span class="money">$1,899.99</span>
+                            </span>
+                            <s class="price-item price-item--regular">
+                              <span class="money">$2,120.00</span>
+                            </s>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="cart-service-clearance">
+                        <div class="col-left">% Clearance</div>
+                        <div class="col-right">– $400</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-right">
+                    <div class="cart-item__quantity-wrapper">
+                      <quantity-input class="quantity cart-quantity small-hide">
+                        <button class="quantity__button no-js-hidden" name="minus" type="button">
+                          {% render 'icon-minus' %}
+                        </button>
+                        <input
+                          class="quantity__input"
+                          data-quantity-variant-id="{{ item.variant.id }}"
+                          type="number"
+                          name="updates[]"
+                          value="1"
+                          {% # theme-check-disable %}
+                          data-cart-quantity="{{ cart | item_count_for_variant: item.variant.id }}"
+                          min="{{ item.variant.quantity_rule.min }}"
+                          {% if item.variant.quantity_rule.max != null %}
+                            max="{{ item.variant.quantity_rule.max }}"
+                          {% endif %}
+                          step="{{ item.variant.quantity_rule.increment }}"
+                          {% # theme-check-enable %}
+                          aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
+                          id="Quantity-{{ item.index | plus: 1 }}"
+                          data-index="{{ item.index | plus: 1 }}"
+                        >
+                        <button class="quantity__button no-js-hidden" name="plus" type="button">
+                          {% render 'icon-plus' %}
+                        </button>
+                      </quantity-input>
+                      <cart-remove-button
+                        id="Remove-{{ item.index | plus: 1 }}"
+                        data-index="{{ item.index | plus: 1 }}"
+                      >
+                        <a
+                          href="{{ item.url_to_remove }}"
+                          class="button button--tertiary"
+                          aria-label="{{ 'sections.cart.remove_title' | t: title: item.title }}"
+                        >
+                          {% render 'icon-remove' %}
+                        </a>
+                      </cart-remove-button>
+                    </div>
+                  </div>
+                </div>
+                <div class="cart-service-info small-hide">
+                  <div class="cart-service-accordion">
+                    <ul class="accordion-ul">
+                      <li class="accordion-li">
+                        <a href="JavaScript:Void(0);" class="accordion-title">
+                          <span class="title-icon">{% render 'settings-icon' %}</span>
+                          Professional Assembly & Installation
+                          <span class="plus-minus-icon">
+                            {% render 'plus-minus-icon' %}
+                          </span>
+                        </a>
+                        <div class="panel">
+                          <ul class="panel-list">
+                            <li>Professional  services from an experienced pro</li>
+                            <li>You will only be charged once the task is complete</li>
+                          </ul>
+                          <div class="cart-service-add-row cart-service-name-row">
+                            <div class="cart-service-name">× 1 Large Applience Installation – $249.99</div>
+                            <a href="#" class="button">Add Service</a>
+                          </div>
+                        </div>
+                      </li>
+                      <li class="accordion-li">
+                        <a href="JavaScript:Void(0);" class="accordion-title">
+                          <span class="title-icon">{% render 'check-icon' %}</span>
+                          Protection Plan
+                          <span class="plus-minus-icon">
+                            {% render 'plus-minus-icon' %}
+                          </span>
+                        </a>
+                        <div class="panel">
+                          <div class="cart-service-add-row custom-select-row">
+                            <div class="custom-select">
+                              <div class="cart-service-name custom-select-title">4 Year Protection for $249.99</div>
+                              <ul class="custom-select-ul">
+                                <li>4 Year Protection for $249.99</li>
+                                <li>3 Year Protection for $249.99</li>
+                                <li>2 Year Protection for $249.99</li>
+                                <li>1 Year Protection for $249.99</li>
+                              </ul>
+                             </div>
+                             <a href="#" class="button">Add Protection Paln</a>
+                          </div>
+                          <ul class="panel-list">
+                            <li>Professional  services from an experienced pro</li>
+                            <li>You will only be charged once the task is complete</li>
+                          </ul>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="cart-service-info medium-hide large-up-hide">
+                <div class="price-qty-bar">
+                  <div class="cart-service-price">
+                    <div class="price  price--on-sale ">
+                      <div class="price__container">
+                        <div class="price__regular hidden">
+                          <span class="price-item price-item--regular">
+                            <span class="money">$1,899.99</span>
+                          </span>
+                        </div>
+                        <div class="price__sale">
+                          <span class="price-item price-item--sale price-item--last">
+                            <span class="money">$1,899.99</span>
+                          </span>
+                          <s class="price-item price-item--regular">
+                            <span class="money">$2,120.00</span>
+                          </s>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="cart-service-clearance">
+                      <div class="col-left">% Clearance</div>
+                      <div class="col-right">– $400</div>
+                    </div>
+                  </div>
+                  <div class="cart-item__quantity-wrapper">
+                      <quantity-input class="quantity cart-quantity">
+                        <button class="quantity__button no-js-hidden" name="minus" type="button">
+                          {% render 'icon-minus' %}
+                        </button>
+                        <input
+                          class="quantity__input"
+                          data-quantity-variant-id="{{ item.variant.id }}"
+                          type="number"
+                          name="updates[]"
+                          value="1"
+                          {% # theme-check-disable %}
+                          data-cart-quantity="{{ cart | item_count_for_variant: item.variant.id }}"
+                          min="{{ item.variant.quantity_rule.min }}"
+                          {% if item.variant.quantity_rule.max != null %}
+                            max="{{ item.variant.quantity_rule.max }}"
+                          {% endif %}
+                          step="{{ item.variant.quantity_rule.increment }}"
+                          {% # theme-check-enable %}
+                          aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
+                          id="Quantity-{{ item.index | plus: 1 }}"
+                          data-index="{{ item.index | plus: 1 }}"
+                        >
+                        <button class="quantity__button no-js-hidden" name="plus" type="button">
+                          {% render 'icon-plus' %}
+                        </button>
+                      </quantity-input>
+                      <cart-remove-button
+                        id="Remove-{{ item.index | plus: 1 }}"
+                        data-index="{{ item.index | plus: 1 }}"
+                      >
+                        <a
+                          href="{{ item.url_to_remove }}"
+                          class="button button--tertiary"
+                          aria-label="{{ 'sections.cart.remove_title' | t: title: item.title }}"
+                        >
+                          {% render 'icon-remove' %}
+                        </a>
+                      </cart-remove-button>
+                    </div>
+                </div>
+                  <div class="cart-service-accordion">
+                    <ul class="accordion-ul">
+                      <li class="accordion-li">
+                        <a href="JavaScript:Void(0);" class="accordion-title">
+                          <span class="title-icon">{% render 'settings-icon' %}</span>
+                          Professional Assembly & Installation
+                          <span class="plus-minus-icon">
+                            {% render 'plus-minus-icon' %}
+                          </span>
+                        </a>
+                        <div class="panel">
+                          <ul class="panel-list">
+                            <li>Professional  services from an experienced pro</li>
+                            <li>You will only be charged once the task is complete</li>
+                          </ul>
+                          <div class="cart-service-add-row cart-service-name-row">
+                            <div class="cart-service-name">× 1 Large Applience Installation – $249.99</div>
+                            <a href="#" class="button">Add Service</a>
+                          </div>
+                        </div>
+                      </li>
+                      <li class="accordion-li">
+                        <a href="JavaScript:Void(0);" class="accordion-title">
+                          <span class="title-icon">{% render 'check-icon' %}</span>
+                          Protection Plan
+                          <span class="plus-minus-icon">
+                            {% render 'plus-minus-icon' %}
+                          </span>
+                        </a>
+                        <div class="panel">
+                          <div class="cart-service-add-row custom-select-row">
+                            <div class="custom-select">
+                              <div class="cart-service-name custom-select-title">4 Year Protection for $249.99</div>
+                              <ul class="custom-select-ul">
+                                <li>4 Year Protection for $249.99</li>
+                                <li>3 Year Protection for $249.99</li>
+                                <li>2 Year Protection for $249.99</li>
+                                <li>1 Year Protection for $249.99</li>
+                              </ul>
+                             </div>
+                             <a href="#" class="button">Add Protection Paln</a>
+                          </div>
+                          <ul class="panel-list">
+                            <li>Professional  services from an experienced pro</li>
+                            <li>You will only be charged once the task is complete</li>
+                          </ul>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+              </div>
+            </div>
+
+            <div class="cart-service-row">
+              <div class="cart-item__media">
+                <div class="cart-stock-tag">
+                  <span>In Stock</span>
+                </div>
+                <a href="#" class="cart-item__image-container gradient global-media-settings">
+                  <img src="//espace-67.com/cdn/shop/products/96555_1.jpg?v=1652109424&amp;width=300" class="cart-item__image" alt="Whirlpool Hose Laundry Accessory W10044609A IMAGE 1" loading="lazy" width="150" height="150">
+                </a>
+              </div>
+              <div class="cart-service-right">
+                <div class="cart-service-head">
+                  <div class="col-left">
+                    <div class="cart-service-tag">
+                      <div class="tag-box">free shipping</div>
+                      <div class="tag-box">Clearance</div>
+                    </div>
+                    <a href="/products/whirlpool-accessoire-de-lessive-boyaux-w10044609a?variant=43787273011425" class="cart-item__name h4 break"><strong>Frigidaire</strong> | 24-inch Freestanding Electric Range CFEH2411UW</a>
+                    <p class="product-option cart-service-variant">White</p>
+                    <div class="cart-service-price small-hide">
+                      <div class="price  price--on-sale ">
+                        <div class="price__container">
+                          <div class="price__regular hidden">
+                            <span class="price-item price-item--regular">
+                              <span class="money">$1,899.99</span>
+                            </span>
+                          </div>
+                          <div class="price__sale">
+                            <span class="price-item price-item--sale price-item--last">
+                              <span class="money">$1,899.99</span>
+                            </span>
+                            <s class="price-item price-item--regular">
+                              <span class="money">$2,120.00</span>
+                            </s>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="cart-service-clearance">
+                        <div class="col-left">% Clearance</div>
+                        <div class="col-right">– $400</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-right">
+                    <div class="cart-item__quantity-wrapper small-hide">
+                      <quantity-input class="quantity cart-quantity">
+                        <button class="quantity__button no-js-hidden" name="minus" type="button">
+                          {% render 'icon-minus' %}
+                        </button>
+                        <input
+                          class="quantity__input"
+                          data-quantity-variant-id="{{ item.variant.id }}"
+                          type="number"
+                          name="updates[]"
+                          value="1"
+                          {% # theme-check-disable %}
+                          data-cart-quantity="{{ cart | item_count_for_variant: item.variant.id }}"
+                          min="{{ item.variant.quantity_rule.min }}"
+                          {% if item.variant.quantity_rule.max != null %}
+                            max="{{ item.variant.quantity_rule.max }}"
+                          {% endif %}
+                          step="{{ item.variant.quantity_rule.increment }}"
+                          {% # theme-check-enable %}
+                          aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
+                          id="Quantity-{{ item.index | plus: 1 }}"
+                          data-index="{{ item.index | plus: 1 }}"
+                        >
+                        <button class="quantity__button no-js-hidden" name="plus" type="button">
+                          {% render 'icon-plus' %}
+                        </button>
+                      </quantity-input>
+                      <cart-remove-button
+                        id="Remove-{{ item.index | plus: 1 }}"
+                        data-index="{{ item.index | plus: 1 }}"
+                      >
+                        <a
+                          href="{{ item.url_to_remove }}"
+                          class="button button--tertiary"
+                          aria-label="{{ 'sections.cart.remove_title' | t: title: item.title }}"
+                        >
+                          {% render 'icon-remove' %}
+                        </a>
+                      </cart-remove-button>
+                    </div>
+                  </div>
+                </div>
+                <div class="cart-service-info small-hide">
+                  <div class="cart-service-accordion">
+                    <ul class="accordion-ul">
+                      <li class="accordion-li">
+                        <a href="JavaScript:Void(0);" class="accordion-title">
+                          <span class="title-icon">{% render 'settings-icon' %}</span>
+                          Professional Assembly & Installation
+                          <span class="plus-minus-icon">
+                            {% render 'plus-minus-icon' %}
+                          </span>
+                        </a>
+                        <div class="panel">
+                          <ul class="panel-list">
+                            <li>Professional  services from an experienced pro</li>
+                            <li>You will only be charged once the task is complete</li>
+                          </ul>
+                          <div class="cart-service-add-row cart-service-name-row">
+                            <div class="cart-service-name">× 1 Large Applience Installation – $249.99</div>
+                            <a href="#" class="button">Add Service</a>
+                          </div>
+                        </div>
+                      </li>
+                      <li class="accordion-li">
+                        <a href="JavaScript:Void(0);" class="accordion-title">
+                          <span class="title-icon">{% render 'check-icon' %}</span>
+                          Protection Plan
+                          <span class="plus-minus-icon">
+                            {% render 'plus-minus-icon' %}
+                          </span>
+                        </a>
+                        <div class="panel">
+                          <div class="cart-service-add-row custom-select-row">
+                            <div class="custom-select">
+                              <div class="cart-service-name custom-select-title">4 Year Protection for $249.99</div>
+                              <ul class="custom-select-ul">
+                                <li>4 Year Protection for $249.99</li>
+                                <li>3 Year Protection for $249.99</li>
+                                <li>2 Year Protection for $249.99</li>
+                                <li>1 Year Protection for $249.99</li>
+                              </ul>
+                             </div>
+                             <a href="#" class="button">Add Protection Paln</a>
+                          </div>
+                          <ul class="panel-list">
+                            <li>Professional  services from an experienced pro</li>
+                            <li>You will only be charged once the task is complete</li>
+                          </ul>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="cart-service-info medium-hide large-up-hide">
+                <div class="price-qty-bar">
+                  <div class="cart-service-price">
+                    <div class="price  price--on-sale ">
+                      <div class="price__container">
+                        <div class="price__regular hidden">
+                          <span class="price-item price-item--regular">
+                            <span class="money">$1,899.99</span>
+                          </span>
+                        </div>
+                        <div class="price__sale">
+                          <span class="price-item price-item--sale price-item--last">
+                            <span class="money">$1,899.99</span>
+                          </span>
+                          <s class="price-item price-item--regular">
+                            <span class="money">$2,120.00</span>
+                          </s>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="cart-service-clearance">
+                      <div class="col-left">% Clearance</div>
+                      <div class="col-right">– $400</div>
+                    </div>
+                  </div>
+                  <div class="cart-item__quantity-wrapper">
+                      <quantity-input class="quantity cart-quantity">
+                        <button class="quantity__button no-js-hidden" name="minus" type="button">
+                          {% render 'icon-minus' %}
+                        </button>
+                        <input
+                          class="quantity__input"
+                          data-quantity-variant-id="{{ item.variant.id }}"
+                          type="number"
+                          name="updates[]"
+                          value="1"
+                          {% # theme-check-disable %}
+                          data-cart-quantity="{{ cart | item_count_for_variant: item.variant.id }}"
+                          min="{{ item.variant.quantity_rule.min }}"
+                          {% if item.variant.quantity_rule.max != null %}
+                            max="{{ item.variant.quantity_rule.max }}"
+                          {% endif %}
+                          step="{{ item.variant.quantity_rule.increment }}"
+                          {% # theme-check-enable %}
+                          aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
+                          id="Quantity-{{ item.index | plus: 1 }}"
+                          data-index="{{ item.index | plus: 1 }}"
+                        >
+                        <button class="quantity__button no-js-hidden" name="plus" type="button">
+                          {% render 'icon-plus' %}
+                        </button>
+                      </quantity-input>
+                      <cart-remove-button
+                        id="Remove-{{ item.index | plus: 1 }}"
+                        data-index="{{ item.index | plus: 1 }}"
+                      >
+                        <a
+                          href="{{ item.url_to_remove }}"
+                          class="button button--tertiary"
+                          aria-label="{{ 'sections.cart.remove_title' | t: title: item.title }}"
+                        >
+                          {% render 'icon-remove' %}
+                        </a>
+                      </cart-remove-button>
+                    </div>
+                </div>
+                  <div class="cart-service-accordion">
+                    <ul class="accordion-ul">
+                      <li class="accordion-li">
+                        <a href="JavaScript:Void(0);" class="accordion-title">
+                          <span class="title-icon">{% render 'settings-icon' %}</span>
+                          Professional Assembly & Installation
+                          <span class="plus-minus-icon">
+                            {% render 'plus-minus-icon' %}
+                          </span>
+                        </a>
+                        <div class="panel">
+                          <ul class="panel-list">
+                            <li>Professional  services from an experienced pro</li>
+                            <li>You will only be charged once the task is complete</li>
+                          </ul>
+                          <div class="cart-service-add-row cart-service-name-row">
+                            <div class="cart-service-name">× 1 Large Applience Installation – $249.99</div>
+                            <a href="#" class="button">Add Service</a>
+                          </div>
+                        </div>
+                      </li>
+                      <li class="accordion-li">
+                        <a href="JavaScript:Void(0);" class="accordion-title">
+                          <span class="title-icon">{% render 'check-icon' %}</span>
+                          Protection Plan
+                          <span class="plus-minus-icon">
+                            {% render 'plus-minus-icon' %}
+                          </span>
+                        </a>
+                        <div class="panel">
+                          <div class="cart-service-add-row custom-select-row">
+                            <div class="custom-select">
+                              <div class="cart-service-name custom-select-title">4 Year Protection for $249.99</div>
+                              <ul class="custom-select-ul">
+                                <li>4 Year Protection for $249.99</li>
+                                <li>3 Year Protection for $249.99</li>
+                                <li>2 Year Protection for $249.99</li>
+                                <li>1 Year Protection for $249.99</li>
+                              </ul>
+                             </div>
+                             <a href="#" class="button">Add Protection Paln</a>
+                          </div>
+                          <ul class="panel-list">
+                            <li>Professional  services from an experienced pro</li>
+                            <li>You will only be charged once the task is complete</li>
+                          </ul>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+              </div>
+            </div>
+            {% endcomment %}
+            
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <p class="visually-hidden" id="cart-live-region-text" aria-live="polite" role="status"></p>
+    <p class="visually-hidden" id="shopping-cart-line-item-status" aria-live="polite" aria-hidden="true" role="status">
+      {{ 'accessibility.loading' | t }}
+    </p>
+  </form>
+</cart-items>
+{% endcomment %}
+
+
+                        
+
+{% schema %}
+{
+  "name": "t:sections.main-cart-items.name",
+  "class": "main-cart-items",
+  "settings": [
+    {
+      "type":"header",
+      "content":"Protection plan content"
+    },
+    {
+      "type":"url",
+      "id":"protection_guide_link",
+      "label":"Protection plan guide link",
+      "info": "Select the page and this page will be display in slide drawer when someone click protection plan product tooltip icon"
+    },
+    {
+      "type":"url",
+      "id":"furniture_protection_guide_link",
+      "label":"Furniture protection plan guide link",
+      "info": "Select the page and this page will be display in slide drawer when someone click furniture protection plan product tooltip icon"
+    },
+    {
+		"type":"header",
+		"content":"BBQ Assembly Service tooltip"
+	},
+    {
+		"type":"richtext",
+		"id":"assembly_service_tooltip_en",
+		"label":"Content for english",
+        "default":"<p>Free BBQ Assembly Service</p>"
+	},
+	{
+		"type":"richtext",
+		"id":"assembly_service_tooltip_fr",
+		"label":"Content for french",
+        "default":"<p>Service d'assemblage de BBQ Gratuit</p>"
+	},
+    {
+      "type": "header",
+      "content": "Removal service tooltip"
+    },
+    {
+		"type":"richtext",
+		"id":"rmovl_service_tooltip_en",
+		"label":"Content for english",
+        "default":"<p>Free Removal Service</p>"
+	},
+	{
+		"type":"richtext",
+		"id":"rmovl_service_tooltip_fr",
+		"label":"Content for french",
+        "default":"<p>Service de Rammassage Gratruit</p>"
+	},
+    {
+      "type": "header",
+      "content": "Removal service popup"
+    },
+    {
+      "type":"text",
+      "id":"rmovl_srvc_title",
+      "label":"Popup title",
+      "default":"AVIS : Pour votre service rammassage"
+	},
+    {
+      "type":"richtext",
+      "id":"rmovl_srvc_desc_top",
+      "label":"Popup top description",
+      "default": "<p>Vous devrez debrancher l appareil avant que le service rammassage puisse etre effectue.</p>"
+	},
+    {
+      "type":"richtext",
+      "id":"rmovl_srvc_desc_bottom",
+      "label":"Popup bottom description",
+      "default": "<p>Vous avez des questions ? Notre equipe de vente est disponible des aujourd hui pour repondre a toutes vos questions!</p>"
+	}
+  ]
+}
+{% endschema %}
+

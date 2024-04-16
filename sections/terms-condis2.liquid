@@ -1,0 +1,73 @@
+{{ 'terms-condis.css' | asset_url | stylesheet_tag }} 
+
+{% if section.settings.title != blank %}
+<div class="terms-condition-wrapper">
+  <div class="page-width">
+
+    <div class="accordion-container"> 
+      <div class="set">
+        <span aria-describedby="a11y-external-message" class="tab-title">{{ section.settings.title }}{% if section.settings.b-title != blank or section.settings.b-sub-title != blank or section.settings.des_rich != blank %}<span class="terms-icon">{% render 'icon-faq-chevron' %}</span>{% endif %}</span>
+        {% if section.settings.b-title != blank or section.settings.b-sub-title != blank or section.settings.des_rich != blank %}
+        <div class="set-content">
+          <div class="accordian-content-wrapper">
+            <div class="accordian-content-row">
+              {% if section.settings.b-title != blank or section.settings.b-sub-title != blank %}
+              <div class="accordian-content-col left">
+                <div class="accordian-content-head">
+                  {% if section.settings.b-title != blank %}<h4>{{ section.settings.b-title }}</h4>{% endif %}
+                  {% if section.settings.b-sub-title != blank %}<div class="sub_title">{{ section.settings.b-sub-title }}</div>{% endif %}
+                </div>
+              </div>
+              {% endif %}
+              {% if section.settings.des_rich != blank %}
+              <div class="accordian-content-col right rte">
+                {{ section.settings.des_rich }}
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    
+  </div>
+</div>
+{% endif %}
+
+
+{% schema %}
+  {
+    "name": "Read terms & conditions",
+    "tag": "section",
+    "class":"section section-terms-condis2 section-padding-large",
+    "settings": [
+      {
+        "type":"text",
+        "id":"title",
+        "label":"Title"
+      },
+      {
+        "type":"text",
+        "id":"b-title",
+        "label":"Description-title"
+      },
+      {
+        "type":"text",
+        "id":"b-sub-title",
+        "label":"Description-title"
+      },
+      {
+        "type":"richtext",
+        "id":"des_rich",
+        "label":"Description Text"
+      }
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

@@ -1,0 +1,269 @@
+{% assign Val_avail = false %}
+{% assign V_label = blank %}
+<div class="append_swatch">
+  <div class="Color_swatch hidden">
+    <label>
+      {% for tag_s in product.tags %}
+        {% if tag_s == 'category:accent_chair_espace' %}
+          {% assign Val_avail = true %}
+          {% for inTag in product.tags %}
+            {% if inTag contains 'color_cover_explicit' %}
+              {% if shop.locale == 'en' %}
+                {% assign V_M_label = 'Color' %}  
+              {% else %}
+                {% assign V_M_label = 'Couleur' %}
+              {% endif %}
+              {% assign V_label = inTag | split:'color_cover_explicit:' | last %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+          {% break %}
+        {% elsif tag_s == 'category:accent_table_espace' %}
+          {% assign Val_avail = true %}
+          {% for inTag in product.tags %}
+            {% if inTag contains 'color_top_explicit' %}
+              {% if shop.locale == 'en' %}
+                {% assign V_M_label = 'Color' %}  
+              {% else %}
+                {% assign V_M_label = 'Couleur' %}
+              {% endif %}
+              {% assign V_label = inTag | split:'color_top_explicit:' | last %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+          {% break %}
+        {% elsif tag_s == 'category:stool_espace' %}
+          {% assign Val_avail = true %}
+          {% for inTag in product.tags %}
+            {% if inTag contains 'color_seat_explicit' %}
+              {% if shop.locale == 'en' %}
+                {% assign V_M_label = 'Color' %}  
+              {% else %}
+                {% assign V_M_label = 'Couleur' %}
+              {% endif %}
+              {% assign V_label = inTag | split:'color_seat_explicit:' | last %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+          {% break %}
+        {% elsif tag_s == 'category:cabinet_espace' %}
+          {% assign Val_avail = true %}
+          {% for inTag in product.tags %}
+            {% if inTag contains 'color_explicit' %}
+              {% if shop.locale == 'en' %}
+                {% assign V_M_label = 'Color' %}  
+              {% else %}
+                {% assign V_M_label = 'Couleur' %}
+              {% endif %}
+              {% assign V_label = inTag | split:'color_explicit:' | last %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+          {% break %}
+        {% elsif tag_s == 'category:bed' %}
+          {% assign Val_avail = true %}
+          {% for inTag in product.tags %}
+            {% if inTag contains 'color_bed_frame_explicit' %}
+              {% if shop.locale == 'en' %}
+                {% assign V_M_label = 'Color' %}  
+              {% else %}
+                {% assign V_M_label = 'Couleur' %}
+              {% endif %}
+              {% assign V_label = inTag | split:'color_bed_frame_explicit:' | last %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+          {% break %}
+        {% elsif tag_s == 'category:cushion_espace' %}
+          {% assign Val_avail = true %}
+          {% for inTag in product.tags %}
+            {% if inTag contains 'color_cover_explicit' %}
+              {% if shop.locale == 'en' %}
+                {% assign V_M_label = 'Color' %}  
+              {% else %}
+                {% assign V_M_label = 'Couleur' %}
+              {% endif %}
+              {% assign V_label = inTag | split:'color_cover_explicit:' | last %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+          {% break %}
+        {% elsif tag_s == 'category:bedding_espace' %}
+          {% assign Val_avail = true %}
+          {% for inTag in product.tags %}
+            {% if inTag contains 'color_cover_explicit' %}
+              {% if shop.locale == 'en' %}
+                {% assign V_M_label = 'Color' %}  
+              {% else %}
+                {% assign V_M_label = 'Couleur' %}
+              {% endif %}
+              {% assign V_label = inTag | split:'color_cover_explicit:' | last %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+          {% break %}
+        {% elsif tag_s == 'category:dresser' %}
+          {% assign Val_avail = true %}
+          {% for inTag in product.tags %}
+            {% if inTag contains 'color_structure_explicit' %}
+              {% if shop.locale == 'en' %}
+                {% assign V_M_label = 'Color' %}  
+              {% else %}
+                {% assign V_M_label = 'Couleur' %}
+              {% endif %}
+              {% assign V_label = inTag | split:'color_structure_explicit:' | last %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+          {% break %}
+        {% elsif tag_s == 'category:bench' %}
+          {% assign Val_avail = true %}
+          {% for inTag in product.tags %}
+            {% if inTag contains 'color_cover_explicit' %}
+              {% if shop.locale == 'en' %}
+                {% assign V_M_label = 'Color' %}  
+              {% else %}
+                {% assign V_M_label = 'Couleur' %}
+              {% endif %}
+              {% assign V_label = inTag | split:'color_cover_explicit:' | last %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+          {% break %}
+        {% elsif tag_s == 'category:accent_chair_espace' %}
+          {% assign Val_avail = true %}
+          {% for inTag in product.tags %}
+            {% if inTag contains 'color_seat_explicit' %}
+              {% if shop.locale == 'en' %}
+                {% assign V_M_label = 'Color' %}  
+              {% else %}
+                {% assign V_M_label = 'Couleur' %}
+              {% endif %}
+              {% assign V_label = inTag | split:'color_seat_explicit:' | last %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+          {% break %}
+        {% elsif tag_s == 'category:sofa_espace' %}
+          {% assign Val_avail = true %}
+          {% for inTag in product.tags %}
+            {% if inTag contains 'color_cover_explicit' %}
+              {% if shop.locale == 'en' %}
+                {% assign V_M_label = 'Color' %}  
+              {% else %}
+                {% assign V_M_label = 'Couleur' %}
+              {% endif %}
+              {% assign V_label = inTag | split:'color_cover_explicit:' | last %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+          {% break %}
+        {% elsif tag_s == 'category:accent_chair_espace' %}
+          {% assign Val_avail = true %}
+          {% for inTag in product.tags %}
+            {% if inTag contains 'color_cover_explicit' %}
+              {% if shop.locale == 'en' %}
+                {% assign V_M_label = 'Color' %}  
+              {% else %}
+                {% assign V_M_label = 'Couleur' %}
+              {% endif %}
+              {% assign V_label = inTag | split:'color_cover_explicit:' | last %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+          {% break %}
+        {% elsif tag_s == 'category:tv_stand_espace' %}
+          {% assign Val_avail = true %}
+          {% for inTag in product.tags %}
+            {% if inTag contains 'color_structure_explicit' %}
+              {% if shop.locale == 'en' %}
+                {% assign V_M_label = 'Color' %}  
+              {% else %}
+                {% assign V_M_label = 'Couleur' %}
+              {% endif %}
+              {% assign V_label = inTag | split:'color_structure_explicit:' | last %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+          {% break %}
+        {% elsif tag_s == 'category:mattress_espace' %}
+          {% assign Val_avail = true %}
+          {% for inTag in product.tags %}
+            {% if inTag contains 'mattress_bed_size' %}
+              {% if shop.locale == 'en' %}
+                {% assign V_M_label = 'Size' %}  
+              {% else %}
+                {% assign V_M_label = 'Taille' %}
+              {% endif %}
+              {% assign V_label = inTag | split:'mattress_bed_size:' | last %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+          {% break %}
+        {% elsif tag_s == 'mattress_bed_size:king' %}
+          {% assign Val_avail = true %}
+          {% for inTag in product.tags %}
+            {% if inTag contains 'mattress_bed_size' %}
+              {% if shop.locale == 'en' %}
+                {% assign V_M_label = 'Size' %}  
+              {% else %}
+                {% assign V_M_label = 'Taille' %}
+              {% endif %}
+              {% assign V_label = inTag | split:'mattress_bed_size:' | last %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+          {% break %}
+        {% endif %}
+      {% endfor %}
+
+      {% if Val_avail == true %}
+        {{ V_M_label }} : <span class="select_val">{% if V_label != blank %}{{ V_label }}{% endif %}</span>
+      {% else %}
+        {% if shop.locale == 'en' %}Color{% else %}Couleur{% endif %} : 
+      {% endif %}
+      
+      {% comment %}<span class="select_val"></span>{% endcomment %}
+    </label>
+    <ul class="product_list"></ul>
+  </div>
+</div>
+
+
+
+{% if product.metafields.pimData.structure != blank %}
+<script>
+  var remove_quotes = `{{product.metafields.pimData.structure}}`;
+  var resultr = [];
+  if(remove_quotes.charAt(0) == '"'){
+    remove_quotes = remove_quotes.replace('"{','{').replace('}"','}')
+  }
+  var store_data = JSON.parse(remove_quotes);
+  console.log('variant json -->',store_data);
+  for(var i=0;i<store_data.variants.length;i++){
+    resultr.push(store_data.variants[i].handle);
+  }
+  resultr.forEach((curr_handle,index) => {
+    
+    fetch('/products/'+curr_handle+'.js',{ method:'GET', headers: {
+      'Content-Type': 'application/json'} 
+    }).then((response) =>{
+      if(response.status == 200){
+        return response.json();
+      };
+    }).then(data =>{ 
+      if(data){
+        let cuurentProductHandle = `{{ product.handle}}`;
+        if(document.querySelector('.append_swatch .Color_swatch .product_list')){
+          document.querySelector('.append_swatch .Color_swatch .product_list').innerHTML += `<li class="${data.handle == cuurentProductHandle ? 'active' : '' }"><a href="${data.url}"><img src="${data.featured_image}"></a></li>`;
+        }
+      }
+      if((resultr.length - 1) == index){
+        if(document.querySelectorAll('.append_swatch .Color_swatch .product_list li').length > 0){
+          document.querySelector('.append_swatch .Color_swatch').classList.remove('hidden');
+        }
+      }
+    })
+  });
+</script>
+{% endif %}

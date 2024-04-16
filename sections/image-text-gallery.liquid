@@ -1,0 +1,194 @@
+<link rel="stylesheet" href="{{ 'image-text-gallery.css' | asset_url }}" media="print" onload="this.media='all'">
+<noscript>{{ 'image-text-gallery.css' | asset_url | stylesheet_tag }}</noscript>
+
+{%- assign spacing-top = section.settings.spacing-top | times: 1 -%}
+{%- assign spacing-bottom = section.settings.spacing-bottom | times: 1 -%}
+{%- if spacing-top > 0 or spacing-bottom > 0 -%}
+  {%- if spacing-top == 0 %}{% assign spacing-top = '' %}{% endif -%}
+  {%- if spacing-top == 0 %}{% assign spacing-bottom = '' %}{% endif -%}
+  {%- style -%}
+    {%- if spacing-top >= 60 -%}
+      #shopify-section-{{ section.id }} {
+        padding-top: {{ spacing-top | times: 0.7 | round | at_least: 20 }}px;
+        padding-bottom: {{ spacing-bottom | times: 0.7 | round | at_least: 20 }}px;
+      }
+      @media screen and (min-width: 750px){
+        #shopify-section-{{ section.id }} { padding-top: {{ spacing-top }}px; padding-bottom: {{ spacing-bottom }}px; }
+      }
+    {%- else -%}
+      #shopify-section-{{ section.id }} { padding-top: {{ spacing-top }}px; padding-bottom: {{ spacing-bottom }}px; }
+    {%- endif -%}
+  {%- endstyle -%}  
+{%- endif -%}
+
+
+{%- for block in section.blocks -%}
+  
+  {%- capture mainImages -%}
+    {%- if block.settings.image != blank -%}
+      {%- if mainImages != blank -%}{{ mainImages }}{%- endif -%}
+        <div class="swiper-slide">
+          <div class="gallery-big-row">
+            <div class="left-col">
+              <div class="img-box">
+                {%- assign altText = block.settings.image.alt | default: block.settings.title -%}
+                {{ block.settings.image | image_url: width: 1440 | image_tag: loading: 'lazy', alt: altText }}
+              </div>
+            </div>
+            {%- if block.settings.title != blank or block.settings.btn_label != blank -%}
+              <div class="right-col">
+                <div class="gallery-slider-info">
+                  <div class="gallery-info-bottom">
+                    {%- if block.settings.caption != blank -%}
+                      <h6 class="medium-hide large-up-hide">{{ block.settings.caption }}</h6>
+                    {%- endif -%}
+                    {%- if block.settings.title != blank -%}
+                      <h2>{{ block.settings.title }}</h2>
+                    {%- endif -%}
+                    {%- if block.settings.btn_label != blank -%}
+                      <a {% if block.settings.btn_link == blank %}role="link" aria-disabled="true"{% else %}href="{{ block.settings.btn_link }}"{% endif %}
+                        class="link link-btn underline-link-btn link-btn-arrow"
+                      >
+                        {{- block.settings.btn_label -}}
+                        {%- render 'icon-long-arrow-right' -%}
+                      </a>
+                    {%- endif -%}
+                  </div>
+                </div>
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+    {%- endif -%}
+  {%- endcapture -%}
+  
+  {%- capture thumbImages -%}
+    {%- if block.settings.image != blank -%}
+      {%- if thumbImages != blank -%}{{ thumbImages }}{%- endif -%}
+      <div class="swiper-slide">
+        <div class="img-box">
+          {%- assign altText = block.settings.image.alt | default: block.settings.title -%}
+          {{ block.settings.image | image_url: width: 400 | image_tag: loading: 'lazy', alt: altText }}
+        </div>
+      </div>
+    {%- endif -%}
+  {%- endcapture -%}
+  
+{%- endfor -%}
+
+
+
+{%- if mainImages != blank and thumbImages != blank -%}
+  <div class="page-width">
+  
+    <div class="slider-mobile-gutter swiper gallery-big-slider" data-image-text-gallery-slider>
+      <div class="swiper-wrapper grid grid--1-col-tablet-down slider slider--mobile grid--peek">
+        <div class="swiper-pagination small-hide"></div>
+        {{ mainImages | strip_newlines }}
+      </div>
+    </div>
+  
+    <div thumbsSlider="" class="swiper gallery-thumb-slider small-hide" data-image-text-gallery-thumb-slider>
+      <div class="swiper-wrapper">{{ thumbImages | strip_newlines }}</div>
+    </div>
+    
+  </div>
+{%- endif -%}
+
+
+
+{% schema %}
+{
+  "name": "Image gallery slider",
+  "tag": "section",
+  "class": "section image-text-gallery",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "No section settings present. All settings are present in block."
+    },
+    {
+      "type": "header",
+      "content": "Section spacing"
+    },
+    {
+      "type": "range",
+      "id": "spacing-top",
+      "min": 0,
+      "max": 150,
+      "step": 10,
+      "default": 0,
+      "unit": "px",
+      "label": "Section margin top"
+    },
+    {
+      "type": "range",
+      "id": "spacing-bottom",
+      "min": 0,
+      "max": 150,
+      "step": 10,
+      "default": 0,
+      "unit": "px",
+      "label": "Section margin bottom"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Gallery image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "900X600 .jpg recommended"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "default": "E67 Kitchen",
+          "label": "Caption",
+          "info": "Visible only in small device"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "default": "Spaces to <br/> be Together",
+          "label": "Section title"
+        },
+        {
+          "type": "text",
+          "id": "btn_label",
+          "default": "Shop Kitchen",
+          "label": "Button label"
+        },
+        {
+          "type": "url",
+          "id": "btn_link",
+          "label": "Button link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image gallery slider",
+      "blocks": [
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+

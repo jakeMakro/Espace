@@ -1,0 +1,274 @@
+{%- capture collectionsTitle -%}{%- endcapture -%}
+
+{%- capture collectionsTabs -%}
+  {%- assign counter = 0 -%}
+  
+  {%- for block in section.blocks -%}
+    {%- if block.settings.collection != blank and block.settings.collection.all_products_count > 0 -%}
+      
+      {% assign collection = block.settings.collection %}
+      {%- capture collectionsTitle -%}
+        {{ collectionsTitle }}
+        <button {% if counter == 0 %}class="active"{% endif %} data-handle="{{ collection.handle }}-{{ forloop.index }}" data-coll-tab-btn>{{ block.settings.title | default: collection.title }}</button>
+      {%- endcapture -%}
+      
+          {% if section.settings.grid_style == 'slider' %}
+            
+              <div class="collections-tabs-item-wrap{% if counter == 0 %} active{% endif %}" data-handle="{{ collection.handle }}-{{ forloop.index }}">
+                <slider-component class="slider-mobile-gutter swiper collections-tabs-item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}" data-coll-tab-item>
+                  {% else %}
+                    <div class="collections-tabs-item{% if counter == 0 %} active{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}" data-handle="{{ collection.handle }}-{{ forloop.index }}" data-coll-tab-item>
+                  {% endif %}
+          
+                    <div class="{% if section.settings.grid_style == 'slider' %}swiper-wrapper{% endif %} grid product-grid contains-card contains-card--product contains-card--standard grid--4-col-desktop grid--2-col-tablet-down {% if section.settings.grid_style == 'slider' %} slider slider--tablet grid--peek{% endif %}">
+                      {%- for product in collection.products limit: 16 -%}
+                        <li class="grid__item{% if section.settings.grid_style == 'slider' %} swiper-slide slider__slide{% endif %}">
+                          {% render 'card-product',
+                            card_product: product,
+                            media_aspect_ratio: 'portrait',
+                            image_shape: 'default',
+                            show_secondary_image: section.settings.show_secondary_image,
+                            show_vendor: section.settings.show_vendor,
+                            show_rating: section.settings.show_rating,
+                            show_quick_add: false,
+                            section_id: section.id
+                          %}
+                        </li>
+                      {%- endfor -%}
+                    </div>
+
+                      
+                    {%- if section.settings.grid_style == 'load_more' -%}
+                      <div class="link-wrap load_more_style">
+                        {%- if collection.all_products_count > 4 -%}
+                          <button class="coll-tab-load-more button primary-btn large-up-hide{% if collection.all_products_count <= 8 %} medium-hide{% endif %}{% if collection.all_products_count <= 4 %} small-hide{% endif %}" data-coll-tab-loadmore-mob>
+                            <span>{% render 'icon-loading' %}{{ section.settings.load_more | default:"Load more" }}</span>
+                          </button>
+                        {%- endif -%}
+                        {% comment %}
+                        {%- if collection.all_products_count > 8 -%}
+                          <div class="spacer medium-hide small-hide">/</div>
+                        {%- endif -%}
+                        {% endcomment %}
+                        {% if block.settings.link_label != blank %}
+                          <a class="link link-btn-arrow" href="{{ collection.url }}">{{ block.settings.link_label }}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="21" height="12" viewBox="0 0 21 12" fill="none">
+                              <path d="M14.3518 1L20 6M20 6L14.3518 11M20 6H0" stroke="black" stroke-width="2"/>
+                            </svg>
+                          </a>
+                        {% endif %}
+                      </div>
+                    {%- else -%}
+                      <div class="link-wrap">
+                        <a class="link link-btn-arrow" href="{{ collection.url }}">{{ block.settings.link_label }}
+                          <svg xmlns="http://www.w3.org/2000/svg" width="21" height="12" viewBox="0 0 21 12" fill="none">
+                            <path d="M14.3518 1L20 6M20 6L14.3518 11M20 6H0" stroke="black" stroke-width="2"/>
+                          </svg>
+                        </a>
+                      </div>
+                    {%- endif -%}
+
+
+                  {% if section.settings.grid_style == 'slider' %}
+                </slider-component>
+                    
+                {% if section.settings.grid_style == 'slider' %}
+                  <div class="slider-nav collections-tabs-nav{% if collection.all_products_count <= 4 %} hidden{% endif %} medium-hide small-hide">
+                    <div class="slider-btn slider-prev">{% render 'icon-slider-prev' %}</div>
+                    <div class="slider-btn slider-next">{% render 'icon-slider-next' %}</div>
+                  </div>
+                {% endif %}
+                              
+              </div>
+                  
+            
+          {% else %}
+      </div>
+      {% endif %}
+      
+      {%- assign counter = 1 -%}
+      
+    {%- endif -%}
+  {%- endfor -%}
+
+
+  
+{%- endcapture -%}
+
+
+
+{%- if collectionsTabs != blank -%}
+  <link rel="stylesheet" href="{{ 'component-card.css' | asset_url }}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{{ 'component-price.css' | asset_url }}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{{ 'component-slider.css' | asset_url }}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{{ 'template-collection.css' | asset_url }}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{{ 'collections-tabs.css' | asset_url }}" media="print" onload="this.media='all'">
+
+{%- assign spacing-top = section.settings.spacing-top | times: 1 -%}
+{%- assign spacing-bottom = section.settings.spacing-bottom | times: 1 -%}
+{%- if spacing-top > 0 or spacing-bottom > 0 -%}
+  {%- if spacing-top == 0 %}{% assign spacing-top = '' %}{% endif -%}
+  {%- if spacing-top == 0 %}{% assign spacing-bottom = '' %}{% endif -%}
+  {%- style -%}
+    {%- if spacing-top >= 60 -%}
+      #shopify-section-{{ section.id }} {
+        padding-top: {{ spacing-top | times: 0.7 | round | at_least: 20 }}px;
+        padding-bottom: {{ spacing-bottom | times: 0.7 | round | at_least: 20 }}px;
+      }
+      @media screen and (min-width: 750px){
+        #shopify-section-{{ section.id }} { padding-top: {{ spacing-top }}px; padding-bottom: {{ spacing-bottom }}px; }
+      }
+    {%- else -%}
+      #shopify-section-{{ section.id }} { padding-top: {{ spacing-top }}px; padding-bottom: {{ spacing-bottom }}px; }
+    {%- endif -%}
+  {%- endstyle -%}  
+{%- endif -%}
+                
+  <noscript><link rel="stylesheet" href="{{ 'component-card.css' | asset_url }}"></noscript>
+  <noscript><link rel="stylesheet" href="{{ 'component-price.css' | asset_url }}"></noscript>
+  <noscript><link rel="stylesheet" href="{{ 'component-slider.css' | asset_url }}"></noscript>
+  <noscript><link rel="stylesheet" href="{{ 'template-collection.css' | asset_url }}"></noscript>
+  <noscript><link rel="stylesheet" href="{{ 'collections-tabs.css' | asset_url }}"></noscript>
+         
+  <div class="collection collections-tabs-main colls-{{ section.settings.grid_style }}" data-collections-tabs>
+      {% if section.settings.head != blank or collectionsTitle != blank %}
+      <div class="page-width full-page-width">
+        <div class="section-head">
+          <div class="left-col">
+            {% if section.settings.head != blank %}<h2 class="h3">{{ section.settings.head }}</h2>{% endif %}
+          </div>
+          {% if collectionsTitle != blank %}<div class="collections-tabs-head">{{ collectionsTitle }}</div>{% endif %}
+        </div>
+      </div>
+      {% endif %}
+  
+      <div class="collections-tabs-wrap">
+        <div class="page-width full-page-width">
+          {{ collectionsTabs }}
+        </div>
+      </div>
+  </div>
+{%- endif -%}
+
+                          
+
+{% schema %}
+  {
+    "name": "Collections tabs",
+    "class": "collections-tabs section-padding-large0",
+    "tag": "section",
+    "settings": [
+      {
+        "type": "inline_richtext",
+        "id": "head",
+        "default": "Our Bestsellers",
+        "label": "Heading"
+      },
+      {
+        "type": "select",
+        "id": "grid_style",
+        "options": [
+          {
+            "value": "load_more",
+            "label": "Load more"
+          },
+          {
+            "value": "slider",
+            "label": "Slider"
+          }
+        ],
+        "default": "load_more",
+        "label": "Grid style"
+      },
+      {
+        "type": "inline_richtext",
+        "id": "load_more",
+        "default": "Load more Bestsellers",
+        "label": "Load more button label",
+        "info": "Visible only if > 8 products in desktop and > 4 products in mobile"
+      },
+      {
+        "type": "header",
+        "content": "Product card settings"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_secondary_image",
+        "default": false,
+        "label": "Show second image on hover"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_vendor",
+        "default": false,
+        "label": "Show vendor"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_rating",
+        "default": false,
+        "label": "Show product rating",
+        "info": "To display a rating, add a product rating app"
+      },
+    {
+      "type": "header",
+      "content": "Section spacing"
+    },
+    {
+      "type": "range",
+      "id": "spacing-top",
+      "min": 0,
+      "max": 150,
+      "step": 10,
+      "default": 150,
+      "unit": "px",
+      "label": "Section margin top"
+    },
+    {
+      "type": "range",
+      "id": "spacing-bottom",
+      "min": 0,
+      "max": 150,
+      "step": 10,
+      "default": 0,
+      "unit": "px",
+      "label": "Section margin bottom"
+    }
+    ],
+    "blocks": [
+      {
+        "type": "collection",
+        "name": "Collection",
+        "settings": [
+          {
+            "type": "collection",
+            "id": "collection",
+            "label": "Collection",
+            "info":"Make sure collection have products"
+          },
+          {
+            "type": "inline_richtext",
+            "id": "title",
+            "label": "Title"
+          },
+          {
+            "type": "text",
+            "id": "link_label",
+            "label": "Link label"
+          }
+        ]
+      }
+    ],
+    "presets":[
+      {
+        "name":"Collections tabs"
+      }
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

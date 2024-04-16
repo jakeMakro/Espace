@@ -1,0 +1,118 @@
+.main-collection-banner{
+    overflow: hidden;
+}
+.collection--hero{
+  padding: 0 0 60px;
+}
+.collection-hero__inner{
+  display: block;
+}
+.collection--hero:not(.collection-hero--with-image) {
+  padding-top: 60px;
+}
+.collection-hero__title {
+  margin: 0;
+  font-size: 80px;
+  font-weight: 700;
+  line-height: 100%;
+  letter-spacing: -1.6px;
+  /* text-transform: capitalize; */
+}
+.main-collection-banner .breadcrumbs{
+  margin-top: 0;
+  justify-content: flex-start;
+}
+.collection-hero--with-image .left-col{
+  padding: 80px 0;
+}
+.collection-hero--with-image .collection-hero_text-wrapper{
+  padding-right: 80px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.collection-hero--with-image .row {
+    display: flex;
+    /* flex-wrap: wrap; */
+}
+.collection--hero .img-box{
+  position: relative;
+  padding-top: 55%;
+  height: 100%;
+}
+
+@media screen and (min-width: 750px){
+  .collection-hero--with-image .left-col{
+    width: 45%;
+  }
+  .collection-hero--with-image .right-col{
+      margin-right: -50vw;
+    width: 55vw;
+  }
+}
+
+@media screen and (max-width: 1199px){
+  .collection-hero__title{
+    font-size: 70px;
+  }
+  .collection--hero{
+    padding: 0 0 50px;
+  }
+  .collection--hero:not(.collection-hero--with-image) {
+    padding-top: 50px;
+  }
+  .collection-hero--with-image .collection-hero_text-wrapper{
+    padding-right: 40px;
+  }
+  .collection-hero--with-image .left-col{
+    padding: 30px 0;
+  }
+}
+@media screen and (max-width: 989px){
+  .collection-hero__title{
+    font-size: 60px;
+  }
+  .collection--hero{
+    padding: 0 0 40px;
+  }
+  .collection--hero:not(.collection-hero--with-image) {
+    padding-top: 40px;
+  }
+  .collection-hero--with-image .collection-hero_text-wrapper{
+    padding-right: 30px;
+  }
+}
+@media screen and (max-width: 749px){
+  .collection-hero__title{
+    font-size: 50px;
+  }
+  .collection-hero .breadcrumbs{
+    justify-content: flex-start;
+  }
+  .collection--hero{
+    padding: 0 0 40px;
+  }
+  .collection--hero:not(.collection-hero--with-image) {
+    padding-top: 30px;
+  }
+  .collection-hero--with-image .collection-hero_text-wrapper{
+    padding-right: 0;
+  }
+  .collection-hero--with-image .left-col{
+    padding-bottom: 0;
+  }
+  .main-collection-banner .collection-hero--with-image .collection-hero__inner {
+    padding-bottom: 0;
+  }
+  .collection-hero--with-image .row{
+    flex-direction: column-reverse;
+  }
+  .new-collection-hero .right-col{
+    width: 100%;
+  }
+  .collection--hero .img-box{
+    margin: 0 -20px;
+    padding-top: 100%;
+  }
+}

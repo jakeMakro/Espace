@@ -1,0 +1,33 @@
+.main-page-title { text-align: center; font-size: 40px; font-style: normal; font-weight: 700; line-height: 1.2; text-transform: capitalize;  letter-spacing: 0; }
+
+.warranty-form { margin: 50px 0 0; font-weight: 400; letter-spacing: 0; }
+  .warranty-form .error-msg { font-size: 12px; display: inline-block; line-height: 1; margin-top: 5px; position: absolute; left: 0; top: 100%; opacity: 0; }
+  .warranty-form .error-msg.active { opacity: 1; display: block !important; }
+
+  .warranty-form input[type="text"], 
+  .warranty-form input[type="email"] {
+    border-width: 0 0 1px; font-size: 14px; font-weight: 400; line-height: 1; padding: 15px 0; width: 100%; border-color: #B8B8B8;  outline: none; box-shadow: none; }
+
+  .warranty-form input[type="text"]::placeholder,
+  .warranty-form input[type="email"]::placeholder { color: #B8B8B8; }
+  .warranty-form input[type="text"]::-webkit-input-placeholder,
+  .warranty-form input[type="email"]::-webkit-input-placeholder { color: #B8B8B8; }
+
+  
+  .form__input-wrapper { margin-bottom: 25px; position: relative; }
+    .form__input-wrapper label { display: none; }
+  
+  .input-grp { display: flex; gap: 40px; width: 100%; }
+    .input-grp .form__input-wrapper { flex: 1 1 auto; }  
+
+  .form__submit { display: block; width: 100%; max-width: 121px; margin-left: auto; margin-right: auto; margin-top: 50px; border-radius: 5px; font-size: 16px; font-weight: 500; line-height: 1; letter-spacing: 0; min-height: 50px; }
+    .form__submit:before,
+    .form__submit:after { border-radius: 5px; }
+
+@media screen and (max-width: 749px){
+  .main-page-title { font-size: 32px; }
+  
+  .input-grp { flex-direction: column; gap: 0; }
+  .warranty-form { margin-top: 25px; }
+  .form__submit { margin-top: 40px; }
+}

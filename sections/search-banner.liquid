@@ -1,0 +1,40 @@
+
+<style>
+  .search-banner{padding: 60px 0;}  
+</style>
+
+<div class="collection--hero color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width">
+    {% render 'breadcrumb' %}
+    <h1 class="collection-hero__title">
+      Recherche
+    </h1>
+  </div>
+</div>
+
+
+{% schema %}
+  {
+    "name": "Search Banner",
+    "class": "search-banner",
+    "settings": [
+      {
+        "type": "color_scheme",
+        "id": "color_scheme",
+        "label": "t:sections.all.colors.label",
+        "default": "background-1"
+      }
+    ],
+    "presets":[
+      {
+        "name":"Search Banner"
+      }
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

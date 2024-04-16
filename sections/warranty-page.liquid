@@ -1,0 +1,132 @@
+{{ 'section-contact-form.css' | asset_url | stylesheet_tag }}
+{{ 'section-main-page.css' | asset_url | stylesheet_tag }}
+{{ 'section-appliance-repair.css' | asset_url | stylesheet_tag }}
+{% comment %}{{ 'section-warranty-page.css' | asset_url | stylesheet_tag }}{% endcomment %}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="page-width section-{{ section.id }}-padding">
+  <div class="page-width--narrow" style="margin-left: auto; margin-right: auto;">
+      {% if section.settings.title != blank %}
+        <h1 class="main-page-title page-title h0{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
+          {{ section.settings.title }}
+        </h1>
+      {% endif %}
+      <div class="warranty-form contact-form-wrapper">
+        <div id="success-msg" class="center"></div>
+        <form id="submit_offer_{{section.id}}" class="return_warranty" action="{{ section.settings.form_action }}" method="post">
+    
+            <div class="contact__fields input-grp">
+              <div class="field form__input-wrapper form__input-wrapper--labelled half-input">            
+                <input id="customer-firstname" placeholder="Nom*"  type="text" class="field__input field__required form__field form__field--text" name="customer-firstname" aria-label="{{ 'templates.contact.form.name' | t }}" value="">            
+                <span style="display:none;" class="error-msg">Veuillez remplir le champ.</span>
+                <label for="customer-firstname" class="field__label">Nom*</label>
+              </div>
+              <div class="field form__input-wrapper form__input-wrapper--labelled half-input">            
+                <input id="customer-lastname" placeholder="Prénom*" type="text" class="field__input field__required form__field form__field--text {% if customer.name != blank %}is-filled{% endif %}" name="customer-lastname" aria-label="{{ 'templates.contact.form.f_name' | t }}" {% if customer %}value="{{ customer.name }}"{% endif %}>            
+                <span style="display:none;" class="error-msg">Veuillez remplir le champ.</span>
+                <label for="customer-lastname" class="field__label">Prénom*</label>
+              </div>
+            </div>
+    
+            <div class="field form__input-wrapper form__input-wrapper--labelled">          
+              <input id="customer-Address" placeholder="Adresse civile*" type="text" class="field__input field__required form__field form__field--text" name="customer-Address" aria-label="Address" value="" />          
+              <span style="display:none;" class="error-msg">Veuillez remplir le champ.</span>
+              <label for="customer-Address" class="field__label">Adresse civile*</label>
+            </div>
+          
+            <div class="field form__input-wrapper form__input-wrapper--labelled">          
+              <input id="client-email" type="email" placeholder="Courriel du client*" class="field__input field__required form__field form__field--text" name="client-email" aria-label="client-email" {% if customer %}value="{{ customer.email }}"{% endif %}>          
+              <span style="display:none;" class="error-msg">Veuillez remplir le champ.</span>
+              <label for="client-email" class="field__label">Courriel du client*</label>
+            </div>
+          
+            <div class="field form__input-wrapper fIW_file form__input-wrapper form__input-wrapper--labelled">          
+              <input id="customer-order" type="text" placeholder="Contrat ou commande d'achat*" class="field__input field__required form__field form__field--text" name="customer-order" aria-label="{{ 'templates.contact.form.order' | t }}" value="">
+              <span style="display:none;" class="error-msg">Veuillez remplir le champ.</span>
+              <label for="customer-order" class="field__label">Contrat ou commande d'achat*</label>
+            </div>
+          
+            <div class="field form__input-wrapper form__input-wrapper--labelled">          
+              <input id="customer-Telephone" placeholder="Tél pour vous joindre*" type="text" class="field__input field__required form__field form__field--text" name="customer-Telephone" aria-label="Phone" value="">          
+              <span style="display:none;" class="error-msg">Veuillez remplir le champ.</span>
+              <label for="customer-Telephone" class="field__label">Tél pour vous joindre*</label>
+            </div>
+          
+            <button type="submit" class="form__submit form__submit--centered button primary-btn button--primary button--min-width">Soumettre</button>
+    
+          </form>
+      </div>
+  </div>
+  
+</div>
+
+{% schema %}
+{
+  "name": "Warranty Page",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    
+    {
+      "type": "header",
+      "content": "Warranty Form"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Remboursement du plan de protection"
+    },
+    {
+      "type": "text",
+      "id": "form_action",
+      "label": "webhook Link",
+      "default": "#"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ]
+}
+{% endschema %}
+<script defer="defer">UPLOADCARE_PUBLIC_KEY = "demopublickey";
+  {% if canonical_url contains '/en' %}
+  	UPLOADCARE_LOCALE = 'en';
+  {% else %}
+	UPLOADCARE_LOCALE = 'fr';
+  {% endif %}
+</script>
