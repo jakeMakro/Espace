@@ -53,7 +53,7 @@
             "desc": "",
             "desc_color": "#ffffff",
             "button_label": "Découvrez notre sélection de sectionnels",
-            "link": "shopify:\/\/collections\/sectionnel-et-sofa-modulaire",
+            "link": "shopify:\/\/collections\/divan-sectionnel",
             "btn_color": "#ffffff",
             "btn_hover_color": "#ffffff",
             "box_align": "bottom-left",
@@ -173,7 +173,7 @@
           "settings": {
             "image": "shopify:\/\/shop_images\/907568.jpg",
             "title": "Sectionnel",
-            "collection": "sectionnel-et-sofa-modulaire",
+            "collection": "divan-sectionnel",
             "url": ""
           }
         },
