@@ -182,7 +182,7 @@
           "settings": {
             "image": "shopify:\/\/shop_images\/Sans_titre.png",
             "title": "Lit",
-            "collection": "lit",
+            "collection": "base-lit",
             "url": "shopify:\/\/collections\/all"
           }
         },
