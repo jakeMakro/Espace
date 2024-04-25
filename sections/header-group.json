@@ -1,1 +1,181 @@
-{"name":"t:sections.header.name","type":"header","sections":{"announcement-bar":{"type":"announcement-bar","blocks":{"1c1a2bab-ae35-4593-9179-8505294d7230":{"type":"announcement","settings":{"text":"Livraison GRATUITE avec le code: Freeship67","link":"shopify:\/\/pages\/cueillette-et-livraison"}}},"block_order":["1c1a2bab-ae35-4593-9179-8505294d7230"],"settings":{"color_scheme":"inverse","text_color":"#ffffff"}},"header":{"type":"header","blocks":{"7a1a1992-85ea-4948-bbee-d6842eb53c8f":{"type":"menu-images","settings":{"menu_title":"Meubles","promo_1_st_date":"2023-01-01","promo_1_end_date":"2024-06-01","image_1":"shopify:\/\/shop_images\/Sieges.jpg","title_1":"Soirée film","description_1":"Assurez-vous de profiter d’un maximum de confort lors de vos \nsoirées cinéma maison.","btn_title_1":"Magasinez ici","link_1":"shopify:\/\/collections\/soiree-film","promo_2_st_date":"2023-01-01","promo_2_end_date":"2024-06-01","image_2":"shopify:\/\/shop_images\/709800_lifestyle_3.jpg","title_2":"Nouveautés","description_2":"Restez à l’affut des tendances en découvrant nos derniers \narrivages.","btn_title_2":"Magasinez les nouveautés","link_2":"shopify:\/\/collections\/nouveaute-1"}},"header-0":{"type":"menu-images","settings":{"menu_title":"Électroménagers","promo_1_st_date":"2023-01-01","promo_1_end_date":"2024-06-01","image_1":"shopify:\/\/shop_images\/Image.jpg","title_1":"L’art est dans les détails avec Blomberg.","description_1":"Explorez des produits au design élégant conçus pour rendre la \nvie plus facile grâce à leurs innovations.","btn_title_1":"Magasinez les produits Blomberg","link_1":"shopify:\/\/collections\/blombert","promo_2_st_date":"2023-01-01","promo_2_end_date":"2024-06-01","image_2":"shopify:\/\/shop_images\/Image_47.png","title_2":"L’élégance avec l’acier inoxydable noir","description_2":"Rehaussez le style de votre cuisine en optant pour nos \nélectroménagers en acier inoxydable noir.","btn_title_2":"Explorez les électroménagers","link_2":"shopify:\/\/collections\/electromenager"}},"3ac7f3e9-efa8-40ce-981b-c5fe595e3ff8":{"type":"menu-images","settings":{"menu_title":"Matelas","promo_1_st_date":"2023-01-01","promo_1_end_date":"2024-06-01","image_1":"shopify:\/\/shop_images\/Image-7.jpg","title_1":"Nouveau matelas, nouvelle literie !","description_1":"Profitez d’un sommeil réparateur avec votre nouveau matelas \net votre literie fraiche.","btn_title_1":"Voir la literie","link_1":"shopify:\/\/collections\/literie","promo_2_st_date":"2023-01-01","promo_2_end_date":"2024-06-01","image_2":"shopify:\/\/shop_images\/Les_matelas_en_boites_un_confort_simplifie..jpg","title_2":"Les matelas en boîte, un confort simplifié.","description_2":"Révolutionnez votre sommeil avec les matelas en boite sans \ntracas.","btn_title_2":"Magasinez les matelas","link_2":"shopify:\/\/collections\/matelas-en-boite"}},"9d0b0a38-7305-4076-b26a-864ccc34407f":{"type":"menu-images","settings":{"menu_title":"Accessoires","promo_1_st_date":"2023-01-01","promo_1_end_date":"2024-06-01","image_1":"shopify:\/\/shop_images\/681889_lifestyle_2_2636c460-bec6-414e-a310-95f8dd6f5770.jpg","title_1":"Chaque mur mérite d’être embelli.","description_1":"Donnez du caractère à votre espace avec nos décorations murales.","btn_title_1":"Explorez notre sélection","link_1":"shopify:\/\/collections\/decoration-murale","promo_2_st_date":"2023-01-01","promo_2_end_date":"2024-06-01","image_2":"shopify:\/\/shop_images\/Laisser_la_nature_entrer_sans_tracas..jpg","title_2":"Laissez la nature entrer, tout simplement.","description_2":"Ajoutez de la vie à votre espace avec nos plantes artificielles.","btn_title_2":"Explorez notre sélection","link_2":"shopify:\/\/collections\/plantes-artificielles"}},"98dc59d1-c1e2-4484-ae90-b933d3e2973c":{"type":"menu-images","disabled":true,"settings":{"menu_title":"EXTÉRIEUR","promo_1_st_date":"2023-01-01","promo_1_end_date":"2023-12-12","image_1":"shopify:\/\/shop_images\/Image-min.jpg","title_1":"Outdoors Season","description_1":"Lorem ipsum dolor sit amet, consectetur adipiscing elit.","btn_title_1":"Shop Now","link_1":"","promo_2_st_date":"2023-01-01","promo_2_end_date":"2023-12-12","image_2":"shopify:\/\/shop_images\/Image_1_-min.jpg","title_2":"Best Gift Ideas","description_2":"Lorem ipsum dolor sit amet, consectetur adipiscing elit.","btn_title_2":"Shop Featured Products","link_2":""}},"4168cbaa-1ea6-45e7-8f01-f1805c55fdb4":{"type":"menu-images","settings":{"menu_title":"Pièces","promo_1_st_date":"2023-12-13","promo_1_end_date":"2024-01-12","title_1":"Décor moderne","description_1":"Faites le choix d'un style épuré et tendance.","btn_title_1":"Découvrir la sélection.","link_1":"shopify:\/\/collections\/decor-moderne","promo_2_st_date":"2023-12-13","promo_2_end_date":"2024-06-01","image_2":"shopify:\/\/shop_images\/698978_7_lifestyle.jpg","title_2":"La dernière étape : s'amuser avec la décoration.","description_2":"Créer un espace à votre image en exprimant votre créativité.","btn_title_2":"Trouver l'inspiration déco.","link_2":"shopify:\/\/collections\/decorations"}}},"block_order":["7a1a1992-85ea-4948-bbee-d6842eb53c8f","header-0","3ac7f3e9-efa8-40ce-981b-c5fe595e3ff8","9d0b0a38-7305-4076-b26a-864ccc34407f","98dc59d1-c1e2-4484-ae90-b933d3e2973c","4168cbaa-1ea6-45e7-8f01-f1805c55fdb4"],"settings":{"help_text":"Centre d'aide","help_menu":"help-center","store_text":"Trouver un magasin","store_link":"shopify:\/\/pages\/trouver-un-magasin","logo_position":"top-left","menu":"new-menu","menu_type_desktop":"dropdown","menu_additional":"additional-menu","sticky_header_type":"always","show_line_separator":true,"color_scheme":"background-1","enable_country_selector":false,"enable_language_selector":true,"mobile_logo_position":"center","margin_bottom":0,"padding_top":20,"padding_bottom":20}}},"order":["announcement-bar","header"]}
+{
+  "name": "t:sections.header.name",
+  "type": "header",
+  "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "blocks": {
+        "1c1a2bab-ae35-4593-9179-8505294d7230": {
+          "type": "announcement",
+          "settings": {
+            "text": "Livraison GRATUITE avec le code: Freeship67",
+            "link": "shopify:\/\/pages\/cueillette-et-livraison"
+          }
+        }
+      },
+      "block_order": [
+        "1c1a2bab-ae35-4593-9179-8505294d7230"
+      ],
+      "settings": {
+        "color_scheme": "inverse",
+        "text_color": "#ffffff"
+      }
+    },
+    "header": {
+      "type": "header",
+      "blocks": {
+        "7a1a1992-85ea-4948-bbee-d6842eb53c8f": {
+          "type": "menu-images",
+          "settings": {
+            "menu_title": "Meubles",
+            "promo_1_st_date": "2023-01-01",
+            "promo_1_end_date": "2024-06-01",
+            "image_1": "shopify:\/\/shop_images\/Sieges.jpg",
+            "title_1": "Soirée film",
+            "description_1": "Assurez-vous de profiter d’un maximum de confort lors de vos \nsoirées cinéma maison.",
+            "btn_title_1": "Magasinez ici",
+            "link_1": "shopify:\/\/collections\/soiree-film",
+            "promo_2_st_date": "2023-01-01",
+            "promo_2_end_date": "2024-06-01",
+            "image_2": "shopify:\/\/shop_images\/709800_lifestyle_3.jpg",
+            "title_2": "Nouveautés",
+            "description_2": "Restez à l’affut des tendances en découvrant nos derniers \narrivages.",
+            "btn_title_2": "Magasinez les nouveautés",
+            "link_2": "shopify:\/\/collections\/nouveaute-1"
+          }
+        },
+        "header-0": {
+          "type": "menu-images",
+          "settings": {
+            "menu_title": "Électroménagers",
+            "promo_1_st_date": "2023-01-01",
+            "promo_1_end_date": "2024-06-01",
+            "image_1": "shopify:\/\/shop_images\/Image.jpg",
+            "title_1": "L’art est dans les détails avec Blomberg.",
+            "description_1": "Explorez des produits au design élégant conçus pour rendre la \nvie plus facile grâce à leurs innovations.",
+            "btn_title_1": "Magasinez les produits Blomberg",
+            "link_1": "shopify:\/\/collections\/blombert",
+            "promo_2_st_date": "2023-01-01",
+            "promo_2_end_date": "2024-06-01",
+            "image_2": "shopify:\/\/shop_images\/Image_47.png",
+            "title_2": "L’élégance avec l’acier inoxydable noir",
+            "description_2": "Rehaussez le style de votre cuisine en optant pour nos \nélectroménagers en acier inoxydable noir.",
+            "btn_title_2": "Explorez les électroménagers",
+            "link_2": "shopify:\/\/collections\/electromenager"
+          }
+        },
+        "3ac7f3e9-efa8-40ce-981b-c5fe595e3ff8": {
+          "type": "menu-images",
+          "settings": {
+            "menu_title": "Matelas",
+            "promo_1_st_date": "2023-01-01",
+            "promo_1_end_date": "2024-06-01",
+            "image_1": "shopify:\/\/shop_images\/Image-7.jpg",
+            "title_1": "Nouveau matelas, nouvelle literie !",
+            "description_1": "Profitez d’un sommeil réparateur avec votre nouveau matelas \net votre literie fraiche.",
+            "btn_title_1": "Voir la literie",
+            "link_1": "shopify:\/\/collections\/literie",
+            "promo_2_st_date": "2023-01-01",
+            "promo_2_end_date": "2024-06-01",
+            "image_2": "shopify:\/\/shop_images\/Les_matelas_en_boites_un_confort_simplifie..jpg",
+            "title_2": "Les matelas en boîte, un confort simplifié.",
+            "description_2": "Révolutionnez votre sommeil avec les matelas en boite sans \ntracas.",
+            "btn_title_2": "Magasinez les matelas",
+            "link_2": "shopify:\/\/collections\/matelas-en-boite"
+          }
+        },
+        "9d0b0a38-7305-4076-b26a-864ccc34407f": {
+          "type": "menu-images",
+          "settings": {
+            "menu_title": "Accessoires",
+            "promo_1_st_date": "2023-01-01",
+            "promo_1_end_date": "2024-06-01",
+            "image_1": "shopify:\/\/shop_images\/681889_lifestyle_2_2636c460-bec6-414e-a310-95f8dd6f5770.jpg",
+            "title_1": "Chaque mur mérite d’être embelli.",
+            "description_1": "Donnez du caractère à votre espace avec nos décorations murales.",
+            "btn_title_1": "Explorez notre sélection",
+            "link_1": "shopify:\/\/collections\/decoration-murale",
+            "promo_2_st_date": "2023-01-01",
+            "promo_2_end_date": "2024-06-01",
+            "image_2": "shopify:\/\/shop_images\/Laisser_la_nature_entrer_sans_tracas..jpg",
+            "title_2": "Laissez la nature entrer, tout simplement.",
+            "description_2": "Ajoutez de la vie à votre espace avec nos plantes artificielles.",
+            "btn_title_2": "Explorez notre sélection",
+            "link_2": "shopify:\/\/collections\/plante-artificielle"
+          }
+        },
+        "98dc59d1-c1e2-4484-ae90-b933d3e2973c": {
+          "type": "menu-images",
+          "disabled": true,
+          "settings": {
+            "menu_title": "EXTÉRIEUR",
+            "promo_1_st_date": "2023-01-01",
+            "promo_1_end_date": "2023-12-12",
+            "image_1": "shopify:\/\/shop_images\/Image-min.jpg",
+            "title_1": "Outdoors Season",
+            "description_1": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+            "btn_title_1": "Shop Now",
+            "link_1": "",
+            "promo_2_st_date": "2023-01-01",
+            "promo_2_end_date": "2023-12-12",
+            "image_2": "shopify:\/\/shop_images\/Image_1_-min.jpg",
+            "title_2": "Best Gift Ideas",
+            "description_2": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+            "btn_title_2": "Shop Featured Products",
+            "link_2": ""
+          }
+        },
+        "4168cbaa-1ea6-45e7-8f01-f1805c55fdb4": {
+          "type": "menu-images",
+          "settings": {
+            "menu_title": "Pièces",
+            "promo_1_st_date": "2023-12-13",
+            "promo_1_end_date": "2024-01-12",
+            "title_1": "Décor moderne",
+            "description_1": "Faites le choix d'un style épuré et tendance.",
+            "btn_title_1": "Découvrir la sélection.",
+            "link_1": "shopify:\/\/collections\/decor-moderne",
+            "promo_2_st_date": "2023-12-13",
+            "promo_2_end_date": "2024-06-01",
+            "image_2": "shopify:\/\/shop_images\/698978_7_lifestyle.jpg",
+            "title_2": "La dernière étape : s'amuser avec la décoration.",
+            "description_2": "Créer un espace à votre image en exprimant votre créativité.",
+            "btn_title_2": "Trouver l'inspiration déco.",
+            "link_2": "shopify:\/\/collections\/decorations"
+          }
+        }
+      },
+      "block_order": [
+        "7a1a1992-85ea-4948-bbee-d6842eb53c8f",
+        "header-0",
+        "3ac7f3e9-efa8-40ce-981b-c5fe595e3ff8",
+        "9d0b0a38-7305-4076-b26a-864ccc34407f",
+        "98dc59d1-c1e2-4484-ae90-b933d3e2973c",
+        "4168cbaa-1ea6-45e7-8f01-f1805c55fdb4"
+      ],
+      "settings": {
+        "help_text": "Centre d'aide",
+        "help_menu": "help-center",
+        "store_text": "Trouver un magasin",
+        "store_link": "shopify:\/\/pages\/trouver-un-magasin",
+        "logo_position": "top-left",
+        "menu": "new-menu",
+        "menu_type_desktop": "dropdown",
+        "menu_additional": "additional-menu",
+        "sticky_header_type": "always",
+        "show_line_separator": true,
+        "color_scheme": "background-1",
+        "enable_country_selector": false,
+        "enable_language_selector": true,
+        "mobile_logo_position": "center",
+        "margin_bottom": 0,
+        "padding_top": 20,
+        "padding_bottom": 20
+      }
+    }
+  },
+  "order": [
+    "announcement-bar",
+    "header"
+  ]
+}
